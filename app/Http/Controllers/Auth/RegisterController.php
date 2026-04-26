@@ -28,10 +28,10 @@ class RegisterController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:225',
-            'email' => 'required|email|unique:user,email',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
-            'nip' => 'required|string|unique:user,nip',
-            'id_mata_pelajaran'=> 'required|exists:id_mata_pelajaran',
+            'nip' => 'required|string|unique:users,nip',
+            'id_mata_pelajaran'=> 'required|exists:mata_pelajarans,id',
         ], [
             'name.required'              => 'Nama lengkap wajib diisi.',
             'email.required'             => 'Email wajib diisi.',

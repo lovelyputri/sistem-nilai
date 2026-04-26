@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GuruController;
-use App\Http\Controllers\Admin\GuruController\GuruController as AdminGuruController;
 use App\Http\Controllers\Admin\NilaiController;
 use App\Http\Controllers\Admin\SiswaController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Guru\DashboardController as GuruDashboardController;
+use App\Http\Controllers\Guru\NilaiController as GuruNilaiController;
+use App\Models\Nilai;
 use Illuminate\Support\Facades\Route;
 
 // auth
@@ -52,5 +54,19 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.role:admin'])
     // Nilai
     Route::get('/nilai', [NilaiController::class, 'index'])->name('nilai.index');
     Route::get('/nilai/{siswa}', [NilaiController::class, 'show'])->name('nilai.show');
+});
 
+Route::middleware(['auth', 'check.role:guru'])->prefix('guru')->name('guru.')->group(function () {
+
+    // Dashboard
+    Route::get('/dashboard', [GuruDashboardController::class, 'index'])->name('dashboard');
+
+    // Nilai
+    Route::get('/nilai', [GuruNilaiController::class, 'index'])->name('nilai.index');
+    Route::post('/nilai', [GuruNilaiController::class, 'store'])->name('nilai.store');
+    Route::get('/nilai/{nilai}/edit', [GuruNilaiController::class, 'edit'])->name('nilai.edit');
+    Route::put('/nilai/{nilai}', [GuruNilaiController::class, 'update'])->name('nilai.update');
+
+    // pilih kelas
+    Route::post('/nilai/select-class', [GuruNilaiController::class, 'selectClass'])->name('nilai.selectClass');
 });
