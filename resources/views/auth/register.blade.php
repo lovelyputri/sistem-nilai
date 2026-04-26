@@ -141,12 +141,9 @@
         .alert-success { background: #F0FDF4; color: #166534; border: 1px solid #86EFAC; }
 
         @media (max-width: 900px) {
-            .container { flex-direction: column; }
-            .image-panel, .form-panel { width: 100%; min-height: unset; animation: none; transform: none; }
-            .image-panel { padding: 3rem 2rem; }
-            .brand { position: relative; top: 0; left: 0; margin-bottom: 2.5rem; justify-content: center; }
-            .illustration { max-width: 320px; }
-            .form-panel { padding: 3rem 2rem; }
+            .container { display: flex; flex-direction: column; justify-content: center; }
+            .image-panel { display: none; }
+            .form-panel { width: 100%; min-height: 100vh; animation: none; transform: none; padding: 2rem; }
             .form-row { grid-template-columns: 1fr; gap: 0; }
         }
     </style>
