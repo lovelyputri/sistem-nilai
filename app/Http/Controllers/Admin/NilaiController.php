@@ -28,7 +28,7 @@ class NilaiController extends Controller
                 'id' => $siswa->id,
                 'name' => $siswa->name,
                 'nis' => $siswa->nis,
-                'kelas' => $siswa->nilai,
+                'kelas' => $siswa->kelas,
                 'nilai_mapel' => $siswa->nilai,
                 'rata-rata' => $totalMapel > 0 
                     ? round($totalNilai / $totalMapel, 2)
@@ -64,6 +64,7 @@ class NilaiController extends Controller
 
         return view('admin.nilai.show', compact(
             'siswa',
+            'jumlahNilai',
             'totalMapel',
             'rataRata',
             'mataPelajaranBelumDiisi'

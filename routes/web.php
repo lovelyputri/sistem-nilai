@@ -23,9 +23,9 @@ Route::middleware('guest')->group(function () {
 });
 
 // Logout 
-Route::post('/keluar', [LoginController::class, 'logout'])
+Route::post('/logout', [LoginController::class, 'logout'])
     ->middleware('auth')
-    ->name('keluar');
+    ->name('logout');
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.role:admin'])->group(function () {
     // Dashboard

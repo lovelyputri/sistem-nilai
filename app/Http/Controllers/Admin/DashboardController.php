@@ -25,6 +25,13 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        return view('admin.dashboard', compact('statistik', 'siswa'));
+        $statistikNilai = [
+            'rata_rata' => round(Nilai::avg('nilai') ?? 0, 2),
+            'nilai_tertinggi' => Nilai::max('nilai') ?? 0,
+            'nilai terendah' => Nilai::min('nilai') ?? 0,
+            'total_siswa_punya_nilai' => Nilai::distinct('id_siswa')->count('id_siswa'),
+        ];
+
+        return view('admin.dashboard', compact('statistik', 'siswa','statistikNilai'));
     }
 }

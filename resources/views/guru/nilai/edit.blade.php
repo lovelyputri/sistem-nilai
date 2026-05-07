@@ -4,8 +4,8 @@
 <div class="container">
     <h2>Edit Nilai</h2>
 
-    <p><strong>Siswa:</strong> {{ $nilai->siswa->nama }}</p>
-    <p><strong>Mapel:</strong> {{ $nilai->mataPelajaran->nama }}</p>
+    <p><strong>Siswa:</strong> {{ $nilai->siswa->name }}</p>
+    <p><strong>Mapel:</strong> {{ $nilai->mataPelajaran->name }}</p>
 
     <form action="{{ route('guru.nilai.update', $nilai->id) }}" method="POST">
         @csrf

@@ -21,7 +21,7 @@ class Siswa extends Model
     }
 
     // menghitung rata rata nilai pada siswa secara otomatis
-    public function getRataRataAtrribute(): float|null
+    public function getRataRataAttrribute(): float|null
     {
         $totalMapel = MataPelajaran::count();
 

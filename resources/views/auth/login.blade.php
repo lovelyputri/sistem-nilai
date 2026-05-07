@@ -242,7 +242,7 @@
                             <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
                             Biar tetap masuk
                         </label>
-                        <a href="#" class="text-link">Lupa sandi?</a>
+                        <!-- <a href="#" class="text-link">Lupa sandi?</a> -->
                     </div>
 
                     <button type="submit" class="btn">Masuk Sistem</button>

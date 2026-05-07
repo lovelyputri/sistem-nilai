@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\MataPelajaran;
 use App\Models\Siswa;
 use Illuminate\Http\Request;
 
@@ -29,7 +30,8 @@ class SiswaController extends Controller
 
     public function create() 
     {
-        return view('admin.siswa.tambah');
+        $daftarKelas = MataPelajaran::orderBy('name')->get();
+        return view('admin.siswa.tambah', compact('daftarKelas'));
     }
 
     /**
