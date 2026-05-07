@@ -45,6 +45,12 @@
         color: var(--text-dark);
     }
 
+    .header-actions {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
     .mapel-badge {
         background: linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%);
         padding: 0.5rem 1.5rem;
@@ -63,6 +69,31 @@
     .mapel-badge span:last-child {
         font-weight: 700;
         color: var(--primary);
+    }
+
+    /* Button Create */
+    .btn-create {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        color: white;
+        padding: 0.6rem 1.5rem;
+        border-radius: 40px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(234, 88, 12, 0.25);
+    }
+
+    .btn-create:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(234, 88, 12, 0.35);
+        color: white;
+        text-decoration: none;
     }
 
     /* Filter Box */
@@ -85,7 +116,7 @@
     }
 
     .filter-select {
-        padding: 0.5rem 1rem;
+        padding: 0.6rem 2rem 0.6rem 1rem;
         border: 1.5px solid var(--border);
         border-radius: 10px;
         font-family: inherit;
@@ -93,17 +124,23 @@
         color: var(--text-dark);
         background: var(--white);
         cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23EA580C' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        min-width: 180px;
     }
 
     .filter-select:focus {
         outline: none;
         border-color: var(--primary-light);
+        box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
     }
 
     .btn-filter {
         background: var(--primary-light);
         color: var(--white);
-        padding: 0.5rem 1rem;
+        padding: 0.6rem 1.5rem;
         border-radius: 10px;
         border: none;
         font-size: 13px;
@@ -114,6 +151,7 @@
 
     .btn-filter:hover {
         background: var(--primary);
+        transform: translateY(-1px);
     }
 
     /* Stat Card */
@@ -175,6 +213,12 @@
         background: rgba(16, 185, 129, 0.1);
         border-left: 4px solid var(--success);
         color: var(--success);
+    }
+
+    .alert-danger {
+        background: rgba(239, 68, 68, 0.1);
+        border-left: 4px solid var(--danger);
+        color: var(--danger);
     }
 
     /* Table Styles */
@@ -283,6 +327,8 @@
     .btn-update:hover {
         background: var(--primary);
         transform: translateY(-1px);
+        color: white;
+        text-decoration: none;
     }
 
     /* Empty State */
@@ -300,6 +346,158 @@
     .empty-state p {
         color: var(--text-muted);
         margin-bottom: 1rem;
+    }
+
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.2s ease;
+    }
+
+    .modal.show {
+        display: flex;
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 24px;
+        max-width: 500px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-header {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-header h3 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin: 0;
+    }
+
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: var(--text-muted);
+        transition: color 0.2s;
+    }
+
+    .modal-close:hover {
+        color: var(--danger);
+    }
+
+    .modal-body {
+        padding: 1.5rem;
+    }
+
+    .modal-footer {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 0.5rem;
+    }
+
+    .form-group label .required {
+        color: var(--danger);
+    }
+
+    .form-input, .form-select {
+        width: 100%;
+        padding: 0.7rem 1rem;
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        font-family: inherit;
+        font-size: 14px;
+        transition: all 0.2s;
+    }
+
+    .form-input:focus, .form-select:focus {
+        outline: none;
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+    }
+
+    .form-select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23EA580C' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+    }
+
+    .btn-modal-cancel {
+        padding: 0.6rem 1.25rem;
+        background: #f3f4f6;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+
+    .btn-modal-cancel:hover {
+        background: #e5e7eb;
+    }
+
+    .btn-modal-save {
+        padding: 0.6rem 1.5rem;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+
+    .btn-modal-save:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(234, 88, 12, 0.3);
+    }
+
+    .alert-info-modal {
+        background: rgba(59, 130, 246, 0.1);
+        border-radius: 10px;
+        padding: 0.75rem;
+        font-size: 12px;
+        color: var(--info);
+        margin-top: 1rem;
     }
 
     /* Footer Info */
@@ -329,9 +527,16 @@
             flex-direction: column;
             align-items: flex-start;
         }
+        .header-actions {
+            width: 100%;
+            justify-content: space-between;
+        }
         .filter-box {
             flex-direction: column;
             align-items: stretch;
+        }
+        .filter-select {
+            width: 100%;
         }
         .stat-grid {
             grid-template-columns: 1fr;
@@ -347,9 +552,18 @@
     <!-- PAGE HEADER -->
     <div class="page-header">
         <h1>📝 Input Nilai Siswa</h1>
-        <div class="mapel-badge">
-            <span>Mata Pelajaran:</span>
-            <span>{{ $mataPelajaran->name }}</span>
+        <div class="header-actions">
+            <div class="mapel-badge">
+                <span>Mata Pelajaran:</span>
+                <span>{{ $mataPelajaran->name ?? 'Belum ada mapel' }}</span>
+            </div>
+            <button class="btn-create" onclick="openCreateModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                Tambah Nilai Baru
+            </button>
         </div>
     </div>
 
@@ -364,18 +578,34 @@
     </div>
     @endif
 
-    <!-- FILTER BY KELAS -->
+    @if(session('error'))
+    <div class="alert alert-danger">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <span>{{ session('error') }}</span>
+    </div>
+    @endif
+
+    <!-- FILTER BY KELAS - DIPERBAGUS -->
     <div class="filter-box">
-        <label>Pilih Kelas:</label>
+        <label>📚 Filter Kelas:</label>
         <select id="filterKelas" class="filter-select">
             <option value="">-- Pilih Kelas --</option>
             @foreach ($daftarKelas as $kelas)
                 <option value="{{ $kelas }}" {{ ($kelasTerpilih ?? '') == $kelas ? 'selected' : '' }}>
-                    Kelas {{ $kelas }}
+                    🏫 Kelas {{ $kelas }}
                 </option>
             @endforeach
         </select>
-        <button class="btn-filter" onclick="applyFilter()">Tampilkan</button>
+        <button class="btn-filter" onclick="applyFilter()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="display: inline; margin-right: 6px;">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+            </svg>
+            Tampilkan
+        </button>
     </div>
 
     <!-- STATISTIK CARDS -->
@@ -492,10 +722,65 @@
 
     <!-- FOOTER INFO + LEGEND WARNA -->
     <div class="footer-info">
-        <span style="color: #10B981;">Hijau</span> = Bagus (≥75)</span>
-        <span style="color: #F59E0B;">Kuning</span> = Remidi (60-74)</span>
-        <span style="color: #EF4444;">Merah</span> = KKN (≤59)</span>
-        <span style="color: #6B7280;">Abu-abu</span> = Belum dinilai</span>
+        <span>🟢 <span style="color: #10B981;">Hijau</span> = Bagus (≥75)</span>
+        <span>🟡 <span style="color: #F59E0B;">Kuning</span> = Remidi (60-74)</span>
+        <span>🔴 <span style="color: #EF4444;">Merah</span> = KKN (≤59)</span>
+        <span>⚪ <span style="color: #6B7280;">Abu-abu</span> = Belum dinilai</span>
+    </div>
+</div>
+
+<!-- MODAL CREATE NILAI -->
+<div id="createModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>➕ Tambah Nilai Baru</h3>
+            <button class="modal-close" onclick="closeCreateModal()">&times;</button>
+        </div>
+        <form action="{{ route('guru.nilai.store') }}" method="POST">
+            @csrf
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Pilih Siswa <span class="required">*</span></label>
+                    <select name="id_siswa" class="form-select" required>
+                        <option value="">-- Pilih Siswa --</option>
+                        @if(!empty($kelasTerpilih) && isset($siswa))
+                            @foreach($siswa as $s)
+                                <option value="{{ $s->id }}">
+                                    {{ $s->name }} - Kelas {{ $s->kelas ?? $kelasTerpilih }} | NIS: {{ $s->nis ?? '-' }}
+                                </option>
+                            @endforeach
+                        @else
+                            @foreach($allSiswa ?? [] as $s)
+                                <option value="{{ $s->id }}">
+                                    {{ $s->name }} - Kelas {{ $s->kelas }} | NIS: {{ $s->nis ?? '-' }}
+                                </option>
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Nilai <span class="required">*</span></label>
+                    <input type="number" 
+                           name="nilai" 
+                           class="form-input" 
+                           placeholder="Masukkan nilai (0-100)"
+                           min="0" 
+                           max="100" 
+                           step="0.01"
+                           required>
+                    <small style="color: var(--text-muted); font-size: 11px;">Nilai minimal 0, maksimal 100</small>
+                </div>
+
+                <div class="alert-info-modal">
+                    <strong>ℹ️ Informasi:</strong> Mata pelajaran akan diambil dari mata pelajaran yang Anda ajar ({{ $mataPelajaran->name ?? '-' }})
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-modal-cancel" onclick="closeCreateModal()">Batal</button>
+                <button type="submit" class="btn-modal-save">Simpan Nilai</button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -518,6 +803,27 @@
             form.appendChild(input);
             document.body.appendChild(form);
             form.submit();
+        }
+    }
+
+    function openCreateModal() {
+        const modal = document.getElementById('createModal');
+        modal.classList.add('show');
+        // Prevent body scroll
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeCreateModal() {
+        const modal = document.getElementById('createModal');
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('createModal');
+        if (event.target === modal) {
+            closeCreateModal();
         }
     }
 </script>

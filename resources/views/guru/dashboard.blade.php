@@ -12,14 +12,14 @@
         --bg-light: #FFF7ED;
         --success: #10B981;
         --warning: #F59E0B;
-        --info: #3B82F6;
         --danger: #EF4444;
+        --info: #3B82F6;
     }
 
     /* MAIN CONTENT */
     .main-content {
         padding: 2rem;
-        max-width: 1200px;
+        max-width: 1400px;
         margin: 0 auto;
         animation: fadeIn 0.5s ease;
     }
@@ -29,144 +29,171 @@
         to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Welcome Section */
-    .welcome-section {
-        background: linear-gradient(135deg, var(--white) 0%, #FFF7ED 100%);
-        border-radius: 24px;
-        padding: 2rem;
-        margin-bottom: 2rem;
-        border: 1px solid var(--border);
-    }
-
-    .welcome-section h2 {
-        font-size: 28px;
-        font-weight: 700;
-        color: var(--text-dark);
-        margin-bottom: 0.5rem;
-    }
-
-    .welcome-section p {
-        color: var(--text-muted);
-        font-size: 15px;
-    }
-
-    /* Profile Card */
-    .profile-card {
-        background: var(--white);
-        border-radius: 20px;
-        padding: 1.5rem;
-        margin-bottom: 2rem;
-        border: 1px solid var(--border);
+    /* Page Header */
+    .page-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        margin-bottom: 2rem;
         flex-wrap: wrap;
         gap: 1rem;
     }
 
-    .profile-info {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 2rem;
-    }
-
-    .profile-item {
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-    }
-
-    .profile-label {
-        font-size: 12px;
-        color: var(--text-muted);
-        text-transform: uppercase;
-        font-weight: 600;
-    }
-
-    .profile-value {
-        font-size: 18px;
+    .page-header h1 {
+        font-size: 28px;
         font-weight: 700;
         color: var(--text-dark);
     }
 
-    .mapel-badge {
-        background: rgba(234, 88, 12, 0.1);
-        color: var(--primary);
-        padding: 0.5rem 1rem;
-        border-radius: 12px;
-        font-weight: 600;
-        display: inline-block;
+    .header-actions {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
     }
 
-    /* Stats Cards - 3 Cards */
-    .stats-grid {
+    .mapel-badge {
+        background: linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%);
+        padding: 0.5rem 1.5rem;
+        border-radius: 40px;
+        border: 1px solid var(--border);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .mapel-badge span:first-child {
+        font-size: 14px;
+        color: var(--text-muted);
+    }
+
+    .mapel-badge span:last-child {
+        font-weight: 700;
+        color: var(--primary);
+    }
+
+    /* Filter Box */
+    .filter-box {
+        background: var(--white);
+        border-radius: 16px;
+        padding: 1rem 1.5rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .filter-box label {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-dark);
+    }
+
+    .filter-select {
+        padding: 0.6rem 2rem 0.6rem 1rem;
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        font-family: inherit;
+        font-size: 14px;
+        color: var(--text-dark);
+        background: var(--white);
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23EA580C' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        min-width: 180px;
+    }
+
+    .filter-select:focus {
+        outline: none;
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+    }
+
+    .btn-filter {
+        background: var(--primary-light);
+        color: var(--white);
+        padding: 0.6rem 1.5rem;
+        border-radius: 10px;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-filter:hover {
+        background: var(--primary);
+        transform: translateY(-1px);
+    }
+
+    /* Stat Card */
+    .stat-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.5rem;
-        margin-bottom: 2rem;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
     }
 
     .stat-card {
         background: var(--white);
-        border-radius: 20px;
-        padding: 1.5rem;
+        border-radius: 16px;
+        padding: 1rem 1.25rem;
         border: 1px solid var(--border);
         transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .stat-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, var(--primary-light), var(--primary));
     }
 
     .stat-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 24px rgba(234, 88, 12, 0.08);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
 
-    .stat-icon {
-        width: 52px;
-        height: 52px;
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 1rem;
+    .stat-card .stat-label {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-bottom: 0.5rem;
     }
 
-    .stat-value {
-        font-size: 36px;
+    .stat-card .stat-value {
+        font-size: 28px;
         font-weight: 700;
         color: var(--text-dark);
-        margin-bottom: 0.25rem;
     }
 
-    .stat-label {
-        font-size: 14px;
+    .stat-card .stat-unit {
+        font-size: 12px;
         color: var(--text-muted);
-        font-weight: 500;
+        margin-left: 0.25rem;
     }
 
-    .progress-bar-custom {
-        margin-top: 1rem;
-        background: #FED7AA;
-        border-radius: 10px;
-        height: 6px;
-        overflow: hidden;
+    /* Alert Message */
+    .alert {
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        animation: slideDown 0.3s ease;
     }
 
-    .progress-fill {
-        background: linear-gradient(90deg, var(--primary-light), var(--primary));
-        height: 100%;
-        border-radius: 10px;
-        transition: width 0.3s ease;
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .alert-success {
+        background: rgba(16, 185, 129, 0.1);
+        border-left: 4px solid var(--success);
+        color: var(--success);
+    }
+
+    .alert-danger {
+        background: rgba(239, 68, 68, 0.1);
+        border-left: 4px solid var(--danger);
+        color: var(--danger);
     }
 
     /* Table Styles */
@@ -174,49 +201,13 @@
         background: var(--white);
         border-radius: 20px;
         border: 1px solid var(--border);
-        overflow: hidden;
-    }
-
-    .card-header {
-        padding: 1.25rem 1.5rem;
-        border-bottom: 1px solid var(--border);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 1rem;
-    }
-
-    .card-header h3 {
-        font-size: 18px;
-        font-weight: 700;
-        color: var(--text-dark);
-    }
-
-    .btn-add {
-        background: var(--primary-light);
-        color: var(--white);
-        padding: 0.5rem 1rem;
-        border-radius: 10px;
-        text-decoration: none;
-        font-size: 13px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        border: none;
-        cursor: pointer;
-    }
-
-    .btn-add:hover {
-        background: var(--primary);
-        transform: translateY(-2px);
+        overflow-x: auto;
     }
 
     .data-table {
         width: 100%;
         border-collapse: collapse;
+        min-width: 700px;
     }
 
     .data-table th {
@@ -234,6 +225,7 @@
         border-bottom: 1px solid var(--border);
         color: var(--text-muted);
         font-size: 14px;
+        vertical-align: middle;
     }
 
     .data-table tr:hover {
@@ -244,45 +236,169 @@
         border-bottom: none;
     }
 
-    .badge {
+    /* Badge Nilai dengan Warna */
+    .badge-nilai {
         display: inline-block;
-        padding: 0.35rem 0.9rem;
+        padding: 0.35rem 1rem;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 700;
+        text-align: center;
+        min-width: 110px;
+    }
+
+    .badge-nilai.bagus {
+        background: rgba(16, 185, 129, 0.15);
+        color: var(--success);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .badge-nilai.remidi {
+        background: rgba(245, 158, 11, 0.15);
+        color: var(--warning);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .badge-nilai.kkn {
+        background: rgba(239, 68, 68, 0.15);
+        color: var(--danger);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .badge-nilai.belum {
+        background: rgba(156, 163, 175, 0.15);
+        color: #6B7280;
+        border: 1px solid rgba(156, 163, 175, 0.3);
+    }
+
+    /* Badge Kelas */
+    .badge-kelas {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
         border-radius: 20px;
         font-size: 12px;
         font-weight: 600;
+        background: rgba(249, 115, 22, 0.1);
+        color: var(--primary);
     }
 
-    .badge-success {
-        background: rgba(16, 185, 129, 0.1);
-        color: var(--success);
+    /* Input Nilai di Tabel */
+    .nilai-input {
+        width: 100px;
+        padding: 0.5rem 0.75rem;
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        font-family: inherit;
+        font-size: 14px;
+        text-align: center;
+        transition: all 0.2s;
     }
 
-    .badge-primary {
-        background: rgba(59, 130, 246, 0.1);
-        color: var(--info);
+    .nilai-input:focus {
+        outline: none;
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
     }
 
-    .badge-warning {
-        background: rgba(245, 158, 11, 0.1);
-        color: var(--warning);
+    .nilai-input.is-invalid {
+        border-color: var(--danger);
+        background: rgba(239, 68, 68, 0.05);
     }
 
-    .badge-danger {
-        background: rgba(239, 68, 68, 0.1);
-        color: var(--danger);
+    /* Button Save */
+    .btn-save {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: var(--success);
+        color: white;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 500;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
     }
 
+    .btn-save:hover {
+        background: #059669;
+        transform: translateY(-1px);
+    }
+
+    .btn-save:disabled {
+        background: #9CA3AF;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* Button Update */
+    .btn-update {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: var(--primary-light);
+        color: var(--white);
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 500;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-update:hover {
+        background: var(--primary);
+        transform: translateY(-1px);
+        color: white;
+        text-decoration: none;
+    }
+
+    /* Empty State */
     .empty-state {
         text-align: center;
         padding: 3rem;
-        color: var(--text-muted);
     }
 
     .empty-state svg {
-        width: 64px;
-        height: 64px;
-        margin-bottom: 1rem;
+        margin: 0 auto 1rem;
+        display: block;
         opacity: 0.5;
+    }
+
+    .empty-state p {
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+    }
+
+    /* Footer Info */
+    .footer-info {
+        margin-top: 1rem;
+        text-align: center;
+        font-size: 12px;
+        color: var(--text-muted);
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    /* Loading Spinner */
+    .loading-spinner {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
     }
 
     /* Responsive */
@@ -290,145 +406,456 @@
         .main-content {
             padding: 1rem;
         }
-        .stats-grid {
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .filter-box {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .filter-select {
+            width: 100%;
+        }
+        .stat-grid {
             grid-template-columns: 1fr;
         }
-        .profile-info {
+        .footer-info {
             flex-direction: column;
-            gap: 0.75rem;
+            gap: 0.25rem;
         }
-        .data-table th, .data-table td {
-            padding: 0.75rem 1rem;
+        .nilai-input {
+            width: 80px;
         }
     }
 </style>
 
 <div class="main-content">
-    <!-- WELCOME SECTION -->
-    <div class="welcome-section">
-        <h2>Selamat datang, {{ $guru->name }}! 👋</h2>
-        <p>Pantau aktivitas mengajar Anda. Berikut ringkasan data pembelajaran Anda hari ini.</p>
-    </div>
-
-    <!-- PROFILE CARD -->
-    <div class="profile-card">
-        <div class="profile-info">
-            <div class="profile-item">
-                <span class="profile-label">Nama Guru</span>
-                <span class="profile-value">{{ $guru->name }}</span>
-            </div>
-            <div class="profile-item">
-                <span class="profile-label">Mata Pelajaran</span>
-                <span class="mapel-badge">📚 {{ $mataPelajaran->name ?? 'Belum ditentukan' }}</span>
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+        <h1>📝 Input Nilai Siswa</h1>
+        <div class="header-actions">
+            <div class="mapel-badge">
+                <span>Mata Pelajaran:</span>
+                <span>{{ $mataPelajaran->name ?? 'Belum ada mapel' }}</span>
             </div>
         </div>
     </div>
 
-    <!-- STATISTICS CARDS - 3 CARDS -->
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-icon" style="background: rgba(234, 88, 12, 0.1);">
-                <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" width="26" height="26">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                    <circle cx="9" cy="7" r="4"/>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                </svg>
-            </div>
-            <div class="stat-value">{{ $totalSiswa }}</div>
-            <div class="stat-label">Total Siswa</div>
-        </div>
+    <!-- SESSION MESSAGES -->
+    @if(session('success'))
+    <div class="alert alert-success">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        <span>{{ session('success') }}</span>
+    </div>
+    @endif
 
-        <div class="stat-card">
-            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1);">
-                <svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2" width="26" height="26">
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                    <polyline points="22 4 12 14.01 9 11.01"/>
-                </svg>
-            </div>
-            <div class="stat-value">{{ $sudahDiinput }}</div>
-            <div class="stat-label">Nilai Diinput</div>
-            <div class="progress-bar-custom">
-                <div class="progress-fill" style="width: {{ $totalSiswa > 0 ? ($sudahDiinput / $totalSiswa) * 100 : 0 }}%"></div>
-            </div>
-        </div>
+    @if(session('error'))
+    <div class="alert alert-danger">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <span>{{ session('error') }}</span>
+    </div>
+    @endif
 
-        <div class="stat-card">
-            <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1);">
-                <svg viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2" width="26" height="26">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M12 6v6l4 2"/>
-                </svg>
-            </div>
-            <div class="stat-value">{{ $totalSiswa - $sudahDiinput }}</div>
-            <div class="stat-label">Belum Dinilai</div>
-        </div>
+    <!-- FILTER BY KELAS -->
+    <div class="filter-box">
+        <label>📚 Filter Kelas:</label>
+        <select id="filterKelas" class="filter-select">
+            <option value="">-- Pilih Kelas --</option>
+            @foreach ($daftarKelas as $kelas)
+                <option value="{{ $kelas }}" {{ ($kelasTerpilih ?? '') == $kelas ? 'selected' : '' }}>
+                    🏫 Kelas {{ $kelas }}
+                </option>
+            @endforeach
+        </select>
+        <button class="btn-filter" onclick="applyFilter()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="display: inline; margin-right: 6px;">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+            </svg>
+            Tampilkan
+        </button>
     </div>
 
-    <!-- NILAI TERBARU TABLE -->
+    <!-- STATISTIK CARDS -->
+    @if(!empty($kelasTerpilih) && isset($siswa) && count($siswa) > 0)
+    <div class="stat-grid">
+        <div class="stat-card">
+            <div class="stat-label">TOTAL SISWA</div>
+            <div class="stat-value">{{ count($siswa) }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">SUDAH DINILAI</div>
+            <div class="stat-value">
+                {{ $siswa->filter(fn($s) => optional($s->nilai->first())->nilai)->count() }}
+                <span class="stat-unit">/ {{ count($siswa) }}</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">RATA-RATA KELAS</div>
+            <div class="stat-value">
+                @php
+                    $rata = $siswa->avg(fn($s) => optional($s->nilai->first())->nilai);
+                @endphp
+                {{ $rata ? number_format($rata, 2) : '-' }}
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <!-- TABLE NILAI DENGAN KOLOM CREATE -->
     <div class="card">
-        <div class="card-header">
-            <h3>📋 Nilai Terbaru (5 data terakhir)</h3>
-            <a href="{{ url('/guru/nilai/create') }}" class="btn-add">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-                    <line x1="12" y1="5" x2="12" y2="19"/>
-                    <line x1="5" y1="12" x2="19" y2="12"/>
-                </svg>
-                Input Nilai
-            </a>
-        </div>
-
-        @if($nilaiDiinput->count() > 0)
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Nama Siswa</th>
-                        <th>Mata Pelajaran</th>
-                        <th>Nilai</th>
-                        <th>Keterangan</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($nilaiDiinput as $index => $n)
-                    <tr>
+        <table class="data-table" id="nilaiTable">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama Siswa</th>
+                    <th>NIS</th>
+                    <th>Kelas</th>
+                    <th>Nilai Saat Ini</th>
+                    <th>Input Nilai Baru</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(!empty($kelasTerpilih) && isset($siswa) && count($siswa) > 0)
+                    @forelse ($siswa as $index => $s)
+                    @php 
+                        $nilaiAktif = optional($s->nilai->first())->nilai;
+                        $nilaiId = optional($s->nilai->first())->id;
+                        
+                        function getNilaiBadgeClass($nilai) {
+                            if ($nilai === null) return 'belum';
+                            if ($nilai >= 75) return 'bagus';
+                            if ($nilai >= 60) return 'remidi';
+                            return 'kkn';
+                        }
+                        
+                        function getNilaiLabel($nilai) {
+                            if ($nilai === null) return 'Belum dinilai';
+                            if ($nilai >= 75) return '✅ ' . number_format($nilai, 0);
+                            if ($nilai >= 60) return '⚠️ ' . number_format($nilai, 0) . ' (Remidi)';
+                            return '❌ ' . number_format($nilai, 0) . ' (KKN)';
+                        }
+                        
+                        $badgeClass = getNilaiBadgeClass($nilaiAktif);
+                        $nilaiLabel = getNilaiLabel($nilaiAktif);
+                    @endphp
+                    <tr data-siswa-id="{{ $s->id }}" data-nilai-id="{{ $nilaiId }}">
                         <td>{{ $index + 1 }}</td>
-                        <td><strong>{{ $n->siswa->name ?? 'Tidak diketahui' }}</strong></td>
-                        <td>{{ $n->mataPelajaran->name ?? '-' }}</td>
-                        <td><span style="font-size: 18px; font-weight: 700; color: var(--text-dark);">{{ $n->nilai }}</span></td>
                         <td>
-                            @if($n->nilai >= 85)
-                                <span class="badge badge-success">🎉 Sangat Baik</span>
-                            @elseif($n->nilai >= 70)
-                                <span class="badge badge-primary">👍 Baik</span>
-                            @elseif($n->nilai >= 60)
-                                <span class="badge badge-warning">📖 Cukup</span>
+                            <strong>{{ $s->name }}</strong>
+                         </td>
+                        <td>{{ $s->nis ?? '-' }}</td>
+                        <td>
+                            <span class="badge-kelas">{{ $s->kelas ?? $kelasTerpilih }}</span>
+                         </td>
+                        <td>
+                            <span class="badge-nilai {{ $badgeClass }}" id="nilaiDisplay{{ $s->id }}">
+                                {{ $nilaiLabel }}
+                            </span>
+                         </td>
+                        <td>
+                            <input type="number" 
+                                   id="nilaiInput{{ $s->id }}"
+                                   class="nilai-input" 
+                                   placeholder="0-100"
+                                   min="0" 
+                                   max="100" 
+                                   step="0.01"
+                                   value="{{ $nilaiAktif ?? '' }}">
+                            <div id="errorMsg{{ $s->id }}" style="font-size: 11px; color: var(--danger); margin-top: 4px; display: none;"></div>
+                         </td>
+                        <td>
+                            @if($nilaiAktif !== null)
+                                <button class="btn-update" onclick="updateNilai({{ $s->id }}, {{ $nilaiId }})" id="btnAction{{ $s->id }}">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                        <path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"/>
+                                        <polygon points="18 2 22 6 12 16 8 16 8 12 18 2"/>
+                                    </svg>
+                                    Update
+                                </button>
                             @else
-                                <span class="badge badge-danger">⚠️ Perbaikan</span>
+                                <button class="btn-save" onclick="createNilai({{ $s->id }})" id="btnAction{{ $s->id }}">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                        <path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"/>
+                                        <polygon points="18 2 22 6 12 16 8 16 8 12 18 2"/>
+                                    </svg>
+                                    Simpan
+                                </button>
                             @endif
+                         </td>
+                     </tr>
+                    @empty
+                    <tr>
+                        <td colspan="7" class="empty-state">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="48" height="48">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 6v6l4 2"/>
+                            </svg>
+                            <p>Belum ada data siswa</p>
                         </td>
                     </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    @endforelse
+                @else
+                <tr>
+                    <td colspan="7" class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="48" height="48">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                        <p>Silakan pilih kelas terlebih dahulu</p>
+                    </td>
+                </tr>
+                @endif
+            </tbody>
+        </table>
+    </div>
 
-            @if($sudahDiinput > 5)
-                <div style="padding: 1rem 1.5rem; text-align: center; border-top: 1px solid var(--border);">
-                    <a href="{{ url('/guru/nilai') }}" style="color: var(--primary); text-decoration: none; font-weight: 500;">
-                        Lihat Semua Nilai ({{ $sudahDiinput }}) →
-                    </a>
-                </div>
-            @endif
-        @else
-            <div class="empty-state">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <rect x="2" y="4" width="20" height="16" rx="2"/>
-                    <line x1="8" y1="10" x2="16" y2="10"/>
-                </svg>
-                <p>Belum ada nilai yang diinput</p>
-                <a href="{{ url('/guru/nilai/create') }}" class="btn-add" style="margin-top: 1rem; display: inline-flex;">+ Input Nilai Pertama</a>
-            </div>
-        @endif
+    <!-- FOOTER INFO + LEGEND WARNA -->
+    <div class="footer-info">
+        <span>🟢 <span style="color: #10B981;">Hijau</span> = Bagus (≥75)</span>
+        <span>🟡 <span style="color: #F59E0B;">Kuning</span> = Remidi (60-74)</span>
+        <span>🔴 <span style="color: #EF4444;">Merah</span> = KKN (≤59)</span>
+        <span>⚪ <span style="color: #6B7280;">Abu-abu</span> = Belum dinilai</span>
     </div>
 </div>
+
+<script>
+    const csrfToken = '{{ csrf_token() }}';
+    const mataPelajaranId = {{ $mataPelajaran->id ?? 'null' }};
+
+    function applyFilter() {
+        const kelas = document.getElementById('filterKelas').value;
+        if (kelas) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{{ route("guru.nilai.selectClass") }}';
+            const csrf = document.createElement('input');
+            csrf.type = 'hidden';
+            csrf.name = '_token';
+            csrf.value = csrfToken;
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'kelas';
+            input.value = kelas;
+            form.appendChild(csrf);
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+
+    function createNilai(siswaId) {
+        const inputElement = document.getElementById(`nilaiInput${siswaId}`);
+        const nilai = inputElement.value;
+        const errorMsg = document.getElementById(`errorMsg${siswaId}`);
+        const btn = document.getElementById(`btnAction${siswaId}`);
+        const originalBtnText = btn.innerHTML;
+        
+        // Validasi
+        if (!nilai) {
+            errorMsg.textContent = 'Nilai wajib diisi';
+            errorMsg.style.display = 'block';
+            inputElement.classList.add('is-invalid');
+            return;
+        }
+        
+        const nilaiNum = parseFloat(nilai);
+        if (isNaN(nilaiNum) || nilaiNum < 0 || nilaiNum > 100) {
+            errorMsg.textContent = 'Nilai harus antara 0-100';
+            errorMsg.style.display = 'block';
+            inputElement.classList.add('is-invalid');
+            return;
+        }
+        
+        errorMsg.style.display = 'none';
+        inputElement.classList.remove('is-invalid');
+        
+        // Loading state
+        btn.disabled = true;
+        btn.innerHTML = '<span class="loading-spinner"></span> Menyimpan...';
+        
+        // Kirim request
+        fetch('{{ route("guru.nilai.store") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                id_siswa: siswaId,
+                nilai: nilaiNum,
+                id_mata_pelajaran: mataPelajaranId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update tampilan
+                const displaySpan = document.getElementById(`nilaiDisplay${siswaId}`);
+                const badgeClass = getNilaiBadgeClass(nilaiNum);
+                const nilaiLabel = getNilaiLabel(nilaiNum);
+                displaySpan.className = `badge-nilai ${badgeClass}`;
+                displaySpan.innerHTML = nilaiLabel;
+                
+                // Ubah tombol dari Simpan jadi Update
+                btn.className = 'btn-update';
+                btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                    <path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"/>
+                                    <polygon points="18 2 22 6 12 16 8 16 8 12 18 2"/>
+                                </svg>
+                                Update`;
+                
+                // Simpan nilai_id ke row
+                const row = btn.closest('tr');
+                row.setAttribute('data-nilai-id', data.nilai_id);
+                
+                // Update onclick function
+                btn.onclick = function() { updateNilai(siswaId, data.nilai_id); };
+                
+                // Tampilkan notifikasi
+                showNotification('success', data.message);
+            } else {
+                errorMsg.textContent = data.message || 'Terjadi kesalahan';
+                errorMsg.style.display = 'block';
+                showNotification('error', data.message || 'Gagal menyimpan nilai');
+            }
+            btn.disabled = false;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            errorMsg.textContent = 'Gagal menyimpan nilai';
+            errorMsg.style.display = 'block';
+            btn.disabled = false;
+            btn.innerHTML = originalBtnText;
+            showNotification('error', 'Terjadi kesalahan pada server');
+        });
+    }
+    
+    function updateNilai(siswaId, nilaiId) {
+        const inputElement = document.getElementById(`nilaiInput${siswaId}`);
+        const nilai = inputElement.value;
+        const errorMsg = document.getElementById(`errorMsg${siswaId}`);
+        const btn = document.getElementById(`btnAction${siswaId}`);
+        
+        // Validasi
+        if (!nilai) {
+            errorMsg.textContent = 'Nilai wajib diisi';
+            errorMsg.style.display = 'block';
+            inputElement.classList.add('is-invalid');
+            return;
+        }
+        
+        const nilaiNum = parseFloat(nilai);
+        if (isNaN(nilaiNum) || nilaiNum < 0 || nilaiNum > 100) {
+            errorMsg.textContent = 'Nilai harus antara 0-100';
+            errorMsg.style.display = 'block';
+            inputElement.classList.add('is-invalid');
+            return;
+        }
+        
+        errorMsg.style.display = 'none';
+        inputElement.classList.remove('is-invalid');
+        
+        // Loading state
+        btn.disabled = true;
+        btn.innerHTML = '<span class="loading-spinner"></span> Mengupdate...';
+        
+        // Kirim request update
+        fetch(`/guru/nilai/${nilaiId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                nilai: nilaiNum
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update tampilan
+                const displaySpan = document.getElementById(`nilaiDisplay${siswaId}`);
+                const badgeClass = getNilaiBadgeClass(nilaiNum);
+                const nilaiLabel = getNilaiLabel(nilaiNum);
+                displaySpan.className = `badge-nilai ${badgeClass}`;
+                displaySpan.innerHTML = nilaiLabel;
+                
+                showNotification('success', data.message);
+            } else {
+                errorMsg.textContent = data.message || 'Terjadi kesalahan';
+                errorMsg.style.display = 'block';
+                showNotification('error', data.message || 'Gagal mengupdate nilai');
+            }
+            btn.disabled = false;
+            btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                <path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"/>
+                                <polygon points="18 2 22 6 12 16 8 16 8 12 18 2"/>
+                            </svg>
+                            Update`;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            errorMsg.textContent = 'Gagal mengupdate nilai';
+            errorMsg.style.display = 'block';
+            btn.disabled = false;
+            btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                <path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"/>
+                                <polygon points="18 2 22 6 12 16 8 16 8 12 18 2"/>
+                            </svg>
+                            Update`;
+            showNotification('error', 'Terjadi kesalahan pada server');
+        });
+    }
+    
+    function getNilaiBadgeClass(nilai) {
+        if (nilai === null) return 'belum';
+        if (nilai >= 75) return 'bagus';
+        if (nilai >= 60) return 'remidi';
+        return 'kkn';
+    }
+    
+    function getNilaiLabel(nilai) {
+        if (nilai === null) return 'Belum dinilai';
+        if (nilai >= 75) return '✅ ' + Math.round(nilai);
+        if (nilai >= 60) return '⚠️ ' + Math.round(nilai) + ' (Remidi)';
+        return '❌ ' + Math.round(nilai) + ' (KKN)';
+    }
+    
+    function showNotification(type, message) {
+        // Buat alert temporary
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type}`;
+        alertDiv.style.position = 'fixed';
+        alertDiv.style.top = '20px';
+        alertDiv.style.right = '20px';
+        alertDiv.style.zIndex = '9999';
+        alertDiv.style.maxWidth = '350px';
+        alertDiv.style.animation = 'slideDown 0.3s ease';
+        alertDiv.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                ${type === 'success' ? 
+                    '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' : 
+                    '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'
+                }
+            </svg>
+            <span>${message}</span>
+        `;
+        document.body.appendChild(alertDiv);
+        
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 3000);
+    }
+</script>
 @endsection
