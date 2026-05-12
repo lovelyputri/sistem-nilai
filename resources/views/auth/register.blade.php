@@ -54,16 +54,55 @@
             100% { transform: translateY(0px) rotate(0deg) scale(1); }
         }
 
-        .brand { position: absolute; top: 3rem; left: 3rem; display: flex; align-items: center; gap: 1rem; z-index: 2; }
-        .brand-icon {
-            width: 44px; height: 44px; background: rgba(234, 88, 12, 0.1); border-radius: 12px;
-            display: flex; justify-content: center; align-items: center; backdrop-filter: blur(10px); border: 1px solid rgba(234, 88, 12, 0.2);
+        .brand{
+            position:absolute;
+            top:3rem;
+            left:3rem;
+            z-index:10;
         }
-        .brand-icon svg { width: 22px; height: 22px; stroke: var(--primary); }
-        .brand-text { display: flex; flex-direction: column; line-height: 1.2; }
-        .brand-text span:first-child { font-size: 13px; font-weight: 700; color: var(--primary); letter-spacing: 1px; text-transform: uppercase;}
-        .brand-text span:last-child { font-size: 15px; font-weight: 700; color: var(--text-dark); }
-        
+
+        .logo{
+            display:flex;
+            align-items:center;
+            gap:1rem;
+            text-decoration:none;
+        }
+
+        .logo-box{
+            width:42px;
+            height:42px;
+            background:linear-gradient(135deg, var(--primary), #C2410C);
+            border-radius:12px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:white;
+            box-shadow:0 4px 12px rgba(234,88,12,.3);
+            flex-shrink:0;
+        }
+
+        .logo-box svg{
+            width:24px;
+            height:24px;
+        }
+
+        .logo-text h2{
+            font-size:18px;
+            font-weight:800;
+            color:var(--text-dark);
+            line-height:1;
+            margin:0;
+            letter-spacing:-0.5px;
+        }
+
+        .logo-text p{
+            font-size:11px;
+            font-weight:600;
+            color:var(--primary);
+            text-transform:uppercase;
+            letter-spacing:0.5px;
+            margin-top:2px;
+        }
         .illustration { width: 100%; max-width: 460px; display: block; margin: 0 auto; z-index: 2; position: relative; filter: drop-shadow(0 15px 25px rgba(234,88,12,0.15)); mix-blend-mode: multiply; }
         
         .hero-text { text-align: center; margin-top: 3rem; z-index: 2; position: relative;}
@@ -166,16 +205,30 @@
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
             </svg>
 
-            <div class="brand">
-                <div class="brand-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="8" r="7"/>
-                        <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>
-                    </svg>
-                </div>
-                <div class="brand-text">
-                    <span>Sistem Nilai</span>
-                    <span>Portal Guru</span>
+             <div class="brand">
+                <div class="logo">
+
+                    <!-- ICON -->
+                    <div class="logo-box">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round">
+
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                        </svg>
+                    </div>
+
+                    <!-- TULISAN SAMPING -->
+                    <div class="logo-text">
+                        <h2>EDUGRADES</h2>
+                        <p>Teacher Portal</p>
+                    </div>
+
                 </div>
             </div>
             

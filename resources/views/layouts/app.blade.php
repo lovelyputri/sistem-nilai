@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+`<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -32,7 +32,7 @@
 
         /* NAVBAR STYLES */
         .navbar {
-            background: var(--white);
+            background: rgba(255, 255, 255, 0.9);
             padding: 0.75rem 2rem;
             display: flex;
             justify-content: space-between;
@@ -590,4 +590,4 @@
     </div>
 
 </body>
-</html>
+</html>`

@@ -65,7 +65,8 @@ Route::middleware(['auth', 'check.role:guru'])->prefix('guru')->name('guru.')->g
     Route::get('/nilai', [GuruNilaiController::class, 'index'])->name('nilai.index');
     Route::post('/nilai', [GuruNilaiController::class, 'store'])->name('nilai.store');
     Route::get('/nilai/{nilai}/edit', [GuruNilaiController::class, 'edit'])->name('nilai.edit');
-    Route::put('/nilai/{nilai}', [GuruNilaiController::class, 'update'])->name('nilai.update');
+    // Route::put('/nilai/{nilai}', [GuruNilaiController::class, 'update'])->name('nilai.update');
+    Route::delete('nilai/{nilai}', [NilaiController::class, 'destroy'])->name('nilai.destroy');
 
     // pilih kelas
     Route::post('/nilai/select-class', [GuruNilaiController::class, 'selectClass'])->name('nilai.selectClass');

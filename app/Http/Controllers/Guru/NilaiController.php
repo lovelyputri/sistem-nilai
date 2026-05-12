@@ -23,6 +23,7 @@ class NilaiController extends Controller
         abort_if(! $mataPelajaran, 403, 'Anda belum memiliki mata pelajaran');
 
         $siswa = collect();
+        // $kelas = $siswa->first()->kelas ?? null;
 
         if ($kelasTerpilih) {
             $siswa = Siswa::with([
@@ -34,6 +35,15 @@ class NilaiController extends Controller
             ->whereRaw('LOWER(TRIM(kelas)) = ?', [strtolower(trim($kelasTerpilih))])
             ->get();
         }
+        
+        $siswa = Siswa::with([
+            'nilai' => function ($q) use ($mataPelajaran, $guru) {
+                $q->where('id_mata_pelajaran', $mataPelajaran->id)
+                ->where('id_user', $guru->id);
+            }
+        ])
+        ->where('kelas', $kelasTerpilih)
+        ->get();
 
         $daftarKelas = Siswa::select('kelas')
             ->distinct()
@@ -41,6 +51,7 @@ class NilaiController extends Controller
             ->pluck('kelas');
 
         return view('guru.nilai.index', compact(
+            'guru',
             'mataPelajaran',
             'siswa',
             'kelasTerpilih',
@@ -55,9 +66,10 @@ class NilaiController extends Controller
     {
         /** @var User $guru */
         $guru = Auth::user();
+
         $mataPelajaran = $guru->mataPelajaran()->first();
 
-        abort_if(! $mataPelajaran, 403);
+        abort_if(!$mataPelajaran, 403);
 
         $request->validate([
             'id_siswa' => 'required|exists:siswas,id',
@@ -65,33 +77,35 @@ class NilaiController extends Controller
         ], [
             'id_siswa.required' => 'Siswa wajib dipilih',
             'id_siswa.exists' => 'Siswa tidak ditemukan',
-            'nilai.required' => 'Nilai wajib diiisi',
+            'nilai.required' => 'Nilai wajib diisi',
             'nilai.numeric' => 'Nilai harus berupa angka',
             'nilai.min' => 'Nilai minimal 0',
-            'nilai.max' => 'Nilai maksimal 100', 
+            'nilai.max' => 'Nilai maksimal 100',
         ]);
 
-        $exists = Nilai::where('id_siswa', $request->id_siswa)
-            ->where('id_mata_pelajaran', $mataPelajaran->id)
-            ->exists();
+        Nilai::updateOrCreate(
+            [
+                'id_siswa' => $request->id_siswa,
+                'id_mata_pelajaran' => $mataPelajaran->id,
+            ],
+            [
+                'id_user' => $guru->id,
+                'nilai' => $request->nilai,
+            ]
+        );
 
-        if ($exists) {
-            return back()->with('error', 'Nilai sudah ada, silakan edit');
-        }
+        $siswa = Siswa::findOrFail($request->id_siswa);
 
-        Nilai::create([
-            'id_siswa' => $request->id_siswa,
-            'id_mata_pelajaran' => $mataPelajaran->id,
-            'id_user' => $guru->id, 
-            'nilai' => $request->nilai, 
+        session([
+            'kelas_terpilih' => $siswa->kelas
         ]);
-
-        $siswa = Siswa::find($request->id_siswa);
-        $request->session()->put('kelas_terpilih', $siswa->kelas);
 
         return redirect()
             ->route('guru.nilai.index')
-            ->with('sukses', "Nilai {$siswa->name} untuk mapel {$mataPelajaran->name} berhasil disimpan");
+            ->with(
+                'sukses',
+                "Nilai {$siswa->name} berhasil disimpan"
+            );
     }
 
     /**
@@ -143,9 +157,19 @@ class NilaiController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Nilai $nil)
     {
-        //
+        /** @var User $guru */
+        $guru = Auth::user();
+
+        abort_if($nilai->id_user !== $guru->id, 403);
+
+        $namaSiswa = $nilai->siswa->name ?? 'Siswa';
+        $nilai->delete();
+
+        return redirect()
+            ->route('guru.nilai.index')
+            ->with('suskses', "Nilai {$namaSiswa} berhasil dihapus");
     }
 
     public function selectClass(Request $request)

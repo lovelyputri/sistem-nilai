@@ -14,6 +14,7 @@ class Nilai extends Model
         'id_mata_pelajaran',
         'id_user',
         'nilai',
+        // 'deskripsi',
     ];
 
     public function siswa(): BelongsTo
