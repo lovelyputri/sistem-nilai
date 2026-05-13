@@ -102,7 +102,7 @@
         .btn-logout:hover { background: #FEF2F2; border-color: #FEE2E2; }
 
         /* --- CONTENT --- */
-        .container { padding: 2rem; max-width: 1400px; margin: 0 auto; }
+        .container {padding: 2rem; max-width: 95%; width: 100%; margin: 0 auto;}
 
         /* --- ENHANCED WELCOME BANNER --- */
         .welcome-banner {
