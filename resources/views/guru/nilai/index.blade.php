@@ -25,6 +25,8 @@
             --slate-800: #431407;
             --success: #10B981;
             --danger: #EF4444;
+            --warning: #F59E0B;
+            --info: #3B82F6;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -188,19 +190,110 @@
             border: 1px solid var(--slate-200);
         }
 
-        .nilai-input {
-            width: 80px;
-            padding: 0.6rem;
-            border-radius: 10px;
-            border: 2px solid var(--slate-200);
-            text-align: center;
+        /* ===== KOLOM NILAI (READ-ONLY) ===== */
+        .nilai-display {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 60px;
+            padding: 8px 16px;
+            border-radius: 12px;
             font-weight: 800;
-            font-size: 16px;
-            color: var(--primary-dark);
-            transition: all 0.2s;
+            font-size: 18px;
+            background: #F3F4F6;
+            color: var(--text-dark);
+            border: 2px solid #E5E7EB;
+            transition: all 0.3s ease;
         }
-        .nilai-input:focus { border-color: var(--primary); outline: none; background: var(--primary-light); }
 
+        .nilai-display.excellent {
+            background: #ECFDF5;
+            border-color: #10B981;
+            color: #065F46;
+        }
+
+        .nilai-display.good {
+            background: #EFF6FF;
+            border-color: #3B82F6;
+            color: #1E3A8A;
+        }
+
+        .nilai-display.pass {
+            background: #FFFBEB;
+            border-color: #F59E0B;
+            color: #92400E;
+        }
+
+        .nilai-display.fail {
+            background: #FEF2F2;
+            border-color: #EF4444;
+            color: #991B1B;
+        }
+
+        .nilai-display.empty {
+            background: #F3F4F6;
+            border-color: #D1D5DB;
+            color: #9CA3AF;
+        }
+
+        /* ===== KOLOM KETERANGAN ===== */
+        .keterangan-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .keterangan-icon {
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        .keterangan-text {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            background: var(--slate-50);
+            color: var(--slate-500);
+            min-height: 38px;
+            display: flex;
+            align-items: center;
+            border: 2px solid #E5E7EB;
+        }
+
+        .keterangan-text.excellent {
+            background: #ECFDF5;
+            border-color: #10B981;
+            color: #065F46;
+        }
+
+        .keterangan-text.good {
+            background: #EFF6FF;
+            border-color: #3B82F6;
+            color: #1E3A8A;
+        }
+
+        .keterangan-text.pass {
+            background: #FFFBEB;
+            border-color: #F59E0B;
+            color: #92400E;
+        }
+
+        .keterangan-text.fail {
+            background: #FEF2F2;
+            border-color: #EF4444;
+            color: #991B1B;
+        }
+
+        .keterangan-text.empty {
+            background: #F3F4F6;
+            border-color: #D1D5DB;
+            color: #9CA3AF;
+            font-style: italic;
+        }
+
+        /* --- BADGE --- */
         .badge {
             padding: 6px 12px;
             border-radius: 8px;
@@ -214,36 +307,57 @@
         .badge-success { background: #dcfce7; color: #15803d; }
         .badge-danger { background: #fee2e2; color: #b91c1c; }
         .badge-muted { background: var(--slate-100); color: var(--slate-500); }
-
-        .note-field {
-            background: var(--slate-50);
-            border: 1px dashed var(--slate-200);
-            color: var(--slate-500);
-            font-size: 13px;
-            padding: 8px 12px;
-            border-radius: 8px;
-            width: 100%;
-            outline: none;
-            cursor: not-allowed;
-        }
+        .badge-warning { background: #fef3c7; color: #92400e; }
 
         /* --- ACTION BUTTONS --- */
         .btn-action {
-            padding: 6px 10px;
-            border-radius: 8px;
+            padding: 8px 14px;
+            border-radius: 10px;
             cursor: pointer;
             border: none;
             font-size: 12px;
             font-weight: 700;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
+            text-decoration: none;
         }
-        .btn-update { background: var(--primary-light); color: var(--primary-dark); border: 1px solid var(--primary); }
-        .btn-update:hover { background: var(--primary); color: white; }
-        .btn-delete { background: #fee2e2; color: #b91c1c; margin-left: 4px; }
-        .btn-delete:hover { background: #ef4444; color: white; }
+
+        .btn-edit {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-edit:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(234, 88, 12, 0.3);
+        }
+
+        .btn-delete {
+            background: #fee2e2;
+            color: #b91c1c;
+            border: 2px solid #fca5a5;
+        }
+
+        .btn-delete:hover {
+            background: #ef4444;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-action:active {
+            transform: scale(0.95);
+        }
+
+        .action-group {
+            display: flex;
+            gap: 6px;
+        }
 
         /* --- FOOTER --- */
         .footer-actions {
@@ -285,6 +399,28 @@
             z-index: 2000;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .empty-state svg {
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: var(--text-muted);
+            font-size: 14px;
         }
 
         @media (max-width: 768px) {
@@ -293,6 +429,9 @@
             .nav-menu { display: none; }
             .footer-actions { flex-direction: column; gap: 1.5rem; text-align: center; }
             .footer-actions > div { flex-direction: column; gap: 1rem; }
+            .keterangan-container { min-width: 150px; }
+            .action-group { flex-direction: column; gap: 4px; }
+            .btn-action { justify-content: center; }
         }
     </style>
 </head>
@@ -311,35 +450,31 @@
         </div>
 
         <ul class="nav-menu">
-        <li>
-            <a href="{{ route('guru.dashboard') }}" 
-            class="nav-link {{ request()->routeIs('guru.dashboard') ? 'active' : '' }}">
-                
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <rect x="3" y="3" width="7" height="7" rx="1"/>
-                    <rect x="14" y="3" width="7" height="7" rx="1"/>
-                    <rect x="14" y="14" width="7" height="7" rx="1"/>
-                    <rect x="3" y="14" width="7" height="7" rx="1"/>
-                </svg>
+            <li>
+                <a href="{{ route('guru.dashboard') }}" 
+                class="nav-link {{ request()->routeIs('guru.dashboard') ? 'active' : '' }}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <rect x="3" y="3" width="7" height="7" rx="1"/>
+                        <rect x="14" y="3" width="7" height="7" rx="1"/>
+                        <rect x="14" y="14" width="7" height="7" rx="1"/>
+                        <rect x="3" y="14" width="7" height="7" rx="1"/>
+                    </svg>
+                    Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('guru.nilai.index') }}" 
+                class="nav-link {{ request()->routeIs('guru.nilai.index') ? 'active' : '' }}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M12 20h9"/>
+                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    Input Nilai
+                </a>
+            </li>
+        </ul>
 
-                Dashboard
-            </a>
-        </li>
-
-        <li>
-            <a href="{{ route('guru.dashboard') }}" 
-            class="nav-link {{ request()->routeIs('guru.nilai.index') ? 'active' : '' }}">
-                
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M12 20h9"/>
-                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                </svg>
-
-                Input Nilai
-            </a>
-        </li>
-    </ul>
-    <div class="user-section">
+        <div class="user-section">
             <div class="user-profile">
                 <div class="avatar">{{ substr($guru->name, 0, 1) }}</div>
                 <div style="text-align: right;">
@@ -357,17 +492,12 @@
                 </button>
             </form>
         </div>
-            <!-- <button class="btn-logout" onclick="showToast('Sesi Berakhir')">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                <span>Keluar</span>
-            </button>
-        </div> -->
     </nav>
 
     <div class="container">
         <div class="page-header-container">
             <div class="page-header">
-                <h1>Input Nilai Siswa</h1>
+                <h1>Daftar Nilai Siswa</h1>
                 <p id="currentMapel">Matematika - Semester Ganjil 2023/2024</p>
             </div>
 
@@ -376,9 +506,7 @@
                 <label class="label-select">Pilih Kelas :</label>
                 <select class="custom-select"
                         onchange="window.location.href='?kelas=' + this.value">
-
                     <option value="">Pilih Kelas</option>
-
                     @foreach($daftarKelas as $kelas)
                         <option value="{{ $kelas }}"
                             {{ $kelasTerpilih == $kelas ? 'selected' : '' }}>
@@ -398,13 +526,12 @@
                             <th>Siswa</th>
                             <th width="120">Nilai</th>
                             <th width="140">Status</th>
-                            <th>Keterangan Sistem (Otomatis)</th>
-                            <th width="180">Aksi</th>
+                            <th>Keterangan</th>
+                            <th width="200">Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="studentBody">
                         @forelse($siswa as $index => $item)
-
                             @php
                                 $nilai = $item->nilai->first();
                                 $score = $nilai->nilai ?? null;
@@ -412,42 +539,65 @@
                                 if ($score === null) {
                                     $status = 'Kosong';
                                     $badgeClass = 'badge-muted';
-                                    $keterangan = '-';
+                                    $keterangan = 'Belum ada nilai';
+                                    $keteranganClass = 'empty';
+                                    $icon = '⚪';
+                                    $nilaiClass = 'empty';
+                                    $displayValue = '-';
+                                } elseif ($score >= 90) {
+                                    $status = 'Sangat Baik';
+                                    $badgeClass = 'badge-success';
+                                    $keterangan = 'Luar biasa, penguasaan materi sempurna! 🏆';
+                                    $keteranganClass = 'excellent';
+                                    $icon = '🌟';
+                                    $nilaiClass = 'excellent';
+                                    $displayValue = $score;
+                                } elseif ($score >= 80) {
+                                    $status = 'Baik';
+                                    $badgeClass = 'badge-success';
+                                    $keterangan = 'Sangat baik, pertahankan performa! 👍';
+                                    $keteranganClass = 'good';
+                                    $icon = '📈';
+                                    $nilaiClass = 'good';
+                                    $displayValue = $score;
                                 } elseif ($score >= 75) {
                                     $status = 'Tuntas';
-                                    $badgeClass = 'badge-success';
-
-                                    if ($score >= 90) {
-                                        $keterangan = 'Luar biasa, penguasaan materi sempurna.';
-                                    } else {
-                                        $keterangan = 'Sangat baik, pertahankan performa.';
-                                    }
+                                    $badgeClass = 'badge-warning';
+                                    $keterangan = 'Lulus KKM, tingkatkan lagi! 💪';
+                                    $keteranganClass = 'pass';
+                                    $icon = '✅';
+                                    $nilaiClass = 'pass';
+                                    $displayValue = $score;
+                                } elseif ($score >= 50) {
+                                    $status = 'Remedial';
+                                    $badgeClass = 'badge-danger';
+                                    $keterangan = 'Memerlukan bimbingan tambahan. 📚';
+                                    $keteranganClass = 'fail';
+                                    $icon = '⚠️';
+                                    $nilaiClass = 'fail';
+                                    $displayValue = $score;
                                 } else {
                                     $status = 'Remedial';
                                     $badgeClass = 'badge-danger';
-
-                                    if ($score < 50) {
-                                        $keterangan = 'Sangat kurang, perlu bimbingan intensif.';
-                                    } else {
-                                        $keterangan = 'Memerlukan bimbingan tambahan.';
-                                    }
+                                    $keterangan = 'Sangat kurang, perlu bimbingan intensif! 🔴';
+                                    $keteranganClass = 'fail';
+                                    $icon = '🚨';
+                                    $nilaiClass = 'fail';
+                                    $displayValue = $score;
                                 }
                             @endphp
 
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-
                                 <td>
                                     <div class="student-info">
                                         <div class="student-avatar">
                                             {{ strtoupper(substr($item->name, 0, 1)) }}
                                         </div>
-
                                         <div>
                                             <div style="font-weight: 700; color: var(--slate-800);">
                                                 {{ $item->name }}
                                             </div>
-
                                             <div style="font-size: 11px; color: var(--slate-500);">
                                                 NIS: {{ $item->nis }}
                                             </div>
@@ -456,14 +606,9 @@
                                 </td>
 
                                 <td>
-                                    <input 
-                                        type="number"
-                                        class="nilai-input"
-                                        value="{{ $score }}"
-                                        oninput="processGrade(this)"
-                                        min="0"
-                                        max="100"
-                                    >
+                                    <div class="nilai-display {{ $nilaiClass }}">
+                                        {{ $displayValue }}
+                                    </div>
                                 </td>
 
                                 <td>
@@ -473,30 +618,56 @@
                                 </td>
 
                                 <td>
-                                    <input 
-                                        type="text"
-                                        class="note-field"
-                                        value="{{ $keterangan }}"
-                                        readonly
-                                        tabindex="-1"
-                                    >
+                                    <div class="keterangan-container">
+                                        <span class="keterangan-icon">{{ $icon }}</span>
+                                        <div class="keterangan-text {{ $keteranganClass }}">
+                                            {{ $keterangan }}
+                                        </div>
+                                    </div>
                                 </td>
 
                                 <td>
-                                    <!-- <button class="btn-action btn-update">
-                                        Update
-                                    </button> -->
+                                    <div class="action-group">
+                                        <!-- Tombol Edit -->
+                                        <a href="{{ route('guru.nilai.edit', $item->id) }}" 
+                                           class="btn-action btn-edit">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                <path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"/>
+                                                <polygon points="18 2 22 6 12 16 8 16 8 12 18 2"/>
+                                            </svg>
+                                            Edit
+                                        </a>
 
-                                    <button class="btn-action btn-delete">
-                                        Hapus
-                                    </button>
+                                        <!-- Tombol Hapus -->
+                                        <form method="POST" action="{{ route('guru.nilai.destroy', $item->id) }}" 
+                                              style="display: inline;"
+                                              onsubmit="return confirm('⚠️ Yakin ingin menghapus data nilai {{ $item->name }}?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn-action btn-delete">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                    <polyline points="3 6 5 6 21 6"/>
+                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                                    <line x1="10" y1="11" x2="10" y2="17"/>
+                                                    <line x1="14" y1="11" x2="14" y2="17"/>
+                                                </svg>
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
-
                         @empty
                             <tr>
-                                <td colspan="6" style="text-align:center; padding: 3rem; color: var(--text-muted)">
-                                    Tidak ada siswa untuk kelas ini.
+                                <td colspan="6">
+                                    <div class="empty-state">
+                                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="1.5">
+                                            <path d="M12 20h9"/>
+                                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                                        </svg>
+                                        <h3>Tidak ada siswa di kelas ini</h3>
+                                        <p>Silahkan pilih kelas lain atau tambahkan siswa terlebih dahulu.</p>
+                                    </div>
                                 </td>
                             </tr>
                         @endforelse
@@ -509,146 +680,79 @@
             <div style="display: flex; gap: 3rem;">
                 <div>
                     <p style="font-size: 11px; color: var(--slate-200); text-transform: uppercase; letter-spacing: 1px;">Rata-rata Kelas</p>
-                    <p id="avgDisplay" style="font-size: 28px; font-weight: 800;">0.0</p>
+                    <p id="avgDisplay" style="font-size: 28px; font-weight: 800;">
+                        @php
+                            $avg = $siswa->avg(function($item) {
+                                return $item->nilai->first()->nilai ?? null;
+                            });
+                        @endphp
+                        {{ $avg ? number_format($avg, 1) : '0.0' }}
+                    </p>
                 </div>
                 <div>
                     <p style="font-size: 11px; color: var(--slate-200); text-transform: uppercase; letter-spacing: 1px;">Siswa Terinput</p>
-                    <p id="countDisplay" style="font-size: 28px; font-weight: 800;">0 / 0</p>
+                    <p id="countDisplay" style="font-size: 28px; font-weight: 800;">
+                        @php
+                            $terinput = $siswa->filter(function($item) {
+                                return $item->nilai->first() && $item->nilai->first()->nilai !== null;
+                            })->count();
+                        @endphp
+                        {{ $terinput }} / {{ $siswa->count() }}
+                    </p>
                 </div>
             </div>
-            <button class="btn-main btn-save" onclick="saveAll()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-                Simpan Semua Nilai
-            </button>
+            <a href="{{ route('guru.nilai.create') }}" class="btn-main btn-save">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="16"/>
+                    <line x1="8" y1="12" x2="16" y2="12"/>
+                </svg>
+                Tambah Nilai Baru
+            </a>
         </div>
     </div>
 
     <div id="toast"></div>
 
     <script>
-        window.onload = () => {
-            renderStudents("XI-IPA-1");
-        };
-
-        const KKM = 75;
-
-        function renderStudents(className) {
-            const container = document.getElementById('studentBody');
-            const students = studentData[className] || [];
-            container.innerHTML = '';
-
-            if (students.length === 0) {
-                container.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 3rem; color: var(--text-muted)">Tidak ada data siswa untuk kelas ini.</td></tr>`;
-                updateSummary();
-                return;
-            }
-
-            students.forEach((s, index) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>
-                        <div class="student-info">
-                            <div class="student-avatar">${s.initial}</div>
-                            <div>
-                                <div style="font-weight: 700; color: var(--slate-800);">${s.name}</div>
-                                <div style="font-size: 11px; color: var(--slate-500);">NIS: ${s.id}</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <input type="number" class="nilai-input" value="${s.grade !== null ? s.grade : ''}" 
-                               oninput="processGrade(this)" min="0" max="100">
-                    </td>
-                    <td><span class="badge badge-muted">Memuat...</span></td>
-                    <td><input type="text" class="note-field" value="-" readonly tabindex="-1"></td>
-                    <td>
-                        <button class="btn-action btn-update" onclick="showToast('Data ${s.name} disimpan!')">Update</button>
-                        <button class="btn-action btn-delete" onclick="handleDelete(this)">Hapus</button>
-                    </td>
-                `;
-                container.appendChild(tr);
-                // Inisialisasi status untuk nilai awal
-                processGrade(tr.querySelector('.nilai-input'));
-            });
-        }
-
-        function handleClassChange(val) {
-            showToast(`Memuat Kelas ${val}...`);
-            renderStudents(val);
-        }
-
-        function processGrade(input) {
-            // Validasi Max 100
-            if (input.value > 100) input.value = 100;
-            if (input.value < 0) input.value = 0;
-
-            const val = input.value === "" ? NaN : parseInt(input.value);
-            const row = input.closest('tr');
-            const statusBadge = row.querySelector('.badge');
-            const noteField = row.querySelector('.note-field');
-
-            if (isNaN(val)) {
-                statusBadge.className = "badge badge-muted";
-                statusBadge.innerText = "Kosong";
-                noteField.value = "-";
-            } else if (val >= KKM) {
-                statusBadge.className = "badge badge-success";
-                statusBadge.innerText = "Tuntas";
-                if (val >= 90) noteField.value = "Luar biasa, penguasaan materi sempurna.";
-                else noteField.value = "Sangat baik, pertahankan performa.";
-            } else {
-                statusBadge.className = "badge badge-danger";
-                statusBadge.innerText = "Remedial";
-                if (val < 50) noteField.value = "Sangat kurang, perlu bimbingan intensif.";
-                else noteField.value = "Memerlukan bimbingan tambahan.";
-            }
-
-            updateSummary();
-        }
-
-        function updateSummary() {
-            const inputs = document.querySelectorAll('.nilai-input');
-            let total = 0;
-            let filled = 0;
-
-            inputs.forEach(input => {
-                const val = parseInt(input.value);
-                if (!isNaN(val)) {
-                    total += val;
-                    filled++;
-                }
-            });
-
-            const avg = filled > 0 ? (total / filled).toFixed(1) : "0.0";
-            document.getElementById('avgDisplay').innerText = avg;
-            document.getElementById('countDisplay').innerText = `${filled} / ${inputs.length}`;
-        }
-
+        // Toast notification
         function showToast(msg) {
             const toast = document.getElementById('toast');
             toast.innerText = msg;
             toast.style.display = 'block';
-            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+            toast.style.transform = 'translateY(20px)';
+            toast.style.opacity = '0';
+            setTimeout(() => {
+                toast.style.transform = 'translateY(0)';
+                toast.style.opacity = '1';
+            }, 50);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateY(20px)';
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                }, 300);
+            }, 3000);
         }
 
-        function handleDelete(btn) {
-            if(confirm('Hapus data nilai siswa ini?')) {
-                btn.closest('tr').remove();
-                updateSummary();
-                showToast('Data dihapus sementara');
-            }
-        }
+        // Tampilkan toast jika ada session message
+        @if(session('success'))
+            showToast('✅ {{ session('success') }}');
+        @endif
 
-        function saveAll() {
-            const avg = document.getElementById('avgDisplay').innerText;
-            showToast(`Berhasil menyimpan nilai! Rata-rata: ${avg}`);
-        }
+        @if(session('error'))
+            showToast('❌ {{ session('error') }}');
+        @endif
 
-        // Jalankan saat pertama load
-        window.onload = () => {
-            renderStudents("XI-IPA-1");
-        };
+        // Konfirmasi hapus dengan toast
+        document.querySelectorAll('form[action*="destroy"]').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                if (!confirm('⚠️ Yakin ingin menghapus data nilai ini?')) {
+                    e.preventDefault();
+                }
+            });
+        });
     </script>
 </body>
 </html>

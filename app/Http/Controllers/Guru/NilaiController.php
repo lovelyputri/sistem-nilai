@@ -157,7 +157,7 @@ class NilaiController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Nilai $nil)
+    public function destroy(Nilai $nilai)
     {
         /** @var User $guru */
         $guru = Auth::user();
