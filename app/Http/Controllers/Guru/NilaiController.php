@@ -7,179 +7,156 @@ use App\Models\Nilai;
 use App\Models\Siswa;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class NilaiController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * List siswa + nilai sesuai kelas dan mata pelajaran guru
+     * Query param: ?id_user=1&kelas=X-A
      */
-    public function index()
+    public function index(Request $request)
     {
-        $guru = Auth::user();
-        $mataPelajaran = $guru->mataPelajaran()->first();
-        $kelasTerpilih = session('kelas_terpilih') ?? request('kelas');
+        $request->validate([
+            'id_user' => 'required|exists:users,id',
+        ], [
+            'id_user.required' => 'id_user (ID guru) wajib diisi.',
+            'id_user.exists'   => 'Guru tidak ditemukan.',
+        ]);
 
-        abort_if(! $mataPelajaran, 403, 'Anda belum memiliki mata pelajaran');
+        /** @var User $guru */
+        $guru = User::findOrFail($request->id_user);
+
+        abort_if($guru->role !== 'guru', 403, 'User bukan guru.');
+
+        $mataPelajaran = $guru->mataPelajaran()->first();
+
+        if (!$mataPelajaran) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Guru belum memiliki mata pelajaran.',
+            ], 403);
+        }
+
+        $kelasTerpilih = $request->get('kelas');
+        $daftarKelas   = Siswa::select('kelas')->distinct()->orderBy('kelas')->pluck('kelas');
 
         $siswa = collect();
-        // $kelas = $siswa->first()->kelas ?? null;
 
         if ($kelasTerpilih) {
             $siswa = Siswa::with([
                 'nilai' => function ($q) use ($mataPelajaran, $guru) {
                     $q->where('id_mata_pelajaran', $mataPelajaran->id)
-                    ->where('id_user', $guru->id);
+                      ->where('id_user', $guru->id);
                 }
             ])
             ->whereRaw('LOWER(TRIM(kelas)) = ?', [strtolower(trim($kelasTerpilih))])
             ->get();
         }
-        
-        $siswa = Siswa::with([
-            'nilai' => function ($q) use ($mataPelajaran, $guru) {
-                $q->where('id_mata_pelajaran', $mataPelajaran->id)
-                ->where('id_user', $guru->id);
-            }
-        ])
-        ->where('kelas', $kelasTerpilih)
-        ->get();
 
-        $daftarKelas = Siswa::select('kelas')
-            ->distinct()
-            ->orderBy('kelas')
-            ->pluck('kelas');
-
-        return view('guru.nilai.index', compact(
-            'guru',
-            'mataPelajaran',
-            'siswa',
-            'kelasTerpilih',
-            'daftarKelas'
-        ));
+        return response()->json([
+            'status'         => 'success',
+            'guru'           => ['id' => $guru->id, 'name' => $guru->name],
+            'mata_pelajaran' => $mataPelajaran->only('id', 'name', 'kode'),
+            'kelas_terpilih' => $kelasTerpilih,
+            'daftar_kelas'   => $daftarKelas,
+            'data'           => $siswa,
+        ]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Input / update nilai siswa
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'id_user'  => 'required|exists:users,id',
+            'id_siswa' => 'required|exists:siswas,id',
+            'nilai'    => 'required|numeric|min:0|max:100',
+        ], [
+            'id_user.required'  => 'id_user (ID guru) wajib diisi.',
+            'id_user.exists'    => 'Guru tidak ditemukan.',
+            'id_siswa.required' => 'Siswa wajib dipilih.',
+            'id_siswa.exists'   => 'Siswa tidak ditemukan.',
+            'nilai.required'    => 'Nilai wajib diisi.',
+            'nilai.numeric'     => 'Nilai harus berupa angka.',
+            'nilai.min'         => 'Nilai minimal 0.',
+            'nilai.max'         => 'Nilai maksimal 100.',
+        ]);
+
         /** @var User $guru */
-        $guru = Auth::user();
+        $guru = User::findOrFail($request->id_user);
+        abort_if($guru->role !== 'guru', 403, 'User bukan guru.');
 
         $mataPelajaran = $guru->mataPelajaran()->first();
 
-        abort_if(!$mataPelajaran, 403);
+        if (!$mataPelajaran) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Guru belum memiliki mata pelajaran.',
+            ], 403);
+        }
 
-        $request->validate([
-            'id_siswa' => 'required|exists:siswas,id',
-            'nilai' => 'required|numeric|min:0|max:100'
-        ], [
-            'id_siswa.required' => 'Siswa wajib dipilih',
-            'id_siswa.exists' => 'Siswa tidak ditemukan',
-            'nilai.required' => 'Nilai wajib diisi',
-            'nilai.numeric' => 'Nilai harus berupa angka',
-            'nilai.min' => 'Nilai minimal 0',
-            'nilai.max' => 'Nilai maksimal 100',
-        ]);
-
-        Nilai::updateOrCreate(
+        $nilai = Nilai::updateOrCreate(
             [
-                'id_siswa' => $request->id_siswa,
+                'id_siswa'          => $request->id_siswa,
                 'id_mata_pelajaran' => $mataPelajaran->id,
             ],
             [
                 'id_user' => $guru->id,
-                'nilai' => $request->nilai,
+                'nilai'   => $request->nilai,
             ]
         );
 
         $siswa = Siswa::findOrFail($request->id_siswa);
+        $nilai->load('siswa:id,name', 'mataPelajaran:id,name', 'guru:id,name');
 
-        session([
-            'kelas_terpilih' => $siswa->kelas
-        ]);
-
-        return redirect()
-            ->route('guru.nilai.index')
-            ->with(
-                'sukses',
-                "Nilai {$siswa->name} berhasil disimpan"
-            );
+        return response()->json([
+            'status'  => 'success',
+            'message' => "Nilai {$siswa->name} berhasil disimpan.",
+            'data'    => $nilai,
+        ], 201);
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    public function edit(Nilai $nilai)
-    {
-        return view('guru.nilai.edit', compact('nilai'));
-    }
-    // public function edit(Nilai $nilai)
-    // {
-    //     /** @var User $guru */
-    //     $guru = Auth::user();
-
-    //     abort_if($nilai->id_user !== $guru->id, 404, 'Anda tidak dapat mengubah nilai ini');
-
-    //     $nilai->load('siswa', 'mataPelajaran');
-
-    //     return view('guru.nilai.edit', compact('nilai'));
-    // }
-    
-
-    /**
-     * Update the specified resource in storage.
+     * Update nilai
      */
     public function update(Request $request, Nilai $nilai)
     {
-        /** @var User $guru */
-        $guru = Auth::user();
-
-        abort_if($nilai->id_user !== $guru->id, 403);
-
         $request->validate([
-            'nilai' => 'required|numeric|min:0|max:100'
+            'id_user' => 'required|exists:users,id',
+            'nilai'   => 'required|numeric|min:0|max:100',
         ]);
 
-        $nilai->update(['nilai' => $request->nilai]);
+        $guru = User::findOrFail($request->id_user);
 
-        return redirect()
-            ->route('guru.nilai.index')
-            ->with('sukse', "Nilai berhasil diperbarui");
+        if ($nilai->id_user !== $guru->id) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Anda tidak berhak mengubah nilai ini.',
+            ], 403);
+        }
+
+        $nilai->update(['nilai' => $request->nilai]);
+        $nilai->load('siswa:id,name', 'mataPelajaran:id,name');
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Nilai berhasil diperbarui.',
+            'data'    => $nilai,
+        ]);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Hapus nilai
      */
     public function destroy(Nilai $nilai)
     {
-        /** @var User $guru */
-        $guru = Auth::user();
-
-        abort_if($nilai->id_user !== $guru->id, 403);
-
         $namaSiswa = $nilai->siswa->name ?? 'Siswa';
         $nilai->delete();
 
-        return redirect()
-            ->route('guru.nilai.index')
-            ->with('suskses', "Nilai {$namaSiswa} berhasil dihapus");
-    }
-
-    public function selectClass(Request $request)
-    {
-        $request->validate([
-            'kelas' => 'required'   
+        return response()->json([
+            'status'  => 'success',
+            'message' => "Nilai {$namaSiswa} berhasil dihapus.",
         ]);
-
-        session(['kelas_terpilih' => $request->kelas]);
-
-        return redirect()->route('guru.nilai.index');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\GuruKelas;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -74,6 +75,11 @@ class User extends Authenticatable
     public function nilaiDiinput(): HasMany
     {
         return $this->hasMany(Nilai::class, 'id_user');
+    }
+
+    public function kelas(): HasMany
+    {
+        return $this->hasMany(GuruKelas::class, 'id_user');
     }
 
     public function isAktif(): bool

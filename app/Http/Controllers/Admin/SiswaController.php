@@ -15,20 +15,30 @@ class SiswaController extends Controller
     public function index(Request $request)
     {
         $kelasTerpilih = $request->get('kelas');
-        $daftarKelas = Siswa::select('kelas')->distinct()->orderBy('kelas')->pluck('kelas');
+        $daftarKelas   = Siswa::select('kelas')->distinct()->orderBy('kelas')->pluck('kelas');
 
         $siswa = Siswa::query()
-            ->when($kelasTerpilih, function ($q)  use ($kelasTerpilih) {
-                $q->where('kelas', $kelasTerpilih);  
-            })
+            ->when($kelasTerpilih, fn($q) => $q->where('kelas', $kelasTerpilih))
             ->orderBy('kelas')
             ->orderBy('name')
-            ->get();
+            ->get(['id', 'name', 'nis', 'kelas']);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'status'        => 'success',
+                'total'         => $siswa->count(),
+                'daftar_kelas'  => $daftarKelas,
+                'data'          => $siswa,
+            ]);
+        }
 
         return view('admin.siswa.index', compact('siswa', 'daftarKelas', 'kelasTerpilih'));
     }
 
-    public function create() 
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
     {
         $daftarKelas = MataPelajaran::orderBy('name')->get();
         return view('admin.siswa.tambah', compact('daftarKelas'));
@@ -40,36 +50,36 @@ class SiswaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:225',
-            'nis' => 'required|string|unique:siswas,nis',
+            'name'  => 'required|string|max:225',
+            'nis'   => 'required|string|unique:siswas,nis',
             'kelas' => 'required|string|max:30',
         ], [
-            'nama.required' => 'Nama wajib diisi.',
-            'nis.required' => 'NIS wajib diisi',
-            'nis.unique' => 'NIS sudah terdaftar',
-            'kelas.required' => 'Kelas wajib diisi'
+            'name.required'  => 'Nama wajib diisi.',
+            'nis.required'   => 'NIS wajib diisi.',
+            'nis.unique'     => 'NIS sudah terdaftar.',
+            'kelas.required' => 'Kelas wajib diisi.',
         ]);
 
-        Siswa::create($request->only('name', 'nis', 'kelas'));
+        $siswa = Siswa::create($request->only('name', 'nis', 'kelas'));
 
-        return redirect()
-            ->route('admin.siswa.index')
-            ->with('sukses', "Siswa {$request->name} berhasil ditambahkan");
+        if ($request->wantsJson()) {
+            return response()->json([
+                'status'  => 'success',
+                'message' => "Siswa {$siswa->name} berhasil ditambahkan.",
+                'data'    => $siswa,
+            ], 201);
+        }
+
+        return redirect()->route('admin.siswa.index')->with('sukses', "Siswa {$siswa->name} berhasil ditambahkan.");
     }
-
 
     /**
-     * Display the specified resource.
+     * Show the form for editing the specified resource.
      */
-    public function show(string $id)
-    {
-        //
-    }
-
-
     public function edit(Siswa $siswa)
     {
-        return view('admin.siswa.edit', compact('siswa'));
+        $daftarKelas = MataPelajaran::orderBy('name')->get();
+        return view('admin.siswa.edit', compact('siswa', 'daftarKelas'));
     }
 
     /**
@@ -78,33 +88,44 @@ class SiswaController extends Controller
     public function update(Request $request, Siswa $siswa)
     {
         $request->validate([
-            'name' => 'required|string|max:225',
-            'nis' => 'required|string|unique:siswas,nis',
+            'name'  => 'required|string|max:225',
+            'nis'   => 'required|string|unique:siswas,nis,' . $siswa->id,
             'kelas' => 'required|string|max:30',
         ], [
-            'name.required' => 'Nama wajib diisi.',
-            'nis.required' => 'NIS wajib diisi',
-            'nis.unique' => 'NIS sudah terdaftar',
-            'kelas.required' => 'Kelas wajib diisi'
+            'name.required'  => 'Nama wajib diisi.',
+            'nis.required'   => 'NIS wajib diisi.',
+            'nis.unique'     => 'NIS sudah terdaftar.',
+            'kelas.required' => 'Kelas wajib diisi.',
         ]);
 
         $siswa->update($request->only('name', 'nis', 'kelas'));
 
-        return redirect()
-            ->route('admin.siswa.index')
-            ->with('sukses', "Data siswa {$siswa->name} berhasil diperbarui.");
+        if ($request->wantsJson()) {
+            return response()->json([
+                'status'  => 'success',
+                'message' => "Data siswa {$siswa->name} berhasil diperbarui.",
+                'data'    => $siswa,
+            ]);
+        }
+
+        return redirect()->route('admin.siswa.index')->with('sukses', "Data siswa {$siswa->name} berhasil diperbarui.");
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Siswa $siswa)
+    public function destroy(Request $request, Siswa $siswa)
     {
         $name = $siswa->name;
         $siswa->delete();
 
-        return redirect()
-            ->route('admin.siswa.index')
-            ->with('sukses', "Siswa {$name} berhasil dihapus");
+        if ($request->wantsJson()) {
+            return response()->json([
+                'status'  => 'success',
+                'message' => "Siswa {$name} berhasil dihapus.",
+            ]);
+        }
+
+        return redirect()->route('admin.siswa.index')->with('sukses', "Siswa {$name} berhasil dihapus.");
     }
 }

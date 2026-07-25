@@ -21,7 +21,8 @@ class MataPelajaran extends Model
         return $this->belongsToMany(
             User::class,
             'guru_mapel',
-            'id_user',
+            'id_mata_pelajaran',
+            'id_user'
         )->withTimestamps();
     }
 
