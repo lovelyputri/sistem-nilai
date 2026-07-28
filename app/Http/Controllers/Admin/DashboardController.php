@@ -8,6 +8,7 @@ use App\Models\Nilai;
 use App\Models\Siswa;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -32,6 +33,15 @@ class DashboardController extends Controller
             'total_siswa_punya_nilai' => Nilai::distinct('id_siswa')->count('id_siswa'),
         ];
 
-        return view('admin.dashboard', compact('statistik', 'siswa','statistikNilai'));
+        $grafikNilai = Nilai::select(
+            DB::raw('MONTH(created_at) as bulan'),
+            DB::raw('COUNT(*) as total')
+        )
+        ->groupBy(DB::raw('MONTH(created_at)'))
+        ->orderBy('bulan')
+        ->get();
+
+
+        return view('admin.dashboard', compact('statistik', 'siswa','statistikNilai','grafikNilai'));
     }
 }

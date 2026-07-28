@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Nilai Guru - Kelola Nilai</title>
+    <title>Sistem Nilai Guru - Mata Pelajaran</title>
     <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -70,15 +70,15 @@
                     <span>Siswa</span>
                 </a>
 
-                <!-- Mata Pelajaran -->
-                <a href="#" class="flex items-center space-x-1.5 px-3 py-1.5 text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">
-                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                <!-- Mata Pelajaran Menu (Active) -->
+                <a href="#" class="flex items-center space-x-1.5 px-3 py-1.5 text-sm font-bold text-orange-600 bg-orange-50/80 rounded-lg">
+                    <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                     <span>Mata Pelajaran</span>
                 </a>
 
-                <!-- Nilai Menu (Active) -->
-                <a href="#" class="flex items-center space-x-1.5 px-3 py-1.5 text-sm font-bold text-orange-600 bg-orange-50/80 rounded-lg">
-                    <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                <!-- Nilai -->
+                <a href="#" class="flex items-center space-x-1.5 px-3 py-1.5 text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">
+                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                     <span>Nilai</span>
                 </a>
             </nav>
@@ -109,60 +109,55 @@
     <!-- MAIN CONTENT CONTAINER -->
     <main class="w-full max-w-[1600px] mx-auto px-4 lg:px-8 py-6 flex-grow space-y-6">
 
-        <!-- BREADCRUMB & HEADER -->
+        <!-- BREADCRUMB, HEADER & TOMBOL TAMBAH MAPEL -->
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div class="space-y-1.5">
                 <nav class="flex text-xs text-slate-400" aria-label="Breadcrumb">
                     <ol class="inline-flex items-center space-x-1.5">
                         <li><a href="#" class="hover:text-orange-600">Dashboard</a></li>
                         <li><span class="text-slate-300">/</span></li>
-                        <li class="font-medium text-slate-800">Nilai Siswa</li>
+                        <li class="font-medium text-slate-800">Mata Pelajaran</li>
                     </ol>
                 </nav>
                 <div>
-                    <h2 class="text-2xl font-extrabold text-slate-800">Data Nilai Akademik Siswa</h2>
-                    <p class="text-xs text-slate-500 mt-0.5">Pantau dan tinjau rekapitulasi nilai dan rata-rata dari seluruh mata pelajaran yang diikuti siswa.</p>
+                    <h2 class="text-2xl font-extrabold text-slate-800">Kelola Mata Pelajaran</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Kelola daftar mata pelajaran kurikulum dan penugasan bidang studi.</p>
                 </div>
+            </div>
+            <div>
+                <a href="#" class="inline-flex items-center space-x-2 bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-md shadow-orange-500/20 transition-all">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                    <span>Tambah Mata Pelajaran</span>
+                </a>
             </div>
         </div>
 
-        <!-- STAT CARDS NILAI -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <!-- STAT CARDS MATA PELAJARAN -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
                 <div>
-                    <p class="text-xs font-medium text-slate-400">Total Data Siswa</p>
-                    <h3 class="text-2xl font-bold text-slate-800 mt-1">256</h3>
-                    <p class="text-[11px] text-slate-400 mt-0.5">Siswa Terdaftar</p>
-                </div>
-                <div class="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/></svg>
-                </div>
-            </div>
-
-            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-medium text-slate-400">Rata-rata Keseluruhan</p>
-                    <h3 class="text-2xl font-bold text-slate-800 mt-1">78.45</h3>
-                    <p class="text-[11px] text-emerald-500 font-semibold mt-0.5">Standar Baik</p>
-                </div>
-                <div class="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-500">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-                </div>
-            </div>
-
-            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-medium text-slate-400">Nilai Rata-rata Tertinggi</p>
-                    <h3 class="text-2xl font-bold text-slate-800 mt-1">98.50</h3>
-                    <p class="text-[11px] text-slate-400 mt-0.5">Predikat A+</p>
+                    <p class="text-xs font-medium text-slate-400">Total Mata Pelajaran</p>
+                    <h3 class="text-2xl font-bold text-slate-800 mt-1">15</h3>
+                    <p class="text-[11px] text-slate-400 mt-0.5">Bidang Studi Aktif</p>
                 </div>
                 <div class="w-11 h-11 rounded-xl bg-amber-50 flex items-center justify-center text-amber-500">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v2M19 3v2M10 21h4M12 17v4M6 8h12a2 2 0 012 2v1a6 6 0 01-12 0v-1a2 2 0 012-2z"/></svg>
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-medium text-slate-400">Total Guru Pengampu</p>
+                    <h3 class="text-2xl font-bold text-slate-800 mt-1">8</h3>
+                    <p class="text-[11px] text-slate-400 mt-0.5">Guru Terdaftar</p>
+                </div>
+                <div class="w-11 h-11 rounded-xl bg-orange-50 flex items-center justify-center text-orange-500">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                 </div>
             </div>
         </div>
 
-        <!-- LAYOUT: FILTER DI KIRI (3 cols) & TABEL NILAI DI KANAN (9 cols) -->
+        <!-- LAYOUT: FILTER DI KIRI (3 cols) & TABEL MAPEL DI KANAN (9 cols) -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
             <!-- FILTER SIDEBAR DI KIRI -->
@@ -170,30 +165,27 @@
                 <div class="flex items-center justify-between pb-3 border-b border-slate-100">
                     <div class="flex items-center space-x-2">
                         <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
-                        <span class="font-bold text-slate-800 text-sm">Filter Data Nilai</span>
+                        <span class="font-bold text-slate-800 text-sm">Filter Mata Pelajaran</span>
                     </div>
                     <button class="text-xs text-orange-600 hover:underline font-semibold">Reset</button>
                 </div>
 
-                <!-- Cari Siswa -->
+                <!-- Cari Mata Pelajaran -->
                 <div class="space-y-1.5">
-                    <label class="text-xs font-bold text-slate-700">Cari Siswa</label>
+                    <label class="text-xs font-bold text-slate-700">Cari Mapel</label>
                     <div class="relative">
-                        <input type="text" placeholder="Nama siswa..." class="w-full text-xs pl-8 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-orange-500">
+                        <input type="text" placeholder="Nama atau kode mapel..." class="w-full text-xs pl-8 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-orange-500">
                         <svg class="w-4 h-4 text-slate-400 absolute left-2.5 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                     </div>
                 </div>
 
-                <!-- Pilih Kelas -->
+                <!-- Status -->
                 <div class="space-y-1.5">
-                    <label class="text-xs font-bold text-slate-700">Kelas</label>
+                    <label class="text-xs font-bold text-slate-700">Status</label>
                     <select class="w-full text-xs px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-orange-500 text-slate-600">
-                        <option>Semua Kelas</option>
-                        <option>X-1</option>
-                        <option>X-2</option>
-                        <option>XI-1</option>
-                        <option>XI-2</option>
-                        <option>XII-1</option>
+                        <option>Semua Status</option>
+                        <option>Aktif</option>
+                        <option>Non-Aktif</option>
                     </select>
                 </div>
 
@@ -203,101 +195,77 @@
                 </button>
             </div>
 
-            <!-- TABLE CONTENT NILAI DI KANAN (9 cols - Desain Kolom Mapel Diikuti Baru yang Lebih Interaktif) -->
+            <!-- TABLE CONTENT MATA PELAJARAN DI KANAN (9 cols) -->
             <div class="lg:col-span-9 bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col justify-between">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs">
                         <thead>
                             <tr class="bg-amber-50/40 border-b border-slate-100 text-slate-500 font-semibold">
                                 <th class="py-3 px-4 pl-5">No</th>
-                                <th class="py-3 px-4">Nama Siswa</th>
-                                <th class="py-3 px-4">Kelas</th>
-                                <th class="py-3 px-4">Jumlah Mapel Diikuti</th>
-                                <th class="py-3 px-4 text-center">Rata-rata Keseluruhan</th>
+                                <th class="py-3 px-4">Kode Mapel</th>
+                                <th class="py-3 px-4">Nama Mata Pelajaran</th>
+                                <th class="py-3 px-4 text-center">Jumlah Guru</th>
+                                <th class="py-3 px-4">Status</th>
                                 <th class="py-3 px-4 text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100 text-slate-700">
                             <!-- Row 1 -->
                             <tr class="hover:bg-slate-50/50">
-                                <td class="py-4 px-4 pl-5 text-slate-500 font-medium">1</td>
-                                <td class="py-4 px-4 font-bold text-slate-800">Ahmad Fauzan</td>
-                                <td class="py-4 px-4 font-medium text-slate-600">X-1</td>
-                                <td class="py-4 px-4">
-                                    <div class="space-y-1.5 max-w-[220px]">
-                                        <div class="flex items-center justify-between">
-                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                                3 dari 3 Mapel Selesai
-                                            </span>
-                                            <span class="text-[10px] font-semibold text-slate-500">100%</span>
-                                        </div>
-                                        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-                                            <div class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 100%"></div>
-                                        </div>
-                                    </div>
+                                <td class="py-3.5 px-4 pl-5 text-slate-500 font-medium">1</td>
+                                <td class="py-3.5 px-4 font-mono font-bold text-slate-700">MAT-01</td>
+                                <td class="py-3.5 px-4 font-bold text-slate-800">Matematika</td>
+                                <td class="py-3.5 px-4 text-center font-bold text-slate-800">2 Guru</td>
+                                <td class="py-3.5 px-4">
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-600">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span> Aktif
+                                    </span>
                                 </td>
-                                <td class="py-4 px-4 text-center font-extrabold text-orange-600 text-sm">87.5</td>
-                                <td class="py-4 px-4 text-center">
-                                    <div class="flex items-center justify-center">
-                                        <button title="Lihat Detail Nilai Mapel" class="w-7 h-7 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 flex items-center justify-center border border-orange-200 transition-colors">
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                        </button>
+                                <td class="py-3.5 px-4 text-center">
+                                    <div class="flex items-center justify-center space-x-2">
+                                        <button class="w-7 h-7 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 flex items-center justify-center border border-orange-200 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></button>
+                                        <button class="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-100 flex items-center justify-center border border-amber-200 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
+                                        <button class="w-7 h-7 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 flex items-center justify-center border border-rose-200 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
                                     </div>
                                 </td>
                             </tr>
 
                             <!-- Row 2 -->
                             <tr class="hover:bg-slate-50/50">
-                                <td class="py-4 px-4 pl-5 text-slate-500 font-medium">2</td>
-                                <td class="py-4 px-4 font-bold text-slate-800">Siti Nurhaliza</td>
-                                <td class="py-4 px-4 font-medium text-slate-600">X-2</td>
-                                <td class="py-4 px-4">
-                                    <div class="space-y-1.5 max-w-[220px]">
-                                        <div class="flex items-center justify-between">
-                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                                3 dari 3 Mapel Selesai
-                                            </span>
-                                            <span class="text-[10px] font-semibold text-slate-500">100%</span>
-                                        </div>
-                                        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-                                            <div class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 100%"></div>
-                                        </div>
-                                    </div>
+                                <td class="py-3.5 px-4 pl-5 text-slate-500 font-medium">2</td>
+                                <td class="py-3.5 px-4 font-mono font-bold text-slate-700">BIN-02</td>
+                                <td class="py-3.5 px-4 font-bold text-slate-800">Bahasa Indonesia</td>
+                                <td class="py-3.5 px-4 text-center font-bold text-slate-800">1 Guru</td>
+                                <td class="py-3.5 px-4">
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-600">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span> Aktif
+                                    </span>
                                 </td>
-                                <td class="py-4 px-4 text-center font-extrabold text-orange-600 text-sm">90.3</td>
-                                <td class="py-4 px-4 text-center">
-                                    <div class="flex items-center justify-center">
-                                        <button title="Lihat Detail Nilai Mapel" class="w-7 h-7 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 flex items-center justify-center border border-orange-200 transition-colors">
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                        </button>
+                                <td class="py-3.5 px-4 text-center">
+                                    <div class="flex items-center justify-center space-x-2">
+                                        <button class="w-7 h-7 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 flex items-center justify-center border border-orange-200 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></button>
+                                        <button class="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-100 flex items-center justify-center border border-amber-200 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
+                                        <button class="w-7 h-7 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 flex items-center justify-center border border-rose-200 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
                                     </div>
                                 </td>
                             </tr>
 
                             <!-- Row 3 -->
                             <tr class="hover:bg-slate-50/50">
-                                <td class="py-4 px-4 pl-5 text-slate-500 font-medium">3</td>
-                                <td class="py-4 px-4 font-bold text-slate-800">Dimas Pratama</td>
-                                <td class="py-4 px-4 font-medium text-slate-600">XI-1</td>
-                                <td class="py-4 px-4">
-                                    <div class="space-y-1.5 max-w-[220px]">
-                                        <div class="flex items-center justify-between">
-                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
-                                                2 dari 3 Mapel Selesai
-                                            </span>
-                                            <span class="text-[10px] font-semibold text-slate-500">67%</span>
-                                        </div>
-                                        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-                                            <div class="bg-amber-500 h-full rounded-full transition-all duration-500" style="width: 66.6%"></div>
-                                        </div>
-                                    </div>
+                                <td class="py-3.5 px-4 pl-5 text-slate-500 font-medium">3</td>
+                                <td class="py-3.5 px-4 font-mono font-bold text-slate-700">IPA-03</td>
+                                <td class="py-3.5 px-4 font-bold text-slate-800">Ilmu Pengetahuan Alam (IPA)</td>
+                                <td class="py-3.5 px-4 text-center font-bold text-slate-800">1 Guru</td>
+                                <td class="py-3.5 px-4">
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-600">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span> Aktif
+                                    </span>
                                 </td>
-                                <td class="py-4 px-4 text-center font-extrabold text-orange-600 text-sm">77.6</td>
-                                <td class="py-4 px-4 text-center">
-                                    <div class="flex items-center justify-center">
-                                        <button title="Lihat Detail Nilai Mapel" class="w-7 h-7 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 flex items-center justify-center border border-orange-200 transition-colors">
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                        </button>
+                                <td class="py-3.5 px-4 text-center">
+                                    <div class="flex items-center justify-center space-x-2">
+                                        <button class="w-7 h-7 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 flex items-center justify-center border border-orange-200 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></button>
+                                        <button class="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-100 flex items-center justify-center border border-amber-200 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
+                                        <button class="w-7 h-7 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 flex items-center justify-center border border-rose-200 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
                                     </div>
                                 </td>
                             </tr>
@@ -308,13 +276,12 @@
                 <!-- TABLE FOOTER / PAGINATION -->
                 <div class="p-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-3">
                     <div>
-                        Menampilkan 1 - 3 dari 256 data siswa
+                        Menampilkan 1 - 3 dari 15 data
                     </div>
                     <div class="flex items-center space-x-3">
                         <div class="flex items-center space-x-1">
                             <button class="w-7 h-7 rounded-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50 disabled:opacity-40">&lt;</button>
                             <button class="w-7 h-7 rounded-lg bg-orange-500 text-white font-semibold flex items-center justify-center shadow-sm">1</button>
-                            <button class="w-7 h-7 rounded-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50">2</button>
                             <button class="w-7 h-7 rounded-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50">&gt;</button>
                         </div>
                         <div>

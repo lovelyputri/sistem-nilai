@@ -23,32 +23,32 @@ class NilaiController extends Controller
             ->get()
             ->map(function (Siswa $siswa) use ($totalMapel) {
                 $jumlahNilai = $siswa->nilai->count();
-                $totalNilai  = $siswa->nilai->sum('nilai');
+                $totalNilai = $siswa->nilai->sum('nilai');
 
                 return [
-                    'id'          => $siswa->id,
-                    'name'        => $siswa->name,
-                    'nis'         => $siswa->nis,
-                    'kelas'       => $siswa->kelas,
+                    'id' => $siswa->id,
+                    'name' => $siswa->name,
+                    'nis' => $siswa->nis,
+                    'kelas' => $siswa->kelas,
                     'nilai_mapel' => $siswa->nilai,
-                    'rata_rata'   => $totalMapel > 0
+                    'rata_rata' => $totalMapel > 0
                         ? round($totalNilai / $totalMapel, 2)
                         : null,
-                    'lengkap'     => $jumlahNilai >= $totalMapel,
-                    'progress'    => $totalMapel > 0
+                    'lengkap' => $jumlahNilai >= $totalMapel,
+                    'progress' => $totalMapel > 0
                         ? round(($jumlahNilai / $totalMapel) * 100)
                         : 0,
                 ];
             });
 
-        $mataPelajaran = MataPelajaran::orderBy('name')->get(['id', 'name', 'kode']);
+        $mataPelajaran = MataPelajaran::orderBy('name')
+            ->get(['id', 'name', 'kode']);
 
-        return response()->json([
-            'status'      => 'success',
-            'total_mapel' => $totalMapel,
-            'mata_pelajaran' => $mataPelajaran,
-            'data'        => $siswa,
-        ]);
+        return view('admin.nilai.index', compact(
+            'siswa',
+            'mataPelajaran',
+            'totalMapel'
+        ));
     }
 
     /**
@@ -58,8 +58,8 @@ class NilaiController extends Controller
     {
         $siswa->load('nilai.mataPelajaran', 'nilai.guru');
 
-        $totalMapel  = MataPelajaran::count();
-        $totalNilai  = $siswa->nilai->sum('nilai');
+        $totalMapel = MataPelajaran::count();
+        $totalNilai = $siswa->nilai->sum('nilai');
         $jumlahNilai = $siswa->nilai->count();
 
         $rataRata = $totalMapel > 0
@@ -71,31 +71,27 @@ class NilaiController extends Controller
             $siswa->nilai->pluck('id_mata_pelajaran')
         )->get(['id', 'name', 'kode']);
 
-        return response()->json([
-            'status' => 'success',
-            'data'   => [
-                'siswa'             => $siswa->only('id', 'name', 'nis', 'kelas'),
-                'nilai'             => $siswa->nilai,
-                'jumlah_nilai'      => $jumlahNilai,
-                'total_mapel'       => $totalMapel,
-                'rata_rata'         => $rataRata,
-                'mapel_belum_diisi' => $mataPelajaranBelumDiisi,
-                'lengkap'           => $jumlahNilai >= $totalMapel,
-            ],
-        ]);
+        return view('admin.nilai.show', compact(
+            'siswa',
+            'totalMapel',
+            'totalNilai',
+            'jumlahNilai',
+            'rataRata',
+            'mataPelajaranBelumDiisi'
+        ));
     }
 
     /**
-     * Hapus nilai (dari route guru)
+     * Hapus nilai
      */
     public function destroy(Nilai $nilai)
     {
         $namaSiswa = $nilai->siswa->name ?? 'Siswa';
+
         $nilai->delete();
 
-        return response()->json([
-            'status'  => 'success',
-            'message' => "Nilai {$namaSiswa} berhasil dihapus.",
-        ]);
+        return redirect()
+            ->back()
+            ->with('success', "Nilai {$namaSiswa} berhasil dihapus.");
     }
 }

@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GuruController;
+use App\Http\Controllers\Admin\GuruKelasController;
+use App\Http\Controllers\Admin\MataPelajaranController;
 use App\Http\Controllers\Admin\NilaiController;
 use App\Http\Controllers\Admin\SiswaController;
 use App\Http\Controllers\Auth\LoginController;
@@ -12,7 +14,6 @@ use App\Models\Nilai;
 use Illuminate\Support\Facades\Route;
 
 // auth
-Route::middleware('guest')->group(function () {
     // Login
     Route::get('/', [LoginController::class, 'showForm'])->name('login');
     Route::get('/masuk', [LoginController::class, 'showForm'])->name('masuk');
@@ -20,12 +21,8 @@ Route::middleware('guest')->group(function () {
     // Register
     Route::get('/daftar', [RegisterController::class, 'showForm'])->name('register');
     Route::post('/daftar', [RegisterController::class, 'register'])->name('register.proses');
-});
-
-// Logout 
-Route::post('/logout', [LoginController::class, 'logout'])
-    ->middleware('auth')
-    ->name('logout');
+    // Logout 
+    Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.role:admin'])->group(function () {
     // Dashboard
@@ -38,6 +35,29 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.role:admin'])
     Route::get('/guru/{guru}/edit', [GuruController::class, 'edit'])->name('guru.edit');
     Route::put('/guru/{guru}', [GuruController::class, 'update'])->name('guru.update');
     Route::delete('/guru/{guru}', [GuruController::class, 'destroy'])->name('guru.destroy');
+
+    
+    // Menampilkan semua assignment guru dan kelas
+    Route::get('/guru-kelas', [GuruKelasController::class, 'index'])->name('guruKelas.index');
+    // Menampilkan daftar kelas unik
+    Route::get('/kelas', [GuruKelasController::class, 'daftarKelas'])->name('guruKelas.daftarKelas');
+    // Menampilkan guru yang ditugaskan pada kelas tertentu
+    // Route::get('/{kelas}', [GuruKelasController::class, 'show'])->name('guruKelas.show');
+    // // Menambahkan guru ke kelas
+    // Route::post('/', [GuruKelasController::class, 'store'])->name('guruKelas.store');
+    // // Menghapus assignment guru dari kelas
+    // Route::delete('/{guruKelas}', [GuruKelasController::class, 'destroy'])->name('guruKelas.destroy');
+
+    // Mata Pelajaran
+    Route::prefix('mapel')->name('mapel.')->group(function () {
+        Route::get('/', [MataPelajaranController::class, 'index'])->name('index');
+        // Route::get('/create', [MataPelajaranController::class, 'create'])->name('create');
+        // Route::post('/', [MataPelajaranController::class, 'store'])->name('store');
+        // Route::get('/{mataPelajaran}/edit', [MataPelajaranController::class, 'edit'])->name('edit');
+        // Route::put('/{mataPelajaran}', [MataPelajaranController::class, 'update'])->name('update');
+        // Route::delete('/{mataPelajaran}', [MataPelajaranController::class, 'destroy'])->name('destroy');
+    });
+
 
     // konfirmasi guru
     Route::get('/guru/{guru}/confirm', [GuruController::class, 'confirmation'])->name('guru.confirm');

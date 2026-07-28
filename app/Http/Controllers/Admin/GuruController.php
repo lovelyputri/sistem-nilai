@@ -16,16 +16,27 @@ class GuruController extends Controller
     public function index()
     {
         $guru = User::where('role', 'guru')
-            ->with('mataPelajaran', 'nilaiDiinput')
-            ->orderby('name')
+            ->with('mataPelajaran:id,name,kode', 'kelas')
+            ->orderBy('name')
             ->get();
+
         $waitingTeacher = $guru->where('status', 'menunggu')->count();
 
-        return view('admin.guru.index', compact('guru', 'waitingTeacher'));
+        $data = $guru->map(fn($g) => [
+            'id' => $g->id,
+            'name' => $g->name,
+            'email' => $g->email,
+            'nip' => $g->nip,
+            'status' => $g->status,
+            'mata_pelajaran' => $g->mataPelajaran,
+            'kelas' => $g->kelas->pluck('kelas'),
+        ]);
+
+        return view('admin.guru.index', compact('guru', 'waitingTeacher', 'data'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Show the form for creating a new resource.
      */
     public function create()
     {
@@ -33,42 +44,40 @@ class GuruController extends Controller
         return view('admin.guru.create', compact('mataPelajaran'));
     }
 
-    public function store(Request $request) 
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:225',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6|confirmed',
-            'nip' => 'required|string|unique:users,nip',
-            'id_mata_pelajaran'=> 'required|exists:mata_pelajarans,id',
-        ], [
-            'name.required'              => 'Nama lengkap wajib diisi.',
-            'email.required'             => 'Email wajib diisi.',
-            'email.email'                => 'Format email tidak valid.',
-            'email.unique'               => 'Email sudah terdaftar.',
-            'nip.required'               => 'NIP wajib diisi.',
-            'nip.unique'                 => 'NIP sudah terdaftar.',
-            'password.required'        => 'Kata sandi wajib diisi.',
-            'password.min'             => 'Kata sandi minimal 6 karakter.',
-            'password.confirmed'       => 'Konfirmasi kata sandi tidak cocok.',
-            'id_mata_pelajaran.required' => 'Mata pelajaran wajib dipilih.',
-            'id_mata_pelajaran.exists'   => 'Mata pelajaran tidak ditemukan.',
+            "name" => "required|string|max:225",
+            "email" => "required|email|unique:users,email",
+            "password" => "required|string|min:6|confirmed",
+            "nip" => "required|string|unique:users,nip",
+            "id_mata_pelajaran" => "required|exists:mata_pelajarans,id",
         ]);
 
         $guru = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'nip' => $request->nip,
-            'password' => Hash::make($request->password),
-            'role' => 'guru',
-            'status' => 'menunggu',
+            "name" => $request->name,
+            "email" => $request->email,
+            "nip" => $request->nip,
+            "password" => Hash::make($request->password),
+            "role" => "guru",
+            "status" => "menunggu",
         ]);
 
         $guru->mataPelajaran()->attach($request->id_mata_pelajaran);
+        $guru->load("mataPelajaran:id,name,kode");
 
         return redirect()
-            ->route('admin.guru.index')
-            ->with('sukses', "Guru {$guru->name} berhasil ditambahkan.");
+            ->route("admin.guru.index")
+            ->with("sukses", "Guru {$guru->name} berhasil ditambahkan.");
+            
+        // return response()->json([
+        //     "status" => "success",
+        //     "message" => "Guru {$guru->name} berhasil ditambahkan.",
+        //     "data" => $guru,
+        // ], 200);
     }
 
     /**
@@ -79,13 +88,17 @@ class GuruController extends Controller
         //
     }
 
-    public function edit(User $guru) {
-        abort_if($guru->role !== 'guru', 404);
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(User $guru)
+    {
+        abort_if($guru->role !== "guru", 404);
 
-        $guru->load('mataPelajaran');
-        $mataPelajaran = MataPelajaran::orderBy('name')->get();
+        $guru->load("mataPelajaran");
+        $mataPelajaran = MataPelajaran::orderBy("name")->get();
 
-        return view('admin.guru.edit', compact('guru', 'mataPelajaran'));
+        return view("admin.guru.edit", compact("guru", "mataPelajaran"));
     }
 
     /**
@@ -93,44 +106,43 @@ class GuruController extends Controller
      */
     public function update(Request $request, User $guru)
     {
-        abort_if($guru->role !== 'guru',404);
+        abort_if($guru->role != 'guru', 404);
 
         $request->validate([
             'name' => 'required|string|max:225',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6|confirmed',
-            'nip' => 'required|string|unique:users,nip',
-            'id_mata_pelajaran'=> 'nullable|exists:mata_pelajarans,id',
-        ], [
-            'name.required'              => 'Nama lengkap wajib diisi.',
-            'email.required'             => 'Email wajib diisi.',
-            'email.email'                => 'Format email tidak valid.',
-            'email.unique'               => 'Email sudah terdaftar.',
-            'nip.required'               => 'NIP wajib diisi.',
-            'nip.unique'                 => 'NIP sudah terdaftar.',
-            'password.required'        => 'Kata sandi wajib diisi.',
-            'password.min'             => 'Kata sandi minimal 6 karakter.',
-            'password.confirmed'       => 'Konfirmasi kata sandi tidak cocok.',
-            'id_mata_pelajaran.required' => 'Mata pelajaran wajib dipilih.',
-            'id_mata_pelajaran.exists'   => 'Mata pelajaran tidak ditemukan.',
+            'email' => 'nullable|email|unique:users,email,' . $guru->id,
+            'password' => 'nullable|string|min:6|confirmed',
+            'nip' => 'required|string|unique:users,nip,' . $guru->id,
+            'id_mata_pelajaran' => 'nullable|exists:mata_pelajarans,id',
         ]);
 
         $data = [
             'name' => $request->name,
             'email' => $request->email,
-            'nip' => $request->nip, 
+            'nip' => $request->nip,
         ];
 
-        if ($request->filled('password')){
+        if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
         }
 
         $guru->update($data);
-        $guru->mataPelajaran()->sync([$request->id_mata_pelajaran]);
+
+        if ($request->filled('id_mata_pelajaran')) {
+            $guru->mataPelajaran()->sync([$request->id_mata_pelajaran]);
+        }
+
+        $guru->load('mataPelajaran:id,name,kode', 'kelas');
 
         return redirect()
             ->route('admin.guru.index')
             ->with('sukses', "Data guru {$guru->name} berhasil diperbarui.");
+
+        // return response()->json([
+        //     'status' => 'success',
+        //     'message' => "Data guru {$guru->name} berhasil diperbarui.",
+        //     'data' => $guru,
+        // ]);
     }
 
     /**
@@ -138,35 +150,69 @@ class GuruController extends Controller
      */
     public function destroy(User $guru)
     {
-        abort_if($guru->role !== 'guru', 404);
-
-        $name = $guru->name;
+        abort_if($guru->role != 'guru', 404);
+        
+        $nama = $guru->name;
         $guru->delete();
 
         return redirect()
             ->route('admin.guru.index')
-            ->with('sukses', "Akun guru {$name} berhasil dihapus");
+            ->with('sukses', "Akun guru {$nama} berhasil dihapus");
+
+        // return response()->json([
+        //     'status' => 'success',
+        //     'message' => "Akun guru {$nama} berhasil dihapus.",
+        // ]);
     }
 
-    public function confirmation(User $guru) 
+    /**
+     * Confirm teacher account.
+     */
+    public function confirmation(User $guru)
     {
-        abort_if($guru->role !== 'guru', 404);
+        abort_if($guru->role != "guru", 404);
 
         $guru->update(['status' => 'aktif']);
 
         return redirect()
             ->route('admin.guru.index')
             ->with('sukses', "Akun guru {$guru->name} telah dikonfirmasi. Guru sekarang dapat login");
+
+        // return response()->json([
+        //     'status' => 'success',
+        //     'message' => "Akun guru {$guru->name} telah dikonfirmasi.",
+        // ]);
     }
 
-    public function rejected(User $guru) 
+    /**
+     * Reject teacher account.
+     */
+    public function rejected(User $guru)
     {
-        abort_if($guru->role !== 'guru', 404);
+        abort_if($guru->role != "guru", 404);
 
         $guru->update(['status' => 'ditolak']);
 
         return redirect()
             ->route('admin.guru.index')
             ->with('sukses', "Akun guru {$guru->name} telah ditolak");
+
+        // return response()->json([
+        //     'status' => 'success',
+        //     'message' => "Akun guru {$guru->name} telah ditolak.",
+        // ]);
+    }
+
+    /**
+     * Helper: daftar mata pelajaran
+     */
+    public function mataPelajaran()
+    {
+        $mapel = MataPelajaran::orderBy('name')->get(['id', 'name', 'kode']);
+
+        return response()->json([
+            "status" => "success",
+            "data" => $mapel,
+        ]);
     }
 }
