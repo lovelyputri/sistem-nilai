@@ -25,7 +25,7 @@
     <!-- HEADER / NAVBAR -->
     <header class="sticky top-0 z-30 bg-white border-b border-slate-100 shadow-sm px-4 lg:px-8 py-3">
         <div class="w-full max-w-[1600px] mx-auto flex items-center justify-between">
-            
+
             <!-- Logo & Portal Branding -->
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-white shadow-md shadow-orange-500/30">
@@ -77,7 +77,7 @@
                 </div>
 
                 <!-- Siswa Menu -->
-                <a href="{{ route('admin.siswa.index') }}" 
+                <a href="{{ route('admin.siswa.index') }}"
                    class="flex items-center space-x-1.5 px-3 py-1.5 text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors">
                     <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/>
@@ -142,7 +142,7 @@
                     Pantau dan kelola seluruh aktivitas akademik dari satu tempat.
                 </p>
             </div>
-            
+
             <div class="mt-4 md:mt-0 relative flex items-center justify-end shrink-0 pr-4">
                 <div class="w-64 h-24 flex items-center justify-center relative">
                     <svg class="w-16 h-20 absolute -left-2 bottom-0" viewBox="0 0 100 120" fill="none">
@@ -300,7 +300,7 @@
 
         <!-- ROW 2: RINGKASAN NILAI, DONUT CHART & TABEL RANKING SISWA -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-            
+
             <!-- Card 1: Ringkasan Nilai & Bar Chart (4 cols) -->
             <div class="lg:col-span-4 bg-white p-5 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-between">
                 <div>
@@ -321,22 +321,22 @@
                     <div class="grid grid-cols-2 gap-2.5 mb-5">
                         <div class="bg-emerald-50/60 p-2.5 rounded-lg border border-emerald-100/80 text-center">
                             <p class="text-[11px] font-medium text-emerald-600">Nilai Tertinggi</p>
-                            <p class="text-xl font-bold text-emerald-600 mt-0.5">100</p>
+                            <p class="text-xl font-bold text-emerald-600 mt-0.5">{{ $statistikNilai['nilai_tertinggi'] }}</p>
                             <p class="text-[10px] text-emerald-500">Siswa</p>
                         </div>
                         <div class="bg-rose-50/60 p-2.5 rounded-lg border border-rose-100/80 text-center">
                             <p class="text-[11px] font-medium text-rose-600">Nilai Terendah</p>
-                            <p class="text-xl font-bold text-rose-600 mt-0.5">20</p>
+                            <p class="text-xl font-bold text-rose-600 mt-0.5">{{ $statistikNilai['nilai_terendah'] }}</p>
                             <p class="text-[10px] text-rose-500">Siswa</p>
                         </div>
                         <div class="bg-sky-50/60 p-2.5 rounded-lg border border-sky-100/80 text-center">
                             <p class="text-[11px] font-medium text-sky-600">Rata-rata Nilai</p>
-                            <p class="text-xl font-bold text-sky-600 mt-0.5">78.45</p>
+                            <p class="text-xl font-bold text-sky-600 mt-0.5">{{ $statistikNilai['rata_rata'] }}</p>
                             <p class="text-[10px] text-sky-500">Keseluruhan</p>
                         </div>
                         <div class="bg-purple-50/60 p-2.5 rounded-lg border border-purple-100/80 text-center">
                             <p class="text-[11px] font-medium text-purple-600">Siswa dengan Nilai</p>
-                            <p class="text-xl font-bold text-purple-600 mt-0.5">256</p>
+                            <p class="text-xl font-bold text-purple-600 mt-0.5">{{ $statistikNilai['total_siswa_punya_nilai'] }}</p>
                             <p class="text-[10px] text-purple-500">Siswa</p>
                         </div>
                     </div>
@@ -353,31 +353,24 @@
                             </div>
 
                             <div class="flex items-end justify-between pl-6 pr-2 h-36 relative z-10 space-x-2">
-                                <div class="flex-1 flex flex-col items-center justify-end h-full">
-                                    <span class="text-[10px] font-bold text-slate-700 mb-1">5</span>
-                                    <div class="w-full max-w-[28px] bg-orange-500 rounded-t-sm" style="height: 8%;"></div>
-                                    <span class="text-[10px] text-slate-400 mt-2 font-medium">0 - 20</span>
-                                </div>
-                                <div class="flex-1 flex flex-col items-center justify-end h-full">
-                                    <span class="text-[10px] font-bold text-slate-700 mb-1">18</span>
-                                    <div class="w-full max-w-[28px] bg-orange-500 rounded-t-sm" style="height: 22%;"></div>
-                                    <span class="text-[10px] text-slate-400 mt-2 font-medium">21 - 40</span>
-                                </div>
-                                <div class="flex-1 flex flex-col items-center justify-end h-full">
-                                    <span class="text-[10px] font-bold text-slate-700 mb-1">45</span>
-                                    <div class="w-full max-w-[28px] bg-orange-500 rounded-t-sm" style="height: 48%;"></div>
-                                    <span class="text-[10px] text-slate-400 mt-2 font-medium">41 - 60</span>
-                                </div>
-                                <div class="flex-1 flex flex-col items-center justify-end h-full">
-                                    <span class="text-[10px] font-bold text-slate-700 mb-1">112</span>
-                                    <div class="w-full max-w-[28px] bg-orange-500 rounded-t-sm" style="height: 90%;"></div>
-                                    <span class="text-[10px] text-slate-400 mt-2 font-medium">61 - 80</span>
-                                </div>
-                                <div class="flex-1 flex flex-col items-center justify-end h-full">
-                                    <span class="text-[10px] font-bold text-slate-700 mb-1">76</span>
-                                    <div class="w-full max-w-[28px] bg-orange-500 rounded-t-sm" style="height: 68%;"></div>
-                                    <span class="text-[10px] text-slate-400 mt-2 font-medium">81 - 100</span>
-                                </div>
+                                @forelse ($distribusiNilai as $data)
+                                    <div class="flex-1 flex flex-col items-center justify-end h-full">
+                                        {{-- Jumlah nilai --}}
+                                        <span class="text-[10px] font-bold text-slate-700 mb-1">{{ $data['jumlah'] }}</span>
+                                        {{-- Batang grafik --}}
+                                        <div class="w-full max-w-[28px] bg-orange-500 rounded-t-sm" style="height: {{ $data['tinggi'] }}%;"></div>
+                                        {{-- Label rentang --}}
+                                        <span class="text-[10px] text-slate-400 mt-2 font-medium"> {{ $data['label'] }} </span>
+                                    </div>
+                                @empty
+                                    <div class="w-full h-full flex items-center justify-center">
+                                        <span class="text-xs text-slate-400">
+                                            Belum ada data nilai
+                                        </span>
+                                    </div>
+
+                                @endforelse
+
                             </div>
                         </div>
                         <p class="text-center text-[10px] text-slate-400 mt-2 font-medium">Rentang Nilai</p>
@@ -395,73 +388,132 @@
                         <h3 class="font-bold text-slate-800 text-sm">Nilai per Mata Pelajaran</h3>
                     </div>
 
-                    <!-- Donut Chart & Total Nilai di Bawahnya -->
                     <div class="flex flex-col items-center justify-center my-3">
+
                         <div class="relative w-32 h-32 flex items-center justify-center">
                             <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                                <circle cx="50" cy="50" r="38" stroke="#f1f5f9" stroke-width="12" fill="none" />
-                                <circle cx="50" cy="50" r="38" stroke="#3b82f6" stroke-width="12" fill="none" stroke-dasharray="25 214" stroke-dashoffset="0" />
-                                <circle cx="50" cy="50" r="38" stroke="#1d4ed8" stroke-width="12" fill="none" stroke-dasharray="15 224" stroke-dashoffset="-25" />
-                                <circle cx="50" cy="50" r="38" stroke="#60a5fa" stroke-width="12" fill="none" stroke-dasharray="12 227" stroke-dashoffset="-40" />
-                                <circle cx="50" cy="50" r="38" stroke="#38bdf8" stroke-width="12" fill="none" stroke-dasharray="11 228" stroke-dashoffset="-52" />
-                                <circle cx="50" cy="50" r="38" stroke="#0284c7" stroke-width="12" fill="none" stroke-dasharray="10 229" stroke-dashoffset="-63" />
-                                <circle cx="50" cy="50" r="38" stroke="#0369a1" stroke-width="12" fill="none" stroke-dasharray="9 230" stroke-dashoffset="-73" />
-                                <circle cx="50" cy="50" r="38" stroke="#f97316" stroke-width="12" fill="none" stroke-dasharray="9 230" stroke-dashoffset="-82" />
-                                <circle cx="50" cy="50" r="38" stroke="#ea580c" stroke-width="12" fill="none" stroke-dasharray="9 230" stroke-dashoffset="-91" />
-                                <circle cx="50" cy="50" r="38" stroke="#c2410c" stroke-width="12" fill="none" stroke-dasharray="8 231" stroke-dashoffset="-100" />
-                                <circle cx="50" cy="50" r="38" stroke="#f59e0b" stroke-width="12" fill="none" stroke-dasharray="8 231" stroke-dashoffset="-108" />
-                                <circle cx="50" cy="50" r="38" stroke="#d97706" stroke-width="12" fill="none" stroke-dasharray="8 231" stroke-dashoffset="-116" />
-                                <circle cx="50" cy="50" r="38" stroke="#b45309" stroke-width="12" fill="none" stroke-dasharray="7 232" stroke-dashoffset="-124" />
-                                <circle cx="50" cy="50" r="38" stroke="#10b981" stroke-width="12" fill="none" stroke-dasharray="7 232" stroke-dashoffset="-131" />
-                                <circle cx="50" cy="50" r="38" stroke="#059669" stroke-width="12" fill="none" stroke-dasharray="7 232" stroke-dashoffset="-138" />
-                                <circle cx="50" cy="50" r="38" stroke="#047857" stroke-width="12" fill="none" stroke-dasharray="6 233" stroke-dashoffset="-145" />
-                                <circle cx="50" cy="50" r="38" stroke="#8b5cf6" stroke-width="12" fill="none" stroke-dasharray="6 233" stroke-dashoffset="-151" />
-                                <circle cx="50" cy="50" r="38" stroke="#7c3aed" stroke-width="12" fill="none" stroke-dasharray="6 233" stroke-dashoffset="-157" />
-                                <circle cx="50" cy="50" r="38" stroke="#6d28d9" stroke-width="12" fill="none" stroke-dasharray="5 234" stroke-dashoffset="-163" />
-                                <circle cx="50" cy="50" r="38" stroke="#ec4899" stroke-width="12" fill="none" stroke-dasharray="5 234" stroke-dashoffset="-168" />
-                                <circle cx="50" cy="50" r="38" stroke="#db2777" stroke-width="12" fill="none" stroke-dasharray="5 234" stroke-dashoffset="-173" />
-                                <circle cx="50" cy="50" r="38" stroke="#14b8a6" stroke-width="12" fill="none" stroke-dasharray="5 234" stroke-dashoffset="-178" />
-                                <circle cx="50" cy="50" r="38" stroke="#0d9488" stroke-width="12" fill="none" stroke-dasharray="4 235" stroke-dashoffset="-183" />
-                                <circle cx="50" cy="50" r="38" stroke="#64748b" stroke-width="12" fill="none" stroke-dasharray="56 183" stroke-dashoffset="-187" />
+
+                                <!-- Background -->
+                                <circle
+                                    cx="50"
+                                    cy="50"
+                                    r="38"
+                                    stroke="#f1f5f9"
+                                    stroke-width="12"
+                                    fill="none"
+                                />
+
+                                @php
+                                    $colors = [
+                                        '#3b82f6',
+                                        '#1d4ed8',
+                                        '#60a5fa',
+                                        '#38bdf8',
+                                        '#0284c7',
+                                        '#0369a1',
+                                        '#f97316',
+                                        '#ea580c',
+                                        '#c2410c',
+                                        '#f59e0b',
+                                        '#d97706',
+                                        '#b45309',
+                                        '#10b981',
+                                        '#059669',
+                                        '#047857',
+                                        '#8b5cf6',
+                                        '#7c3aed',
+                                        '#6d28d9',
+                                        '#ec4899',
+                                        '#db2777',
+                                        '#14b8a6',
+                                        '#0d9488',
+                                        '#64748b',
+                                    ];
+                                @endphp
+
+                                @foreach ($nilaiPerMapel as $index => $mapel)
+                                    @if ($mapel->total_nilai > 0)
+                                        <circle
+                                            cx="50"
+                                            cy="50"
+                                            r="38"
+                                            stroke="{{ $colors[$index % count($colors)] }}"
+                                            stroke-width="12"
+                                            fill="none"
+                                            pathLength="100"
+                                            stroke-dasharray="{{ $mapel->total_nilai }} {{ max(0, $totalSemuaNilai - $mapel->total_nilai) }}"
+                                            stroke-dashoffset="0"
+                                        />
+                                    @endif
+                                @endforeach
+
                             </svg>
                         </div>
                         <div class="text-center mt-2">
-                            <span class="text-base font-extrabold text-slate-800 leading-tight">1.248</span>
-                            <span class="text-[10px] text-slate-400 font-medium block">Total Nilai</span>
+                            <span class="text-base font-extrabold text-slate-800 leading-tight">
+                                {{ number_format($statistik['total_nilai'], 0, ',', '.') }}
+                            </span>
+
+                            <span class="text-[10px] text-slate-400 font-medium block">
+                                Total Nilai
+                            </span>
                         </div>
+
                     </div>
 
-                    <!-- Scrollable List 24 Mata Pelajaran -->
+                    @php
+                        $warnaMapel = [
+                            'bg-blue-500',
+                            'bg-blue-700',
+                            'bg-blue-400',
+                            'bg-sky-400',
+                            'bg-sky-600',
+                            'bg-sky-700',
+                            'bg-orange-500',
+                            'bg-orange-600',
+                            'bg-orange-700',
+                            'bg-amber-500',
+                            'bg-amber-600',
+                            'bg-amber-700',
+                            'bg-emerald-500',
+                            'bg-emerald-600',
+                            'bg-emerald-700',
+                            'bg-purple-500',
+                            'bg-purple-600',
+                            'bg-purple-700',
+                            'bg-pink-500',
+                            'bg-pink-600',
+                            'bg-teal-500',
+                            'bg-teal-600',
+                            'bg-slate-500',
+                        ];
+                    @endphp
+
                     <div class="space-y-1.5 text-xs max-h-48 overflow-y-auto pr-1 border border-slate-100 rounded-lg p-2 bg-slate-50/50">
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-blue-500"></span><span class="text-slate-600 text-[11px]">Matematika</span></div><span class="text-[11px] font-semibold text-slate-500">95 (7.6%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-blue-700"></span><span class="text-slate-600 text-[11px]">Bahasa Indonesia</span></div><span class="text-[11px] font-semibold text-slate-500">80 (6.4%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-blue-400"></span><span class="text-slate-600 text-[11px]">Bahasa Inggris</span></div><span class="text-[11px] font-semibold text-slate-500">70 (5.6%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-sky-400"></span><span class="text-slate-600 text-[11px]">IPA</span></div><span class="text-[11px] font-semibold text-slate-500">65 (5.2%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-sky-600"></span><span class="text-slate-600 text-[11px]">IPS</span></div><span class="text-[11px] font-semibold text-slate-500">60 (4.8%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-sky-700"></span><span class="text-slate-600 text-[11px]">PKn</span></div><span class="text-[11px] font-semibold text-slate-500">55 (4.4%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-orange-500"></span><span class="text-slate-600 text-[11px]">Seni Budaya</span></div><span class="text-[11px] font-semibold text-slate-500">55 (4.4%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-orange-600"></span><span class="text-slate-600 text-[11px]">PJOK</span></div><span class="text-[11px] font-semibold text-slate-500">50 (4.0%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-orange-700"></span><span class="text-slate-600 text-[11px]">Informatika</span></div><span class="text-[11px] font-semibold text-slate-500">48 (3.8%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span><span class="text-slate-600 text-[11px]">Sejarah</span></div><span class="text-[11px] font-semibold text-slate-500">48 (3.8%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-amber-600"></span><span class="text-slate-600 text-[11px]">Ekonomi</span></div><span class="text-[11px] font-semibold text-slate-500">45 (3.6%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-amber-700"></span><span class="text-slate-600 text-[11px]">Sosiologi</span></div><span class="text-[11px] font-semibold text-slate-500">42 (3.4%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><span class="text-slate-600 text-[11px]">Geografi</span></div><span class="text-[11px] font-semibold text-slate-500">40 (3.2%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-emerald-600"></span><span class="text-slate-600 text-[11px]">Kimia</span></div><span class="text-[11px] font-semibold text-slate-500">40 (3.2%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-emerald-700"></span><span class="text-slate-600 text-[11px]">Fisika</span></div><span class="text-[11px] font-semibold text-slate-500">38 (3.0%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-purple-500"></span><span class="text-slate-600 text-[11px]">Biologi</span></div><span class="text-[11px] font-semibold text-slate-500">38 (3.0%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-purple-600"></span><span class="text-slate-600 text-[11px]">PAI</span></div><span class="text-[11px] font-semibold text-slate-500">35 (2.8%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-purple-700"></span><span class="text-slate-600 text-[11px]">Bahasa Arab</span></div><span class="text-[11px] font-semibold text-slate-500">35 (2.8%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-pink-500"></span><span class="text-slate-600 text-[11px]">Kewirausahaan</span></div><span class="text-[11px] font-semibold text-slate-500">30 (2.4%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-pink-600"></span><span class="text-slate-600 text-[11px]">Seni Musik</span></div><span class="text-[11px] font-semibold text-slate-500">30 (2.4%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-teal-500"></span><span class="text-slate-600 text-[11px]">TIK</span></div><span class="text-[11px] font-semibold text-slate-500">30 (2.4%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-teal-600"></span><span class="text-slate-600 text-[11px]">Bahasa Mandarin</span></div><span class="text-[11px] font-semibold text-slate-500">25 (2.0%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-slate-500"></span><span class="text-slate-600 text-[11px]">Bahasa Jepang</span></div><span class="text-[11px] font-semibold text-slate-500">25 (2.0%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-slate-700"></span><span class="text-slate-600 text-[11px]">Seni Rupa</span></div><span class="text-[11px] font-semibold text-slate-500">24 (1.9%)</span></div>
+
+                        @foreach ($nilaiPerMapel as $index => $mapel)
+                            <div class="flex items-center justify-between">
+
+                                <div class="flex items-center space-x-1.5 min-w-0">
+                                    <span class="w-2 h-2 rounded-full {{ $warnaMapel[$index % count($warnaMapel)] }} shrink-0"></span>
+
+                                    <span class="text-slate-600 text-[11px] truncate">
+                                        {{ $mapel['name'] }}
+                                    </span>
+                                </div>
+
+                                <span class="text-[11px] font-semibold text-slate-500 shrink-0 ml-2">
+                                    {{ $mapel['total_nilai'] }} ({{ $mapel['persentase'] }}%)
+                                </span>
+
+                            </div>
+                        @endforeach
+
                     </div>
                 </div>
 
                 <div class="pt-3 border-t border-slate-100 mt-3">
-                    <a href="#" class="text-xs font-semibold text-orange-500 hover:underline flex items-center gap-1">
+                    <a href="{{ route('admin.nilai.index') }}" class="text-xs font-semibold text-orange-500 hover:underline flex items-center gap-1">
                         Lihat Selengkapnya &rarr;
                     </a>
                 </div>
