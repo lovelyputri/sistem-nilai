@@ -250,7 +250,7 @@
                         <span class="text-xs font-semibold text-slate-500">Mata Pelajaran</span>
                     </div>
                     <div class="mt-2 flex items-baseline space-x-2">
-                        <span class="text-2xl font-extrabold text-slate-800">15</span>
+                        <span class="text-2xl font-extrabold text-slate-800">{{ $statistik['total_mata_pelajaran'] }}</span>
                         <span class="text-[11px] text-slate-400 font-normal">Mata Pelajaran</span>
                     </div>
                 </div>
@@ -311,32 +311,44 @@
                             </div>
                             <h3 class="font-bold text-slate-800 text-sm">Ringkasan Nilai</h3>
                         </div>
-                        <div class="flex items-center space-x-1 border border-slate-200 px-2 py-0.5 rounded text-xs text-slate-600 bg-white">
-                            <span class="text-[11px]">Tahun Ajaran</span>
-                            <span class="font-semibold text-[11px]">2024/2025</span>
-                            <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        <div class="relative">
+                            <form method="GET">
+                                <select name="semester"
+                                    onchange="this.form.submit()"
+                                    class="border border-slate-200 px-2 py-1 rounded text-xs bg-white focus:outline-none">
+                                    <option value="all" {{ request('semester') == 'all' ? 'selected' : '' }}>
+                                        Semua Semester
+                                    </option>
+                                    <option value="ganjil" {{ request('semester') == 'ganjil' ? 'selected' : '' }}>
+                                        Semester Ganjil
+                                    </option>
+                                    <option value="genap" {{ request('semester') == 'genap' ? 'selected' : '' }}>
+                                        Semester Genap
+                                    </option>
+                                </select>
+                            </form>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-2.5 mb-5">
                         <div class="bg-emerald-50/60 p-2.5 rounded-lg border border-emerald-100/80 text-center">
                             <p class="text-[11px] font-medium text-emerald-600">Nilai Tertinggi</p>
-                            <p class="text-xl font-bold text-emerald-600 mt-0.5">100</p>
+                            <p class="text-xl font-bold text-emerald-600 mt-0.5">{{ $statistikNilai['nilai_tertinggi'] }}</p>
                             <p class="text-[10px] text-emerald-500">Siswa</p>
                         </div>
                         <div class="bg-rose-50/60 p-2.5 rounded-lg border border-rose-100/80 text-center">
                             <p class="text-[11px] font-medium text-rose-600">Nilai Terendah</p>
-                            <p class="text-xl font-bold text-rose-600 mt-0.5">20</p>
+                            <p class="text-xl font-bold text-rose-600 mt-0.5">{{ $statistikNilai['nilai_terendah'] }}</p>
                             <p class="text-[10px] text-rose-500">Siswa</p>
                         </div>
                         <div class="bg-sky-50/60 p-2.5 rounded-lg border border-sky-100/80 text-center">
                             <p class="text-[11px] font-medium text-sky-600">Rata-rata Nilai</p>
-                            <p class="text-xl font-bold text-sky-600 mt-0.5">78.45</p>
+                            <p class="text-xl font-bold text-sky-600 mt-0.5">{{ $statistikNilai['rata_rata'] }}</p>
                             <p class="text-[10px] text-sky-500">Keseluruhan</p>
                         </div>
                         <div class="bg-purple-50/60 p-2.5 rounded-lg border border-purple-100/80 text-center">
                             <p class="text-[11px] font-medium text-purple-600">Siswa dengan Nilai</p>
-                            <p class="text-xl font-bold text-purple-600 mt-0.5">256</p>
+                            <p class="text-xl font-bold text-purple-600 mt-0.5">{{ $statistikNilai['total_siswa_punya_nilai'] }}</p>
                             <p class="text-[10px] text-purple-500">Siswa</p>
                         </div>
                     </div>
@@ -353,31 +365,15 @@
                             </div>
 
                             <div class="flex items-end justify-between pl-6 pr-2 h-36 relative z-10 space-x-2">
-                                <div class="flex-1 flex flex-col items-center justify-end h-full">
-                                    <span class="text-[10px] font-bold text-slate-700 mb-1">5</span>
-                                    <div class="w-full max-w-[28px] bg-orange-500 rounded-t-sm" style="height: 8%;"></div>
-                                    <span class="text-[10px] text-slate-400 mt-2 font-medium">0 - 20</span>
-                                </div>
-                                <div class="flex-1 flex flex-col items-center justify-end h-full">
-                                    <span class="text-[10px] font-bold text-slate-700 mb-1">18</span>
-                                    <div class="w-full max-w-[28px] bg-orange-500 rounded-t-sm" style="height: 22%;"></div>
-                                    <span class="text-[10px] text-slate-400 mt-2 font-medium">21 - 40</span>
-                                </div>
-                                <div class="flex-1 flex flex-col items-center justify-end h-full">
-                                    <span class="text-[10px] font-bold text-slate-700 mb-1">45</span>
-                                    <div class="w-full max-w-[28px] bg-orange-500 rounded-t-sm" style="height: 48%;"></div>
-                                    <span class="text-[10px] text-slate-400 mt-2 font-medium">41 - 60</span>
-                                </div>
-                                <div class="flex-1 flex flex-col items-center justify-end h-full">
-                                    <span class="text-[10px] font-bold text-slate-700 mb-1">112</span>
-                                    <div class="w-full max-w-[28px] bg-orange-500 rounded-t-sm" style="height: 90%;"></div>
-                                    <span class="text-[10px] text-slate-400 mt-2 font-medium">61 - 80</span>
-                                </div>
-                                <div class="flex-1 flex flex-col items-center justify-end h-full">
-                                    <span class="text-[10px] font-bold text-slate-700 mb-1">76</span>
-                                    <div class="w-full max-w-[28px] bg-orange-500 rounded-t-sm" style="height: 68%;"></div>
-                                    <span class="text-[10px] text-slate-400 mt-2 font-medium">81 - 100</span>
-                                </div>
+                                @forelse($distribusiNilai as $rentang)
+                                    <div class="flex-1 flex flex-col items-center justify-end h-full">
+                                        <span class="text-[10px] font-bold text-slate-700 mb-1">{{ $rentang['total'] }}</span>
+                                        <div class="w-full max-w-[28px] bg-orange-500 rounded-t-sm" style="height: {{ $rentang['total'] > 0 ? round(($rentang['total'] / $maxDistribusi) * 90) : 2 }}%;"></div>
+                                        <span class="text-[10px] text-slate-400 mt-2 font-medium">{{ $rentang['label'] }}</span>
+                                    </div>
+                                @empty
+                                    <p class="w-full text-center text-[11px] text-slate-400">Belum ada data nilai</p>
+                                @endforelse
                             </div>
                         </div>
                         <p class="text-center text-[10px] text-slate-400 mt-2 font-medium">Rentang Nilai</p>
@@ -396,72 +392,52 @@
                     </div>
 
                     <!-- Donut Chart & Total Nilai di Bawahnya -->
+                    @php
+                        $donutColors = ['#3b82f6','#1d4ed8','#60a5fa','#38bdf8','#0284c7','#0369a1','#f97316','#ea580c','#c2410c','#f59e0b','#d97706','#b45309','#10b981','#059669','#047857','#8b5cf6','#7c3aed','#6d28d9','#ec4899','#db2777','#14b8a6','#0d9488','#64748b'];
+                        $circumference = 2 * M_PI * 38;
+                        $cumulative = 0;
+                    @endphp
                     <div class="flex flex-col items-center justify-center my-3">
                         <div class="relative w-32 h-32 flex items-center justify-center">
                             <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                                 <circle cx="50" cy="50" r="38" stroke="#f1f5f9" stroke-width="12" fill="none" />
-                                <circle cx="50" cy="50" r="38" stroke="#3b82f6" stroke-width="12" fill="none" stroke-dasharray="25 214" stroke-dashoffset="0" />
-                                <circle cx="50" cy="50" r="38" stroke="#1d4ed8" stroke-width="12" fill="none" stroke-dasharray="15 224" stroke-dashoffset="-25" />
-                                <circle cx="50" cy="50" r="38" stroke="#60a5fa" stroke-width="12" fill="none" stroke-dasharray="12 227" stroke-dashoffset="-40" />
-                                <circle cx="50" cy="50" r="38" stroke="#38bdf8" stroke-width="12" fill="none" stroke-dasharray="11 228" stroke-dashoffset="-52" />
-                                <circle cx="50" cy="50" r="38" stroke="#0284c7" stroke-width="12" fill="none" stroke-dasharray="10 229" stroke-dashoffset="-63" />
-                                <circle cx="50" cy="50" r="38" stroke="#0369a1" stroke-width="12" fill="none" stroke-dasharray="9 230" stroke-dashoffset="-73" />
-                                <circle cx="50" cy="50" r="38" stroke="#f97316" stroke-width="12" fill="none" stroke-dasharray="9 230" stroke-dashoffset="-82" />
-                                <circle cx="50" cy="50" r="38" stroke="#ea580c" stroke-width="12" fill="none" stroke-dasharray="9 230" stroke-dashoffset="-91" />
-                                <circle cx="50" cy="50" r="38" stroke="#c2410c" stroke-width="12" fill="none" stroke-dasharray="8 231" stroke-dashoffset="-100" />
-                                <circle cx="50" cy="50" r="38" stroke="#f59e0b" stroke-width="12" fill="none" stroke-dasharray="8 231" stroke-dashoffset="-108" />
-                                <circle cx="50" cy="50" r="38" stroke="#d97706" stroke-width="12" fill="none" stroke-dasharray="8 231" stroke-dashoffset="-116" />
-                                <circle cx="50" cy="50" r="38" stroke="#b45309" stroke-width="12" fill="none" stroke-dasharray="7 232" stroke-dashoffset="-124" />
-                                <circle cx="50" cy="50" r="38" stroke="#10b981" stroke-width="12" fill="none" stroke-dasharray="7 232" stroke-dashoffset="-131" />
-                                <circle cx="50" cy="50" r="38" stroke="#059669" stroke-width="12" fill="none" stroke-dasharray="7 232" stroke-dashoffset="-138" />
-                                <circle cx="50" cy="50" r="38" stroke="#047857" stroke-width="12" fill="none" stroke-dasharray="6 233" stroke-dashoffset="-145" />
-                                <circle cx="50" cy="50" r="38" stroke="#8b5cf6" stroke-width="12" fill="none" stroke-dasharray="6 233" stroke-dashoffset="-151" />
-                                <circle cx="50" cy="50" r="38" stroke="#7c3aed" stroke-width="12" fill="none" stroke-dasharray="6 233" stroke-dashoffset="-157" />
-                                <circle cx="50" cy="50" r="38" stroke="#6d28d9" stroke-width="12" fill="none" stroke-dasharray="5 234" stroke-dashoffset="-163" />
-                                <circle cx="50" cy="50" r="38" stroke="#ec4899" stroke-width="12" fill="none" stroke-dasharray="5 234" stroke-dashoffset="-168" />
-                                <circle cx="50" cy="50" r="38" stroke="#db2777" stroke-width="12" fill="none" stroke-dasharray="5 234" stroke-dashoffset="-173" />
-                                <circle cx="50" cy="50" r="38" stroke="#14b8a6" stroke-width="12" fill="none" stroke-dasharray="5 234" stroke-dashoffset="-178" />
-                                <circle cx="50" cy="50" r="38" stroke="#0d9488" stroke-width="12" fill="none" stroke-dasharray="4 235" stroke-dashoffset="-183" />
-                                <circle cx="50" cy="50" r="38" stroke="#64748b" stroke-width="12" fill="none" stroke-dasharray="56 183" stroke-dashoffset="-187" />
+                                @forelse($nilaiPerMapel as $index => $mapel)
+                                    @php
+                                        $dash = ($mapel['persentase'] / 100) * $circumference;
+                                        $gap = $circumference - $dash;
+                                        $offset = -$cumulative;
+                                        $color = $donutColors[$index % count($donutColors)];
+                                    @endphp
+                                    <circle cx="50" cy="50" r="38" stroke="{{ $color }}" stroke-width="12" fill="none" stroke-dasharray="{{ round($dash, 2) }} {{ round($gap, 2) }}" stroke-dashoffset="{{ round($offset, 2) }}" />
+                                    @php $cumulative += $dash; @endphp
+                                @empty
+                                @endforelse
                             </svg>
                         </div>
                         <div class="text-center mt-2">
-                            <span class="text-base font-extrabold text-slate-800 leading-tight">1.248</span>
+                            <span class="text-base font-extrabold text-slate-800 leading-tight">{{ number_format($statistik['total_nilai'], 0, ',', '.') }}</span>
                             <span class="text-[10px] text-slate-400 font-medium block">Total Nilai</span>
                         </div>
                     </div>
 
-                    <!-- Scrollable List 24 Mata Pelajaran -->
+                    <!-- Scrollable List Mata Pelajaran -->
                     <div class="space-y-1.5 text-xs max-h-48 overflow-y-auto pr-1 border border-slate-100 rounded-lg p-2 bg-slate-50/50">
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-blue-500"></span><span class="text-slate-600 text-[11px]">Matematika</span></div><span class="text-[11px] font-semibold text-slate-500">95 (7.6%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-blue-700"></span><span class="text-slate-600 text-[11px]">Bahasa Indonesia</span></div><span class="text-[11px] font-semibold text-slate-500">80 (6.4%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-blue-400"></span><span class="text-slate-600 text-[11px]">Bahasa Inggris</span></div><span class="text-[11px] font-semibold text-slate-500">70 (5.6%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-sky-400"></span><span class="text-slate-600 text-[11px]">IPA</span></div><span class="text-[11px] font-semibold text-slate-500">65 (5.2%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-sky-600"></span><span class="text-slate-600 text-[11px]">IPS</span></div><span class="text-[11px] font-semibold text-slate-500">60 (4.8%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-sky-700"></span><span class="text-slate-600 text-[11px]">PKn</span></div><span class="text-[11px] font-semibold text-slate-500">55 (4.4%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-orange-500"></span><span class="text-slate-600 text-[11px]">Seni Budaya</span></div><span class="text-[11px] font-semibold text-slate-500">55 (4.4%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-orange-600"></span><span class="text-slate-600 text-[11px]">PJOK</span></div><span class="text-[11px] font-semibold text-slate-500">50 (4.0%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-orange-700"></span><span class="text-slate-600 text-[11px]">Informatika</span></div><span class="text-[11px] font-semibold text-slate-500">48 (3.8%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span><span class="text-slate-600 text-[11px]">Sejarah</span></div><span class="text-[11px] font-semibold text-slate-500">48 (3.8%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-amber-600"></span><span class="text-slate-600 text-[11px]">Ekonomi</span></div><span class="text-[11px] font-semibold text-slate-500">45 (3.6%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-amber-700"></span><span class="text-slate-600 text-[11px]">Sosiologi</span></div><span class="text-[11px] font-semibold text-slate-500">42 (3.4%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><span class="text-slate-600 text-[11px]">Geografi</span></div><span class="text-[11px] font-semibold text-slate-500">40 (3.2%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-emerald-600"></span><span class="text-slate-600 text-[11px]">Kimia</span></div><span class="text-[11px] font-semibold text-slate-500">40 (3.2%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-emerald-700"></span><span class="text-slate-600 text-[11px]">Fisika</span></div><span class="text-[11px] font-semibold text-slate-500">38 (3.0%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-purple-500"></span><span class="text-slate-600 text-[11px]">Biologi</span></div><span class="text-[11px] font-semibold text-slate-500">38 (3.0%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-purple-600"></span><span class="text-slate-600 text-[11px]">PAI</span></div><span class="text-[11px] font-semibold text-slate-500">35 (2.8%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-purple-700"></span><span class="text-slate-600 text-[11px]">Bahasa Arab</span></div><span class="text-[11px] font-semibold text-slate-500">35 (2.8%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-pink-500"></span><span class="text-slate-600 text-[11px]">Kewirausahaan</span></div><span class="text-[11px] font-semibold text-slate-500">30 (2.4%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-pink-600"></span><span class="text-slate-600 text-[11px]">Seni Musik</span></div><span class="text-[11px] font-semibold text-slate-500">30 (2.4%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-teal-500"></span><span class="text-slate-600 text-[11px]">TIK</span></div><span class="text-[11px] font-semibold text-slate-500">30 (2.4%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-teal-600"></span><span class="text-slate-600 text-[11px]">Bahasa Mandarin</span></div><span class="text-[11px] font-semibold text-slate-500">25 (2.0%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-slate-500"></span><span class="text-slate-600 text-[11px]">Bahasa Jepang</span></div><span class="text-[11px] font-semibold text-slate-500">25 (2.0%)</span></div>
-                        <div class="flex items-center justify-between"><div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-slate-700"></span><span class="text-slate-600 text-[11px]">Seni Rupa</span></div><span class="text-[11px] font-semibold text-slate-500">24 (1.9%)</span></div>
+                        @forelse($nilaiPerMapel as $index => $mapel)
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-1.5">
+                                    <span class="w-2 h-2 rounded-full" style="background-color: {{ $donutColors[$index % count($donutColors)] }};"></span>
+                                    <span class="text-slate-600 text-[11px]">{{ $mapel['nama'] }}</span>
+                                </div>
+                                <span class="text-[11px] font-semibold text-slate-500">{{ $mapel['total'] }} ({{ $mapel['persentase'] }}%)</span>
+                            </div>
+                        @empty
+                            <p class="text-center text-[11px] text-slate-400 py-2">Belum ada data nilai</p>
+                        @endforelse
                     </div>
                 </div>
 
                 <div class="pt-3 border-t border-slate-100 mt-3">
-                    <a href="#" class="text-xs font-semibold text-orange-500 hover:underline flex items-center gap-1">
+                    <a href="{{ route('admin.nilai.index') }}" class="text-xs font-semibold text-orange-500 hover:underline flex items-center gap-1">
                         Lihat Selengkapnya &rarr;
                     </a>
                 </div>
@@ -477,9 +453,6 @@
                             </div>
                             <h3 class="font-bold text-slate-800 text-sm">10 Peringkat Siswa</h3>
                         </div>
-                        <a href="#" class="px-2.5 py-1 border border-orange-500 text-orange-500 text-xs rounded-full font-medium hover:bg-orange-50">
-                            Lihat Semua
-                        </a>
                     </div>
 
                     <div class="overflow-x-auto h-[350px] overflow-y-auto pr-1">
@@ -494,123 +467,39 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100 text-slate-700">
-                                <tr>
-                                    <td class="py-2.5 font-bold text-orange-600">#1</td>
-                                    <td class="py-2.5 font-medium text-slate-800">Rizky Maulana</td>
-                                    <td class="py-2.5">XII-1</td>
-                                    <td class="py-2.5 font-semibold">98.50</td>
-                                    <td class="py-2.5 text-center">
-                                        <button class="w-5 h-5 rounded-full border border-orange-200 text-orange-500 flex items-center justify-center hover:bg-orange-50 mx-auto">
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="py-2.5 font-bold text-slate-600">#2</td>
-                                    <td class="py-2.5 font-medium text-slate-800">Siti Nurhaliza</td>
-                                    <td class="py-2.5">X-2</td>
-                                    <td class="py-2.5 font-semibold">97.20</td>
-                                    <td class="py-2.5 text-center">
-                                        <button class="w-5 h-5 rounded-full border border-orange-200 text-orange-500 flex items-center justify-center hover:bg-orange-50 mx-auto">
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="py-2.5 font-bold text-amber-600">#3</td>
-                                    <td class="py-2.5 font-medium text-slate-800">Ahmad Fauzan</td>
-                                    <td class="py-2.5">X-1</td>
-                                    <td class="py-2.5 font-semibold">96.10</td>
-                                    <td class="py-2.5 text-center">
-                                        <button class="w-5 h-5 rounded-full border border-orange-200 text-orange-500 flex items-center justify-center hover:bg-orange-50 mx-auto">
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="py-2.5 font-medium text-slate-600">#4</td>
-                                    <td class="py-2.5 font-medium text-slate-800">Nabila Azzahra</td>
-                                    <td class="py-2.5">XI-2</td>
-                                    <td class="py-2.5 font-semibold">95.40</td>
-                                    <td class="py-2.5 text-center">
-                                        <button class="w-5 h-5 rounded-full border border-orange-200 text-orange-500 flex items-center justify-center hover:bg-orange-50 mx-auto">
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="py-2.5 font-medium text-slate-600">#5</td>
-                                    <td class="py-2.5 font-medium text-slate-800">Dimas Pratama</td>
-                                    <td class="py-2.5">XI-1</td>
-                                    <td class="py-2.5 font-semibold">94.80</td>
-                                    <td class="py-2.5 text-center">
-                                        <button class="w-5 h-5 rounded-full border border-orange-200 text-orange-500 flex items-center justify-center hover:bg-orange-50 mx-auto">
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="py-2.5 font-medium text-slate-600">#6</td>
-                                    <td class="py-2.5 font-medium text-slate-800">Dewi Lestari</td>
-                                    <td class="py-2.5">X-1</td>
-                                    <td class="py-2.5 font-semibold">93.50</td>
-                                    <td class="py-2.5 text-center">
-                                        <button class="w-5 h-5 rounded-full border border-orange-200 text-orange-500 flex items-center justify-center hover:bg-orange-50 mx-auto">
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="py-2.5 font-medium text-slate-600">#7</td>
-                                    <td class="py-2.5 font-medium text-slate-800">Fajar Hidayat</td>
-                                    <td class="py-2.5">XII-1</td>
-                                    <td class="py-2.5 font-semibold">92.90</td>
-                                    <td class="py-2.5 text-center">
-                                        <button class="w-5 h-5 rounded-full border border-orange-200 text-orange-500 flex items-center justify-center hover:bg-orange-50 mx-auto">
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="py-2.5 font-medium text-slate-600">#8</td>
-                                    <td class="py-2.5 font-medium text-slate-800">Putri Rahmawati</td>
-                                    <td class="py-2.5">XI-1</td>
-                                    <td class="py-2.5 font-semibold">91.75</td>
-                                    <td class="py-2.5 text-center">
-                                        <button class="w-5 h-5 rounded-full border border-orange-200 text-orange-500 flex items-center justify-center hover:bg-orange-50 mx-auto">
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="py-2.5 font-medium text-slate-600">#9</td>
-                                    <td class="py-2.5 font-medium text-slate-800">Eko Prasetyo</td>
-                                    <td class="py-2.5">X-2</td>
-                                    <td class="py-2.5 font-semibold">90.50</td>
-                                    <td class="py-2.5 text-center">
-                                        <button class="w-5 h-5 rounded-full border border-orange-200 text-orange-500 flex items-center justify-center hover:bg-orange-50 mx-auto">
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="py-2.5 font-medium text-slate-600">#10</td>
-                                    <td class="py-2.5 font-medium text-slate-800">Maya Sari</td>
-                                    <td class="py-2.5">XI-2</td>
-                                    <td class="py-2.5 font-semibold">89.90</td>
-                                    <td class="py-2.5 text-center">
-                                        <button class="w-5 h-5 rounded-full border border-orange-200 text-orange-500 flex items-center justify-center hover:bg-orange-50 mx-auto">
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                        </button>
-                                    </td>
-                                </tr>
+                                @forelse($topSiswa as $index => $siswa)
+                                    @php
+                                        $rank = $index + 1;
+                                        $rankClass = match(true) {
+                                            $rank === 1 => 'font-bold text-orange-600',
+                                            $rank === 2 => 'font-bold text-slate-600',
+                                            $rank === 3 => 'font-bold text-amber-600',
+                                            default => 'font-medium text-slate-600',
+                                        };
+                                    @endphp
+                                    <tr>
+                                        <td class="py-2.5 {{ $rankClass }}">#{{ $rank }}</td>
+                                        <td class="py-2.5 font-medium text-slate-800">{{ $siswa['nama'] }}</td>
+                                        <td class="py-2.5">{{ $siswa['kelas'] }}</td>
+                                        <td class="py-2.5 font-semibold">{{ number_format($siswa['rata_rata'], 2) }}</td>
+                                        <td class="py-2.5 text-center">
+                                            <button class="w-5 h-5 rounded-full border border-orange-200 text-orange-500 flex items-center justify-center hover:bg-orange-50 mx-auto">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="py-4 text-center text-slate-400">Belum ada data nilai siswa</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
                 </div>
 
                 <div class="pt-3 border-t border-slate-100 mt-2">
-                    <a href="#" class="text-xs font-semibold text-orange-500 hover:underline flex items-center gap-1">
+                    <a href="{{ route('admin.siswa.index') }}" class="text-xs font-semibold text-orange-500 hover:underline flex items-center gap-1">
                         Lihat Selengkapnya &rarr;
                     </a>
                 </div>
@@ -628,47 +517,36 @@
                         </div>
                         <h3 class="font-bold text-slate-800 text-sm">Aktivitas Terbaru</h3>
                     </div>
-                    <a href="#" class="px-2.5 py-1 border border-orange-500 text-orange-500 text-xs rounded-full font-medium hover:bg-orange-50">
-                        Lihat Semua
-                    </a>
                 </div>
 
                 <div class="space-y-3.5">
-                    <div class="flex items-start space-x-3">
-                        <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                    @forelse($aktivitasTerbaru as $aktivitas)
+                        <div class="flex items-start space-x-3">
+                            @if($aktivitas['type'] === 'nilai')
+                                <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 mt-0.5">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-800 font-medium leading-snug">
+                                        <span class="font-semibold text-slate-900">{{ $aktivitas['nama'] }}</span> mendapat nilai baru untuk mata pelajaran <span class="font-semibold text-slate-900">{{ $aktivitas['mapel'] }}</span>
+                                    </p>
+                                    <p class="text-[11px] text-slate-400 mt-0.5">{{ $aktivitas['waktu'] }}</p>
+                                </div>
+                            @else
+                                <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-800 font-medium leading-snug">
+                                        <span class="font-semibold text-slate-900">Siswa {{ $aktivitas['nama'] }}</span> diperbarui datanya
+                                    </p>
+                                    <p class="text-[11px] text-slate-400 mt-0.5">{{ $aktivitas['waktu'] }}</p>
+                                </div>
+                            @endif
                         </div>
-                        <div>
-                            <p class="text-xs text-slate-800 font-medium leading-snug">
-                                <span class="font-semibold text-slate-900">Administrator</span> menambahkan mata pelajaran baru <span class="font-semibold text-slate-900">"Informatika"</span>
-                            </p>
-                            <p class="text-[11px] text-slate-400 mt-0.5">2 menit yang lalu</p>
-                        </div>
-                    </div>
-
-                    <div class="flex items-start space-x-3">
-                        <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 mt-0.5">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                        </div>
-                        <div>
-                            <p class="text-xs text-slate-800 font-medium leading-snug">
-                                <span class="font-semibold text-slate-900">Guru Budi Santoso</span> menginput nilai untuk mata pelajaran <span class="font-semibold text-slate-900">Matematika kelas X-1</span>
-                            </p>
-                            <p class="text-[11px] text-slate-400 mt-0.5">15 menit yang lalu</p>
-                        </div>
-                    </div>
-
-                    <div class="flex items-start space-x-3">
-                        <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                        </div>
-                        <div>
-                            <p class="text-xs text-slate-800 font-medium leading-snug">
-                                <span class="font-semibold text-slate-900">Siswa Dimas Pratama</span> diperbarui datanya
-                            </p>
-                            <p class="text-[11px] text-slate-400 mt-0.5">1 jam yang lalu</p>
-                        </div>
-                    </div>
+                    @empty
+                        <p class="text-xs text-slate-400 text-center py-4">Belum ada aktivitas terbaru</p>
+                    @endforelse
                 </div>
             </div>
 
@@ -681,9 +559,6 @@
                         </div>
                         <h3 class="font-bold text-slate-800 text-sm">Statistik Kelas</h3>
                     </div>
-                    <a href="#" class="px-2.5 py-1 border border-orange-500 text-orange-500 text-xs rounded-full font-medium hover:bg-orange-50">
-                        Lihat Semua
-                    </a>
                 </div>
 
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -691,7 +566,7 @@
                         <div class="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center mb-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
                         </div>
-                        <p class="text-xl font-extrabold text-slate-800">12</p>
+                        <p class="text-xl font-extrabold text-slate-800">{{ $statistikKelas['total'] }}</p>
                         <p class="text-[11px] font-semibold text-slate-600 mt-0.5">Total Kelas</p>
                         <p class="text-[10px] text-slate-400">Kelas Aktif</p>
                     </div>
@@ -700,7 +575,7 @@
                         <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center mb-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                         </div>
-                        <p class="text-xl font-extrabold text-slate-800">8</p>
+                        <p class="text-xl font-extrabold text-slate-800">{{ $statistikKelas['x'] }}</p>
                         <p class="text-[11px] font-semibold text-slate-600 mt-0.5">Kelas X</p>
                         <p class="text-[10px] text-slate-400">Kelas</p>
                     </div>
@@ -709,7 +584,7 @@
                         <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center mb-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                         </div>
-                        <p class="text-xl font-extrabold text-slate-800">3</p>
+                        <p class="text-xl font-extrabold text-slate-800">{{ $statistikKelas['xi'] }}</p>
                         <p class="text-[11px] font-semibold text-slate-600 mt-0.5">Kelas XI</p>
                         <p class="text-[10px] text-slate-400">Kelas</p>
                     </div>
@@ -718,7 +593,7 @@
                         <div class="w-8 h-8 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center mb-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                         </div>
-                        <p class="text-xl font-extrabold text-slate-800">1</p>
+                        <p class="text-xl font-extrabold text-slate-800">{{ $statistikKelas['xii'] }}</p>
                         <p class="text-[11px] font-semibold text-slate-600 mt-0.5">Kelas XII</p>
                         <p class="text-[10px] text-slate-400">Kelas</p>
                     </div>
