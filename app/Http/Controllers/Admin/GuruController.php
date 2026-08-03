@@ -32,7 +32,38 @@ class GuruController extends Controller
             'kelas' => $g->kelas->pluck('kelas'),
         ]);
 
-        return view('admin.guru.index', compact('guru', 'waitingTeacher', 'data'));
+        // --- Statistik untuk 4 kartu di atas ---
+        $totalGuru        = $guru->count();
+        $guruAktif        = $guru->where('status', 'aktif')->count();
+        $guruNonAktif     = $totalGuru - $guruAktif; // gabungan status 'menunggu' & 'ditolak'
+        $totalRelasiMapel = $guru->sum(fn ($g) => $g->mataPelajaran->count());
+
+        $statistik = [
+            'total_guru'           => $totalGuru,
+            'guru_aktif'           => $guruAktif,
+            'persentase_aktif'     => $totalGuru > 0 ? round(($guruAktif / $totalGuru) * 100, 1) : 0,
+            'guru_non_aktif'       => $guruNonAktif,
+            'persentase_non_aktif' => $totalGuru > 0 ? round(($guruNonAktif / $totalGuru) * 100, 1) : 0,
+            'rata_rata_mapel'      => $totalGuru > 0 ? round($totalRelasiMapel / $totalGuru, 1) : 0,
+        ];
+
+        // --- Opsi filter dropdown (diambil dari data asli, bukan hardcode) ---
+        $mataPelajaranOptions = MataPelajaran::orderBy('name')->get(['id', 'name']);
+
+        $kelasOptions = $guru->flatMap(fn ($g) => $g->kelas->pluck('kelas'))
+            ->filter()
+            ->unique()
+            ->sort()
+            ->values();
+
+        return view('admin.guru.index', compact(
+            'guru',
+            'waitingTeacher',
+            'data',
+            'statistik',
+            'mataPelajaranOptions',
+            'kelasOptions'
+        ));
     }
 
     /**
@@ -72,7 +103,7 @@ class GuruController extends Controller
         return redirect()
             ->route("admin.guru.index")
             ->with("sukses", "Guru {$guru->name} berhasil ditambahkan.");
-            
+
         // return response()->json([
         //     "status" => "success",
         //     "message" => "Guru {$guru->name} berhasil ditambahkan.",
@@ -151,7 +182,7 @@ class GuruController extends Controller
     public function destroy(User $guru)
     {
         abort_if($guru->role != 'guru', 404);
-        
+
         $nama = $guru->name;
         $guru->delete();
 
