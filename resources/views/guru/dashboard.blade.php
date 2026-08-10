@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+
     <style>
         /* ========== SEMUA STYLE TETAP SAMA PERSIS SEPERTI ASLINYA ========== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -85,7 +85,7 @@
             cursor: pointer;
             padding-right: 1.5rem;
             border-right: 1px solid var(--border);
-        }        
+        }
         .avatar {
             width: 40px; height: 40px; border-radius: 50%;
             background: var(--primary-light); color: var(--primary);
@@ -127,13 +127,13 @@
         }
 
         .welcome-text { position: relative; z-index: 1; }
-        .welcome-text h1 { 
-            font-size: 32px; font-weight: 800; 
-            color: var(--primary-dark); 
-            letter-spacing: -0.5px; margin-bottom: 0.5rem; 
+        .welcome-text h1 {
+            font-size: 32px; font-weight: 800;
+            color: var(--primary-dark);
+            letter-spacing: -0.5px; margin-bottom: 0.5rem;
         }
-        .welcome-text p { 
-            color: #9A3412; font-size: 16px; font-weight: 500; 
+        .welcome-text p {
+            color: #9A3412; font-size: 16px; font-weight: 500;
         }
         .welcome-date {
             display: inline-block; margin-top: 1rem;
@@ -159,7 +159,7 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .stat-card-modern:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.05); }
-        
+
         .stat-icon {
             width: 48px; height: 48px; border-radius: 14px;
             display: flex; align-items: center; justify-content: center;
@@ -168,7 +168,7 @@
         .stat-card-modern h3 { font-size: 14px; color: var(--text-muted); font-weight: 600; margin-bottom: 0.5rem; }
         .stat-card-modern .value { font-size: 26px; font-weight: 800; color: var(--text-dark); display: flex; align-items: baseline; gap: 5px; }
         .stat-card-modern .trend { font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin-left: 10px; }
-        
+
         .bg-orange { background: #FFF7ED; color: #EA580C; }
         .bg-blue { background: #F0F9FF; color: #0EA5E9; }
         .bg-green { background: #F0FDF4; color: #10B981; }
@@ -176,7 +176,7 @@
 
         /* --- DASHBOARD LAYOUT --- */
         .main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; }
-        
+
         .glass-card {
             background: var(--white); border-radius: 28px; border: 1px solid var(--border);
             padding: 2rem; margin-bottom: 1.5rem;
@@ -211,7 +211,7 @@
         .nilai-kurang { background: #FEE2E2; color: var(--danger); }
 
         .btn-detail {
-            background: transparent; color: var(--info); border: 1px solid var(--info); 
+            background: transparent; color: var(--info); border: 1px solid var(--info);
             padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 12px;
             cursor: pointer; transition: all 0.2s;
         }
@@ -229,21 +229,21 @@
             content: ''; position: absolute; top: -10%; left: -10%; width: 150px; height: 150px;
             background: rgba(255, 255, 255, 0.1); border-radius: 50%;
         }
-        
+
         .crown-icon {
-            position: absolute; 
-            top: -25px; 
-            right: -15px; 
+            position: absolute;
+            top: -25px;
+            right: -15px;
             transform: rotate(15deg);
             background: linear-gradient(135deg, #FBBF24, #F59E0B);
-            padding: 12px; 
-            border-radius: 50%; 
+            padding: 12px;
+            border-radius: 50%;
             box-shadow: 0 8px 20px rgba(245, 158, 11, 0.5);
             border: 4px solid var(--bg-body);
             display: flex; align-items: center; justify-content: center;
             z-index: 10;
         }
-        
+
         .champion-info { text-align: center; margin-top: 0.5rem; }
         .champion-avatar {
             width: 90px; height: 90px; border-radius: 50%; border: 5px solid rgba(255,255,255,0.3);
@@ -257,8 +257,8 @@
         }
 
         .btn-rapor {
-            width: 100%; margin-top: 1.5rem; background: var(--white); color: var(--primary-dark); 
-            border: none; padding: 1rem; border-radius: 18px; font-weight: 800; font-size: 13px; 
+            width: 100%; margin-top: 1.5rem; background: var(--white); color: var(--primary-dark);
+            border: none; padding: 1rem; border-radius: 18px; font-weight: 800; font-size: 13px;
             cursor: pointer; transition: 0.3s;
         }
         .btn-rapor:hover { background: var(--primary-light); transform: translateY(-2px); }
@@ -322,7 +322,7 @@
     </nav>
 
     <div class="container">
-        
+
         <!-- WELCOME BANNER -->
         <div class="welcome-banner">
             <div class="welcome-text">
@@ -382,7 +382,7 @@
         </div>
 
         <div class="main-grid">
-            
+
             <div class="content-left">
                 <!-- CHART -->
                 <div class="glass-card">
@@ -408,7 +408,7 @@
                             Input Nilai
                         </button>
                     </div>
-                    
+
                     <div style="margin-bottom: 1.5rem;">
                         <input type="text" id="searchInput" placeholder="Cari siswa berdasarkan nama atau NIS..." style="width: 100%; padding: 0.8rem 1rem; border-radius: 12px; border: 1px solid var(--border); font-size: 13px; outline: none; background: #F9FAFB;">
                     </div>
@@ -478,16 +478,20 @@
                     <div class="crown-icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/><path d="M12 17H12.01"/></svg>
                     </div>
-                    
+
                     <p style="font-size: 11px; font-weight: 700; opacity: 0.9; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 5px; text-align: center;">Peringkat 1 Kelas</p>
-                    
+
                     <div class="champion-info">
-                        <div class="champion-avatar">{{ strtoupper(substr(optional($topStudent->siswa)->name ?? 'SN', 0, 2)) }}</div>
-                        <h2 style="font-size: 22px; font-weight: 800; letter-spacing: -0.5px;">{{ optional($topStudent->siswa)->name ?? 'Belum Ada Data' }}</h2>
+                        <div class="champion-avatar">
+                            {{ strtoupper(substr(optional(optional($topStudent)->siswa)->name ?? 'SN', 0, 2)) }}
+                        </div>
+                      <h2 style="font-size: 22px; font-weight: 800; letter-spacing: -0.5px;">
+                        {{ $topStudent?->siswa?->name ?? 'Belum Ada Data' }}
+                    </h2>
                         <p style="opacity: 0.9; font-size: 13px; margin-top: 4px; font-weight: 500;">
                             {{ $topStudent->siswa->kelas ?? 'Kelas tidak diketahui' }}
                         </p>
-                        
+
                         <div class="score-pill">
                             <div>
                                 <small style="display:block; opacity: 0.8; font-size: 9px; text-transform: uppercase; font-weight: 700;">Nilai Tertinggi</small>
@@ -535,7 +539,7 @@
 
         // Fungsi navigasi
         function goToInputPage() {
-            window.location.href = "{{ route('guru.nilai.store') }}";
+            window.location.href = "{{ route('guru.nilai.index') }}";
         }
 
         function detailNilai(id) {
@@ -550,7 +554,7 @@
         document.getElementById('searchInput')?.addEventListener('keyup', function() {
             let filter = this.value.toLowerCase();
             let rows = document.querySelectorAll('#nilaiTable tbody tr');
-            
+
             rows.forEach(row => {
                 let text = row.textContent.toLowerCase();
                 row.style.display = text.includes(filter) ? '' : 'none';

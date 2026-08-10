@@ -25,7 +25,7 @@
     <!-- HEADER / NAVBAR -->
     <header class="sticky top-0 z-30 bg-white border-b border-slate-100 shadow-sm px-4 lg:px-8 py-3">
         <div class="w-full max-w-[1600px] mx-auto flex items-center justify-between">
-            
+
             <!-- Logo & Portal Branding -->
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-white shadow-md shadow-orange-500/30">
@@ -137,7 +137,9 @@
             <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
                 <div>
                     <p class="text-xs font-medium text-slate-400">Total Siswa</p>
-                    <h3 class="text-2xl font-bold text-slate-800 mt-1">256</h3>
+                    <h3 class="text-2xl font-bold text-slate-800 mt-1">
+                        {{ $totalSiswa }}
+                    </h3>
                     <p class="text-[11px] text-slate-400 mt-0.5">Siswa Terdaftar</p>
                 </div>
                 <div class="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-500">
@@ -159,7 +161,7 @@
             <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
                 <div>
                     <p class="text-xs font-medium text-slate-400">Total Kelas Aktif</p>
-                    <h3 class="text-2xl font-bold text-slate-800 mt-1">12</h3>
+                    <h3 class="text-2xl font-bold text-slate-800 mt-1">{{ $totalKelas }}</h3>
                     <p class="text-[11px] text-slate-400 mt-0.5">Rombongan Belajar</p>
                 </div>
                 <div class="w-11 h-11 rounded-xl bg-orange-50 flex items-center justify-center text-orange-500">
@@ -170,7 +172,7 @@
 
         <!-- LAYOUT: FILTER DI KIRI (3 cols) & TABEL SISWA DI KANAN (9 cols) -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            
+
             <!-- FILTER SIDEBAR DI KIRI -->
             <div class="lg:col-span-3 bg-white p-5 rounded-2xl border border-slate-100 shadow-sm space-y-4">
                 <div class="flex items-center justify-between pb-3 border-b border-slate-100">

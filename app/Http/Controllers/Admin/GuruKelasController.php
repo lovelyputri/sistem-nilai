@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\GuruKelas;
+use App\Models\MataPelajaran;
 use App\Models\Siswa;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -14,24 +15,71 @@ class GuruKelasController extends Controller
      * Menampilkan halaman kelola guru dan kelas
      */
     public function index()
-    {
-        // Ambil semua guru
-        $guru = User::where('role', 'guru')
-            ->orderBy('name')
-            ->get();
+{
+    // Ambil semua guru
+    $guru = User::where('role', 'guru')
+        ->orderBy('created_at', 'desc')
+        ->get();
 
-        // Ambil semua assignment guru ke kelas
-        $guruKelas = GuruKelas::with([
-            'guru:id,name,nip,email'
-        ])
-            ->orderBy('kelas')
-            ->get();
+    // Pilihan mata pelajaran
+    $mataPelajaranOptions = MataPelajaran::orderBy('name', 'asc')
+        ->get();
 
-        return view('admin.guruKelas.index', compact(
-            'guru',
-            'guruKelas'
-        ));
-    }
+    // Pilihan kelas
+    $kelasOptions = Siswa::query()
+        ->whereNotNull('kelas')
+        ->where('kelas', '!=', '')
+        ->select('kelas')
+        ->distinct()
+        ->orderBy('kelas')
+        ->pluck('kelas');
+
+    // Statistik
+    $menunggu = User::where('role', 'guru')
+        ->where('status', 'menunggu')
+        ->count();
+
+    $disetujui = User::where('role', 'guru')
+        ->where('status', 'disetujui')
+        ->count();
+
+    $ditolak = User::where('role', 'guru')
+        ->where('status', 'ditolak')
+        ->count();
+
+    $totalGuru = User::where('role', 'guru')->count();
+
+    $guruAktif = $disetujui;
+
+    $guruNonAktif = $totalGuru - $guruAktif;
+
+    $persentaseAktif = $totalGuru > 0
+        ? round(($guruAktif / $totalGuru) * 100, 1)
+        : 0;
+
+    $persentaseNonAktif = $totalGuru > 0
+        ? round(($guruNonAktif / $totalGuru) * 100, 1)
+        : 0;
+
+    $statistik = [
+        'menunggu' => $menunggu,
+        'disetujui' => $disetujui,
+        'ditolak' => $ditolak,
+        'total_guru' => $totalGuru,
+        'guru_aktif' => $guruAktif,
+        'guru_non_aktif' => $guruNonAktif,
+        'persentase_aktif' => $persentaseAktif,
+        'persentase_non_aktif' => $persentaseNonAktif,
+        'rata_rata_mapel' => 0,
+    ];
+
+    return view('admin.guruKelas.index', compact(
+        'guru',
+        'statistik',
+        'mataPelajaranOptions',
+        'kelasOptions'
+    ));
+}
 
     /**
      * Menampilkan daftar kelas unik dari tabel siswa

@@ -13,30 +13,15 @@ class GuruController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $guru = User::where('role', 'guru')
-            ->with('mataPelajaran:id,name,kode', 'kelas')
-            ->orderBy('name')
-            ->get();
+        // --- Data untuk statistik (dihitung dari SELURUH guru, tanpa filter) ---
+        $allGuru = User::where('role', 'guru')->with('mataPelajaran')->get();
 
-        $waitingTeacher = $guru->where('status', 'menunggu')->count();
-
-        $data = $guru->map(fn($g) => [
-            'id' => $g->id,
-            'name' => $g->name,
-            'email' => $g->email,
-            'nip' => $g->nip,
-            'status' => $g->status,
-            'mata_pelajaran' => $g->mataPelajaran,
-            'kelas' => $g->kelas->pluck('kelas'),
-        ]);
-
-        // --- Statistik untuk 4 kartu di atas ---
-        $totalGuru        = $guru->count();
-        $guruAktif        = $guru->where('status', 'aktif')->count();
+        $totalGuru        = $allGuru->count();
+        $guruAktif        = $allGuru->where('status', 'aktif')->count();
         $guruNonAktif     = $totalGuru - $guruAktif; // gabungan status 'menunggu' & 'ditolak'
-        $totalRelasiMapel = $guru->sum(fn ($g) => $g->mataPelajaran->count());
+        $totalRelasiMapel = $allGuru->sum(fn ($g) => $g->mataPelajaran->count());
 
         $statistik = [
             'total_guru'           => $totalGuru,
@@ -47,10 +32,44 @@ class GuruController extends Controller
             'rata_rata_mapel'      => $totalGuru > 0 ? round($totalRelasiMapel / $totalGuru, 1) : 0,
         ];
 
+        $waitingTeacher = $allGuru->where('status', 'menunggu')->count();
+
+        // --- Query untuk tabel (dengan filter dari sidebar + pagination) ---
+        $query = User::where('role', 'guru')->with('mataPelajaran:id,name,kode', 'kelas');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('nip', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('mata_pelajaran')) {
+            $mapelId = $request->mata_pelajaran;
+            $query->whereHas('mataPelajaran', function ($q) use ($mapelId) {
+                $q->where('mata_pelajarans.id', $mapelId);
+            });
+        }
+
+        if ($request->filled('kelas')) {
+            $kelas = $request->kelas;
+            $query->whereHas('kelas', function ($q) use ($kelas) {
+                $q->where('kelas', $kelas);
+            });
+        }
+
+        $guru = $query->orderBy('name')->paginate(10)->withQueryString();
+
         // --- Opsi filter dropdown (diambil dari data asli, bukan hardcode) ---
         $mataPelajaranOptions = MataPelajaran::orderBy('name')->get(['id', 'name']);
 
-        $kelasOptions = $guru->flatMap(fn ($g) => $g->kelas->pluck('kelas'))
+        $kelasOptions = $allGuru->flatMap(fn ($g) => $g->kelas->pluck('kelas'))
             ->filter()
             ->unique()
             ->sort()
@@ -59,7 +78,6 @@ class GuruController extends Controller
         return view('admin.guru.index', compact(
             'guru',
             'waitingTeacher',
-            'data',
             'statistik',
             'mataPelajaranOptions',
             'kelasOptions'
@@ -103,12 +121,6 @@ class GuruController extends Controller
         return redirect()
             ->route("admin.guru.index")
             ->with("sukses", "Guru {$guru->name} berhasil ditambahkan.");
-
-        // return response()->json([
-        //     "status" => "success",
-        //     "message" => "Guru {$guru->name} berhasil ditambahkan.",
-        //     "data" => $guru,
-        // ], 200);
     }
 
     /**
@@ -168,12 +180,6 @@ class GuruController extends Controller
         return redirect()
             ->route('admin.guru.index')
             ->with('sukses', "Data guru {$guru->name} berhasil diperbarui.");
-
-        // return response()->json([
-        //     'status' => 'success',
-        //     'message' => "Data guru {$guru->name} berhasil diperbarui.",
-        //     'data' => $guru,
-        // ]);
     }
 
     /**
@@ -189,11 +195,6 @@ class GuruController extends Controller
         return redirect()
             ->route('admin.guru.index')
             ->with('sukses', "Akun guru {$nama} berhasil dihapus");
-
-        // return response()->json([
-        //     'status' => 'success',
-        //     'message' => "Akun guru {$nama} berhasil dihapus.",
-        // ]);
     }
 
     /**
@@ -208,11 +209,6 @@ class GuruController extends Controller
         return redirect()
             ->route('admin.guru.index')
             ->with('sukses', "Akun guru {$guru->name} telah dikonfirmasi. Guru sekarang dapat login");
-
-        // return response()->json([
-        //     'status' => 'success',
-        //     'message' => "Akun guru {$guru->name} telah dikonfirmasi.",
-        // ]);
     }
 
     /**
@@ -227,11 +223,6 @@ class GuruController extends Controller
         return redirect()
             ->route('admin.guru.index')
             ->with('sukses', "Akun guru {$guru->name} telah ditolak");
-
-        // return response()->json([
-        //     'status' => 'success',
-        //     'message' => "Akun guru {$guru->name} telah ditolak.",
-        // ]);
     }
 
     /**

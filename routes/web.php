@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
     // Register
     Route::get('/daftar', [RegisterController::class, 'showForm'])->name('register');
     Route::post('/daftar', [RegisterController::class, 'register'])->name('register.proses');
-    // Logout 
+    // Logout
     Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.role:admin'])->group(function () {
@@ -36,7 +36,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.role:admin'])
     Route::put('/guru/{guru}', [GuruController::class, 'update'])->name('guru.update');
     Route::delete('/guru/{guru}', [GuruController::class, 'destroy'])->name('guru.destroy');
 
-    
+
     // Menampilkan semua assignment guru dan kelas
     Route::get('/guru-kelas', [GuruKelasController::class, 'index'])->name('guruKelas.index');
     // Menampilkan daftar kelas unik

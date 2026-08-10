@@ -13,28 +13,53 @@ class SiswaController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
-        $kelasTerpilih = $request->get('kelas');
-        $daftarKelas   = Siswa::select('kelas')->distinct()->orderBy('kelas')->pluck('kelas');
+{
+    $kelasTerpilih = $request->get('kelas');
 
-        $siswa = Siswa::query()
-            ->when($kelasTerpilih, fn($q) => $q->where('kelas', $kelasTerpilih))
-            ->orderBy('kelas')
-            ->orderBy('name')
-            ->get(['id', 'name', 'nis', 'kelas']);
+    // Daftar kelas dari database
+    $daftarKelas = Siswa::select('kelas')
+        ->distinct()
+        ->orderBy('kelas')
+        ->pluck('kelas');
 
-        if ($request->wantsJson()) {
-            return response()->json([
-                'status'        => 'success',
-                'total'         => $siswa->count(),
-                'daftar_kelas'  => $daftarKelas,
-                'data'          => $siswa,
-            ]);
-        }
+    // Data siswa dari database
+    $siswa = Siswa::query()
+        ->when($kelasTerpilih, function ($query) use ($kelasTerpilih) {
+            $query->where('kelas', $kelasTerpilih);
+        })
+        ->orderBy('kelas')
+        ->orderBy('name')
+        ->get([
+            'id',
+            'name',
+            'nis',
+            'kelas'
+        ]);
 
-        return view('admin.siswa.index', compact('siswa', 'daftarKelas', 'kelasTerpilih'));
+    // Statistik
+    $totalSiswa = Siswa::count();
+
+    $totalKelas = Siswa::select('kelas')
+        ->distinct()
+        ->count('kelas');
+
+    if ($request->wantsJson()) {
+        return response()->json([
+            'status' => 'success',
+            'total' => $siswa->count(),
+            'daftar_kelas' => $daftarKelas,
+            'data' => $siswa,
+        ]);
     }
 
+    return view('admin.siswa.index', compact(
+        'siswa',
+        'daftarKelas',
+        'kelasTerpilih',
+        'totalSiswa',
+        'totalKelas'
+    ));
+}
     /**
      * Show the form for creating a new resource.
      */
