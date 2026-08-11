@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\MataPelajaran;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Illuminate\Validation\Rule;
 
@@ -14,13 +15,58 @@ class MataPelajaranController extends Controller
     /**
      * Menampilkan semua mata pelajaran.
      */
-    public function index(): View
-    {
-        $mataPelajarans = MataPelajaran::latest()->get();
+    public function index(Request $request): View
+{
+    $search = $request->get('search');
+    $kodeTerpilih = $request->get('kode');
+    $perPage = (int) $request->get('per_page', 10);
 
-        return view('admin.mapel.index', compact('mataPelajarans'));
-    }
+    // Daftar kode untuk filter
+    $daftarKode = MataPelajaran::query()
+        ->select('kode')
+        ->whereNotNull('kode')
+        ->where('kode', '!=', '')
+        ->distinct()
+        ->orderBy('kode')
+        ->pluck('kode');
 
+    // Data mata pelajaran
+    $mataPelajarans = MataPelajaran::query()
+        ->withCount('gurus')
+
+        ->when($search, function ($query) use ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('kode', 'like', "%{$search}%");
+            });
+        })
+
+        // Filter berdasarkan kode
+        ->when($kodeTerpilih, function ($query) use ($kodeTerpilih) {
+            $query->where('kode', $kodeTerpilih);
+        })
+
+        ->latest()
+        ->paginate($perPage)
+        ->appends($request->query());
+
+    // Statistik keseluruhan
+    $totalMapel = MataPelajaran::count();
+
+    // Jumlah guru unik yang mengampu minimal 1 mapel
+    $totalGuruPengampu = DB::table('guru_mapel')
+        ->distinct('id_user')
+        ->count('id_user');
+
+    return view('admin.mapel.index', compact(
+        'mataPelajarans',
+        'search',
+        'kodeTerpilih',
+        'daftarKode',
+        'totalMapel',
+        'totalGuruPengampu'
+    ));
+}
     /**
      * Menampilkan form tambah mata pelajaran.
      */

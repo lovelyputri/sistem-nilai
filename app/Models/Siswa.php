@@ -13,6 +13,7 @@ class Siswa extends Model
         'name',
         'nis',
         'kelas',
+        'status'
     ];
 
     public function nilai(): HasMany
@@ -40,7 +41,7 @@ class Siswa extends Model
     }
 
     // pengecekan apakah nilai siswa sudah lengkap semua mapel
-    public function getLengkapAttribute(): bool 
+    public function getLengkapAttribute(): bool
     {
         $totalMapel = MataPelajaran::count();
         return $this->nilai()->count() >= $totalMapel;

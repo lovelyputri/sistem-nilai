@@ -16,14 +16,15 @@ class MataPelajaran extends Model
         'keterangan'
     ];
 
-    public function guru(): BelongsToMany
+    public function gurus(): BelongsToMany
     {
         return $this->belongsToMany(
             User::class,
             'guru_mapel',
             'id_mata_pelajaran',
             'id_user'
-        )->withTimestamps();
+        )->where('users.role', 'guru'); // qualify kolom 'role' dengan nama tabel
+                                        // supaya tidak ambigu saat dipakai di withCount()
     }
 
     public function nilai(): HasMany

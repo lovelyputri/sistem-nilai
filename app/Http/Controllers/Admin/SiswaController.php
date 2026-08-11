@@ -3,60 +3,68 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\GuruKelas;
 use App\Models\MataPelajaran;
 use App\Models\Siswa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
 
 class SiswaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request)
-{
-    $kelasTerpilih = $request->get('kelas');
 
-    // Daftar kelas dari database
+   public function index(Request $request)
+{
+    $search        = $request->get('search');
+    $kelasTerpilih = $request->get('kelas');
+    $statusTerpilih = $request->get('status');
+    $perPage       = (int) $request->get('per_page', 10);
+
+    // Daftar kelas
     $daftarKelas = Siswa::select('kelas')
+        ->whereNotNull('kelas')
+        ->where('kelas', '!=', '')
         ->distinct()
         ->orderBy('kelas')
         ->pluck('kelas');
 
-    // Data siswa dari database
+    // Data siswa
     $siswa = Siswa::query()
         ->when($kelasTerpilih, function ($query) use ($kelasTerpilih) {
             $query->where('kelas', $kelasTerpilih);
         })
-        ->orderBy('kelas')
-        ->orderBy('name')
-        ->get([
-            'id',
-            'name',
-            'nis',
-            'kelas'
-        ]);
+        ->when($statusTerpilih, function ($query) use ($statusTerpilih) {
+            $query->where('status', $statusTerpilih);
+        })
+        ->when($search, function ($query) use ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('nis', 'like', "%{$search}%");
+            });
+        })
+        ->latest()
+        ->paginate($perPage)
+        ->appends($request->query());
 
     // Statistik
     $totalSiswa = Siswa::count();
 
+    $totalSiswaAktif = Siswa::where('status', 'aktif')->count();
+
     $totalKelas = Siswa::select('kelas')
+        ->whereNotNull('kelas')
+        ->where('kelas', '!=', '')
         ->distinct()
         ->count('kelas');
-
-    if ($request->wantsJson()) {
-        return response()->json([
-            'status' => 'success',
-            'total' => $siswa->count(),
-            'daftar_kelas' => $daftarKelas,
-            'data' => $siswa,
-        ]);
-    }
 
     return view('admin.siswa.index', compact(
         'siswa',
         'daftarKelas',
         'kelasTerpilih',
+        'statusTerpilih',
+        'search',
         'totalSiswa',
+        'totalSiswaAktif',
         'totalKelas'
     ));
 }
