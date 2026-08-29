@@ -37,16 +37,16 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.role:admin'])
     Route::delete('/guru/{guru}', [GuruController::class, 'destroy'])->name('guru.destroy');
 
 
-    // Menampilkan semua assignment guru dan kelas
+    // Menampilkan semua assignment guru dan kelas (Verifikasi Guru)
     Route::get('/guru-kelas', [GuruKelasController::class, 'index'])->name('guruKelas.index');
-    // Menampilkan daftar kelas unik
+    // Menampilkan daftar guru dengan penugasan kelas
     Route::get('/kelas', [GuruKelasController::class, 'daftarKelas'])->name('guruKelas.daftarKelas');
     // Menampilkan guru yang ditugaskan pada kelas tertentu
-    // Route::get('/{kelas}', [GuruKelasController::class, 'show'])->name('guruKelas.show');
-    // // Menambahkan guru ke kelas
-    // Route::post('/', [GuruKelasController::class, 'store'])->name('guruKelas.store');
-    // // Menghapus assignment guru dari kelas
-    // Route::delete('/{guruKelas}', [GuruKelasController::class, 'destroy'])->name('guruKelas.destroy');
+    // Route::get('/kelas/{kelas}', [GuruKelasController::class, 'show'])->name('guruKelas.show');
+    // Menambahkan guru ke kelas
+    Route::post('/kelas', [GuruKelasController::class, 'store'])->name('guruKelas.store');
+    // Menghapus assignment guru dari kelas
+    Route::delete('/kelas/{guruKelas}', [GuruKelasController::class, 'destroy'])->name('guruKelas.destroy');
 
     // Mata Pelajaran
     Route::prefix('mapel')->name('mapel.')->group(function () {
