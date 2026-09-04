@@ -175,28 +175,43 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100 text-slate-700">
-                                @forelse ($guru as $g)
-                                    @php
-                                        $initials = collect(explode(' ', trim($g->name)))
-                                            ->filter()
-                                            ->map(fn ($w) => strtoupper(substr($w, 0, 1)))
-                                            ->take(2)
-                                            ->implode('');
+                            @forelse ($guru as $g)
+                                @php
+                                    $initials = collect(explode(' ', trim($g->name)))
+                                        ->filter()
+                                        ->map(fn ($w) => strtoupper(substr($w, 0, 1)))
+                                        ->take(2)
+                                        ->implode('');
 
-                                        $badgeColors = ['sky', 'emerald', 'amber', 'purple', 'orange', 'teal', 'rose'];
-                                        $colorIndex  = $g->id % count($badgeColors);
-                                        $badgeColor  = $badgeColors[$colorIndex];
+                                    $badgeColors = ['sky', 'emerald', 'amber', 'purple', 'orange', 'teal', 'rose'];
+                                    $colorIndex  = $g->id % count($badgeColors);
+                                    $badgeColor  = $badgeColors[$colorIndex];
 
-                                        $statusMap = [
-                                            'aktif'    => ['label' => 'Aktif',    'bg' => 'bg-emerald-50', 'text' => 'text-emerald-600', 'dot' => 'bg-emerald-500'],
-                                            'menunggu' => ['label' => 'Menunggu', 'bg' => 'bg-amber-50',   'text' => 'text-amber-600',   'dot' => 'bg-amber-500'],
-                                            'ditolak'  => ['label' => 'Ditolak',  'bg' => 'bg-rose-50',    'text' => 'text-rose-600',    'dot' => 'bg-rose-500'],
-                                        ];
-                                        $status = $statusMap[$g->status] ?? ['label' => ucfirst($g->status), 'bg' => 'bg-slate-100', 'text' => 'text-slate-600', 'dot' => 'bg-slate-400'];
+                                    $statusMap = [
+                                        'aktif' => [
+                                            'label' => 'Aktif',
+                                            'bg'    => 'bg-emerald-50',
+                                            'text'  => 'text-emerald-600',
+                                            'dot'   => 'bg-emerald-500'
+                                        ],
+                                        'non_aktif' => [
+                                            'label' => 'Non Aktif',
+                                            'bg'    => 'bg-rose-50',
+                                            'text'  => 'text-rose-600',
+                                            'dot'   => 'bg-rose-500'
+                                        ],
+                                    ];
 
-                                        $daftarMapel = $g->mataPelajaran ?? collect();
-                                        $daftarKelas = $g->kelas ?? collect();
-                                    @endphp
+                                    $status = $statusMap[$g->status] ?? [
+                                        'label' => ucfirst(str_replace('_', ' ', $g->status)),
+                                        'bg'    => 'bg-slate-100',
+                                        'text'  => 'text-slate-600',
+                                        'dot'   => 'bg-slate-400'
+                                    ];
+
+                                    $daftarMapel = $g->mataPelajaran ?? collect();
+                                    $daftarKelas = $g->kelas ?? collect();
+                                @endphp
                                     <tr class="hover:bg-slate-50/50">
                                         <td class="py-3 px-4 text-slate-500 font-medium">
                                             {{ $guru->firstItem() + $loop->index }}
@@ -239,7 +254,7 @@
                                         </td>
                                         <td class="py-3 px-4">
                                             <div class="flex items-center justify-center space-x-1.5">
-                                                @if ($g->status === 'menunggu')
+                                                <!-- @if ($g->status === 'menunggu')
                                                     <a href="{{ route('admin.guru.confirm', $g->id) }}"
                                                        title="Konfirmasi"
                                                        class="w-7 h-7 rounded-lg bg-slate-50 text-emerald-600 hover:bg-emerald-50 flex items-center justify-center border border-slate-200 transition-colors">
@@ -250,7 +265,7 @@
                                                        class="w-7 h-7 rounded-lg bg-slate-50 text-rose-600 hover:bg-rose-50 flex items-center justify-center border border-slate-200 transition-colors">
                                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                                                     </a>
-                                                @endif
+                                                @endif -->
 
                                                 <a href="{{ route('admin.guru.edit', $g->id) }}"
                                                    title="Edit"
