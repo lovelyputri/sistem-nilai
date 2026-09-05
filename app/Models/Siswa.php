@@ -12,17 +12,39 @@ class Siswa extends Model
     protected $fillable = [
         'name',
         'nis',
+        'nisn',
+        'nik',
+        'jenis_kelamin',
+        'tempat_lahir',
+        'tanggal_lahir',
+        'agama',
+        'alamat',
         'kelas',
-        'status'
+        'jurusan',
+        'angkatan',
+        'tahun_masuk',
+        'status',
+        'no_hp',
+        'email',
+        'foto',
     ];
 
+    protected $casts = [
+        'tanggal_lahir' => 'date',
+    ];
+
+    /**
+     * Relasi ke nilai siswa
+     */
     public function nilai(): HasMany
     {
         return $this->hasMany(Nilai::class, 'id_siswa');
     }
 
-    // menghitung rata rata nilai pada siswa secara otomatis
-    public function getRataRataAttrribute(): float|null
+    /**
+     * Menghitung rata-rata nilai siswa
+     */
+    public function getRataRataAttribute(): ?float
     {
         $totalMapel = MataPelajaran::count();
 
@@ -31,19 +53,21 @@ class Siswa extends Model
         }
 
         $totalNilai = $this->nilai()->sum('nilai');
-        $jumlahNilai = $this->nilai()->count();
-
-        if ($jumlahNilai === 0) {
-            return null;
-        }
 
         return round($totalNilai / $totalMapel, 2);
     }
 
-    // pengecekan apakah nilai siswa sudah lengkap semua mapel
+    /**
+     * Mengecek apakah nilai siswa sudah lengkap
+     */
     public function getLengkapAttribute(): bool
     {
         $totalMapel = MataPelajaran::count();
+
+        if ($totalMapel === 0) {
+            return false;
+        }
+
         return $this->nilai()->count() >= $totalMapel;
     }
 }

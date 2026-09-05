@@ -14,7 +14,7 @@ class GuruKelas extends Model
         'kelas',
     ];
 
-    public function guruKelas(): BelongsTo
+    public function guru(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user');
     }

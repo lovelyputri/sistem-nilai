@@ -28,19 +28,49 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.role:admin'])
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Guru
-    Route::get('/guru', [GuruController::class, 'index'])->name('guru.index');
-    Route::get('/guru/create', [GuruController::class, 'create'])->name('guru.create');
-    Route::post('/guru', [GuruController::class, 'store'])->name('guru.store');
-    Route::get('/guru/{guru}/edit', [GuruController::class, 'edit'])->name('guru.edit');
-    Route::put('/guru/{guru}', [GuruController::class, 'update'])->name('guru.update');
-    Route::delete('/guru/{guru}', [GuruController::class, 'destroy'])->name('guru.destroy');
+        // Guru
+Route::get('/guru', [GuruController::class, 'index'])->name('guru.index');
+
+Route::get('/guru/create', [GuruController::class, 'create'])->name('guru.create');
+Route::post('/guru', [GuruController::class, 'store'])->name('guru.store');
+
+Route::get('/guru/{guru}/edit', [GuruController::class, 'edit'])->name('guru.edit');
+Route::put('/guru/{guru}', [GuruController::class, 'update'])->name('guru.update');
+
+Route::get('/guru/{guru}', [GuruController::class, 'show'])->name('guru.show');
+Route::delete('/guru/{guru}', [GuruController::class, 'destroy'])->name('guru.destroy');
 
 
     // Menampilkan semua assignment guru dan kelas (Verifikasi Guru)
     Route::get('/guru-kelas', [GuruKelasController::class, 'index'])->name('guruKelas.index');
     // Menampilkan daftar guru dengan penugasan kelas
     Route::get('/kelas', [GuruKelasController::class, 'daftarKelas'])->name('guruKelas.daftarKelas');
+   Route::get(
+    '/guru-kelas/tambah-penugasan',
+    [GuruKelasController::class, 'tambahPenugasan']
+    )->name('guruKelas.tambahPenugasan');
+
+    Route::post(
+        '/guru-kelas/tambah-penugasan',
+        [GuruKelasController::class, 'storePenugasan']
+    )->name('guruKelas.storePenugasan');
+    Route::get(
+    '/guru-kelas/edit-penugasan/{id}',
+    [GuruKelasController::class, 'editPenugasan']
+    )->name('guruKelas.editPenugasan');
+    Route::put(
+        '/guru-kelas/edit-penugasan/{id}',
+        [GuruKelasController::class, 'updatePenugasan']
+    )->name('guruKelas.updatePenugasan');
+    Route::get(
+    '/guru-kelas/tambah-mapel',
+    [GuruKelasController::class, 'tambahMapel']
+    )->name('guruKelas.tambahMapel');
+
+    Route::post(
+        '/guru-kelas/tambah-mapel',
+        [GuruKelasController::class, 'storeMapel']
+    )->name('guruKelas.storeMapel');
     // Menampilkan guru yang ditugaskan pada kelas tertentu
     // Route::get('/kelas/{kelas}', [GuruKelasController::class, 'show'])->name('guruKelas.show');
     // Menambahkan guru ke kelas
@@ -51,11 +81,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.role:admin'])
     // Mata Pelajaran
     Route::prefix('mapel')->name('mapel.')->group(function () {
         Route::get('/', [MataPelajaranController::class, 'index'])->name('index');
-        // Route::get('/create', [MataPelajaranController::class, 'create'])->name('create');
-        // Route::post('/', [MataPelajaranController::class, 'store'])->name('store');
-        // Route::get('/{mataPelajaran}/edit', [MataPelajaranController::class, 'edit'])->name('edit');
-        // Route::put('/{mataPelajaran}', [MataPelajaranController::class, 'update'])->name('update');
-        // Route::delete('/{mataPelajaran}', [MataPelajaranController::class, 'destroy'])->name('destroy');
+        Route::get('/mapel/{mataPelajaran}', [MataPelajaranController::class, 'show'])->name('show');
+        Route::get('/create', [MataPelajaranController::class, 'create'])->name('create');
+        Route::post('/', [MataPelajaranController::class, 'store'])->name('store');
+        Route::get('/{mataPelajaran}/edit', [MataPelajaranController::class, 'edit'])->name('edit');
+        Route::put('/{mataPelajaran}', [MataPelajaranController::class, 'update'])->name('update');
+        Route::delete('/{mataPelajaran}', [MataPelajaranController::class, 'destroy'])->name('destroy');
     });
 
 
@@ -64,16 +95,32 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.role:admin'])
     Route::get('/guru/{guru}/reject', [GuruController::class, 'rejected'])->name('guru.reject');
 
     // Siswa
-    Route::get('/siswa', [SiswaController::class, 'index'])->name('siswa.index');
-    Route::get('/siswa/create', [SiswaController::class, 'create'])->name('siswa.create');
-    Route::post('/siswa', [SiswaController::class, 'store'])->name('siswa.store');
-    Route::get('/siswa/{siswa}/edit', [SiswaController::class, 'edit'])->name('siswa.edit');
-    Route::put('/siswa/{siswa}', [SiswaController::class, 'update'])->name('siswa.update');
-    Route::delete('/siswa/{siswa}', [SiswaController::class, 'destroy'])->name('siswa.destroy');
+    Route::get('/siswa', [SiswaController::class, 'index'])
+        ->name('siswa.index');
+
+    Route::get('/siswa/create', [SiswaController::class, 'create'])
+        ->name('siswa.create');
+
+    Route::post('/siswa', [SiswaController::class, 'store'])
+        ->name('siswa.store');
+
+    Route::get('/siswa/{siswa}', [SiswaController::class, 'show'])
+        ->name('siswa.show');
+
+    Route::get('/siswa/{siswa}/edit', [SiswaController::class, 'edit'])
+        ->name('siswa.edit');
+
+    Route::put('/siswa/{siswa}', [SiswaController::class, 'update'])
+        ->name('siswa.update');
+
+    Route::delete('/siswa/{siswa}', [SiswaController::class, 'destroy'])
+        ->name('siswa.destroy');
 
     // Nilai
     Route::get('/nilai', [NilaiController::class, 'index'])->name('nilai.index');
     Route::get('/nilai/{siswa}', [NilaiController::class, 'show'])->name('nilai.show');
+    Route::delete('/nilai/{nilai}', [NilaiController::class, 'destroy'])
+        ->name('nilai.destroy');
 });
 
 Route::middleware(['auth', 'check.role:guru'])->prefix('guru')->name('guru.')->group(function () {

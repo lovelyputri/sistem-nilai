@@ -4,7 +4,6 @@
     <!-- UTAMA CONTENT CONTAINER -->
     <div class="w-full mx-auto px-4 lg:px-8 py-5 flex-grow space-y-5">
 
-
         {{-- FLASH MESSAGE --}}
         @if (session('sukses'))
             <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold px-4 py-3 rounded-xl">
@@ -117,7 +116,7 @@
                 </div>
 
                 <!-- Status -->
-                <div class="space-y-1.5">
+                <!-- <div class="space-y-1.5">
                     <label class="text-xs font-bold text-slate-700">Status</label>
                     <select name="status" class="w-full text-xs px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-orange-500 text-slate-600">
                         <option value="">Semua Status</option>
@@ -125,7 +124,7 @@
                         <option value="menunggu" @selected(request('status') === 'menunggu')>Menunggu</option>
                         <option value="ditolak" @selected(request('status') === 'ditolak')>Ditolak</option>
                     </select>
-                </div>
+                </div> -->
 
                 <!-- Mata Pelajaran -->
                 <div class="space-y-1.5">
@@ -139,17 +138,6 @@
                         @endforeach
                     </select>
                 </div>
-
-                {{-- <!-- Kelas -->
-                <div class="space-y-1.5">
-                    <label class="text-xs font-bold text-slate-700">Kelas</label>
-                    <select name="kelas" class="w-full text-xs px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-orange-500 text-slate-600">
-                        <option value="">Semua Kelas</option>
-                        @foreach ($kelasOptions as $kelas)
-                            <option value="{{ $kelas }}" @selected(request('kelas') === $kelas)>{{ $kelas }}</option>
-                        @endforeach
-                    </select>
-                </div> --}}
 
                 <button type="submit" class="w-full mt-2 bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold py-2.5 rounded-xl shadow-sm transition-all flex items-center justify-center space-x-1.5">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
@@ -169,8 +157,6 @@
                                     <th class="py-3 px-4">Nama Guru</th>
                                     <th class="py-3 px-4">NIP</th>
                                     <th class="py-3 px-4">Mata Pelajaran</th>
-                                    {{-- <th class="py-3 px-4">Kelas</th> --}}
-                                    <th class="py-3 px-4">Status</th>
                                     <th class="py-3 px-4 text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -187,30 +173,7 @@
                                     $colorIndex  = $g->id % count($badgeColors);
                                     $badgeColor  = $badgeColors[$colorIndex];
 
-                                    $statusMap = [
-                                        'aktif' => [
-                                            'label' => 'Aktif',
-                                            'bg'    => 'bg-emerald-50',
-                                            'text'  => 'text-emerald-600',
-                                            'dot'   => 'bg-emerald-500'
-                                        ],
-                                        'non_aktif' => [
-                                            'label' => 'Non Aktif',
-                                            'bg'    => 'bg-rose-50',
-                                            'text'  => 'text-rose-600',
-                                            'dot'   => 'bg-rose-500'
-                                        ],
-                                    ];
-
-                                    $status = $statusMap[$g->status] ?? [
-                                        'label' => ucfirst(str_replace('_', ' ', $g->status)),
-                                        'bg'    => 'bg-slate-100',
-                                        'text'  => 'text-slate-600',
-                                        'dot'   => 'bg-slate-400'
-                                    ];
-
                                     $daftarMapel = $g->mataPelajaran ?? collect();
-                                    $daftarKelas = $g->kelas ?? collect();
                                 @endphp
                                     <tr class="hover:bg-slate-50/50">
                                         <td class="py-3 px-4 text-slate-500 font-medium">
@@ -244,34 +207,24 @@
                                                 </div>
                                             @endif
                                         </td>
-                                        {{-- <td class="py-3 px-4 text-slate-600">
-                                            {{ $daftarKelas->pluck('kelas')->implode(', ') ?: '-' }}
-                                        </td> --}}
-                                        <td class="py-3 px-4">
-                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium {{ $status['bg'] }} {{ $status['text'] }}">
-                                                <span class="w-1.5 h-1.5 rounded-full {{ $status['dot'] }} mr-1.5"></span> {{ $status['label'] }}
-                                            </span>
-                                        </td>
                                         <td class="py-3 px-4">
                                             <div class="flex items-center justify-center space-x-1.5">
-                                                <!-- @if ($g->status === 'menunggu')
-                                                    <a href="{{ route('admin.guru.confirm', $g->id) }}"
-                                                       title="Konfirmasi"
-                                                       class="w-7 h-7 rounded-lg bg-slate-50 text-emerald-600 hover:bg-emerald-50 flex items-center justify-center border border-slate-200 transition-colors">
-                                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                                                    </a>
-                                                    <a href="{{ route('admin.guru.reject', $g->id) }}"
-                                                       title="Tolak"
-                                                       class="w-7 h-7 rounded-lg bg-slate-50 text-rose-600 hover:bg-rose-50 flex items-center justify-center border border-slate-200 transition-colors">
-                                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                                                    </a>
-                                                @endif -->
-
                                                 <a href="{{ route('admin.guru.edit', $g->id) }}"
                                                    title="Edit"
                                                    class="w-7 h-7 rounded-lg bg-slate-50 text-slate-600 hover:bg-amber-50 hover:text-amber-600 flex items-center justify-center border border-slate-200 transition-colors">
                                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                                 </a>
+
+                                                <a href="{{ route('admin.guru.show', $g->id) }}"
+                                                    title="Lihat Detail"
+                                                    class="w-7 h-7 rounded-lg bg-slate-50 text-slate-600 hover:bg-blue-50 hover:text-blue-600 flex items-center justify-center border border-slate-200 transition-colors">
+                                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                                        </svg>
+                                                    </a>
 
                                                 <form action="{{ route('admin.guru.destroy', $g->id) }}" method="POST"
                                                       onsubmit="return confirm('Hapus akun guru {{ $g->name }}?');">
@@ -285,17 +238,17 @@
                                             </div>
                                         </td>
                                     </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="7" class="py-10 px-4 text-center text-slate-400">
-                                            @if (request()->hasAny(['search', 'status', 'mata_pelajaran', 'kelas']))
-                                                Tidak ada data guru yang cocok dengan filter.
-                                            @else
-                                                Belum ada data guru.
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforelse
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="py-10 px-4 text-center text-slate-400">
+                                        @if (request()->hasAny(['search', 'status', 'mata_pelajaran', 'kelas']))
+                                            Tidak ada data guru yang cocok dengan filter.
+                                        @else
+                                            Belum ada data guru.
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforelse
                             </tbody>
                         </table>
                     </div>
@@ -320,4 +273,3 @@
     </div>
 
 @endsection
-

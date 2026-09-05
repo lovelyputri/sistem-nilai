@@ -1,626 +1,974 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Tambah Siswa | Sistem Nilai Guru</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --primary: #EA580C;
-            --primary-light: #F97316;
-            --white: #FFFFFF;
-            --text-dark: #431407;
-            --text-muted: #9A3412;
-            --border: #FED7AA;
-            --bg-light: #FFF7ED;
-            --success: #10B981;
-            --danger: #EF4444;
-            --info: #3B82F6;
-        }
-        body {
-            font-family: 'Roboto', sans-serif;
-            background: var(--bg-light);
-            color: var(--text-dark);
-            min-height: 100vh;
-        }
+Tidak bisa kita ketahui, bahkan CCTV- CCTV-nya Juga enggak ada, jadi untuk mencari jejak-jejaknya pun Mm.@extends('layout')
 
-        /* NAVBAR STYLES */
-        .navbar {
-            background: var(--white);
-            padding: 0.75rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-        }
+@section('content')
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
+<main class="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: rgba(234, 88, 12, 0.1);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    {{-- Breadcrumb --}}
+    <nav class="flex items-center gap-2 text-xs font-medium text-slate-400 mb-5 overflow-x-auto whitespace-nowrap">
 
-        .logo-icon svg {
-            width: 22px;
-            height: 22px;
-            stroke: var(--primary);
-        }
+        <a href="{{ route('admin.dashboard') }}"
+           class="hover:text-orange-600 transition-colors">
+            Dashboard
+        </a>
 
-        .logo-text {
-            display: flex;
-            flex-direction: column;
-        }
+        <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"/>
+        </svg>
 
-        .logo-text span:first-child {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--primary);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
+        <a href="{{ route('admin.siswa.index') }}"
+           class="hover:text-orange-600 transition-colors">
+            Kelola Siswa
+        </a>
 
-        .logo-text span:last-child {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
+        <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"/>
+        </svg>
 
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 0.5rem;
-        }
+        <span class="text-orange-600">
+            Tambah Siswa
+        </span>
 
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.6rem 1.2rem;
-            border-radius: 10px;
-            color: var(--text-muted);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        .nav-link svg {
-            width: 18px;
-            height: 18px;
-            stroke: currentColor;
-        }
-
-        .nav-link:hover {
-            background: var(--bg-light);
-            color: var(--primary);
-        }
-
-        .nav-link.active {
-            background: linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%);
-            color: var(--primary);
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .user-name {
-            font-weight: 600;
-            color: var(--text-dark);
-            font-size: 14px;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--primary-light), var(--primary));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            font-weight: bold;
-        }
-
-        .logout-btn {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.6rem 1.2rem;
-            border-radius: 10px;
-            color: #DC2626;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 14px;
-            background: rgba(220, 38, 38, 0.05);
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .logout-btn:hover {
-            background: rgba(220, 38, 38, 0.1);
-        }
-
-        /* MAIN CONTENT */
-        .main-content {
-            padding: 2rem;
-            max-width: 800px;
-            margin: 0 auto;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Page Header */
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .page-header h1 {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        .btn-back {
-            background: var(--white);
-            color: var(--text-muted);
-            padding: 0.6rem 1.2rem;
-            border-radius: 10px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            border: 1px solid var(--border);
-        }
-
-        .btn-back:hover {
-            background: var(--bg-light);
-            color: var(--primary);
-            border-color: var(--primary-light);
-        }
-
-        /* Form Card */
-        .form-card {
-            background: var(--white);
-            border-radius: 24px;
-            border: 1px solid var(--border);
-            overflow: hidden;
-        }
-
-        .form-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--border);
-            background: var(--bg-light);
-        }
-
-        .form-header h2 {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-dark);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .form-header h2 svg {
-            width: 22px;
-            height: 22px;
-            stroke: var(--primary);
-        }
-
-        .form-body {
-            padding: 2rem;
-        }
-
-        /* Form Group */
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .form-group label span {
-            color: var(--danger);
-        }
-
-        .input-wrapper {
-            position: relative;
-        }
-
-        .input-icon {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #FDBA74;
-            display: flex;
-            z-index: 1;
-        }
-
-        .input-icon svg {
-            width: 18px;
-            height: 18px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 16px 12px 44px;
-            background: var(--white);
-            border: 1.5px solid var(--border);
-            border-radius: 12px;
-            font-family: inherit;
-            font-size: 14px;
-            color: var(--text-dark);
-            transition: all 0.25s ease;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary-light);
-            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.12);
-        }
-
-        .form-control::placeholder {
-            color: #FDBA74;
-        }
-
-        select.form-control {
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23FDBA74' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 16px center;
-        }
-
-        /* Error Messages */
-        .error-message {
-            color: var(--danger);
-            font-size: 12px;
-            margin-top: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-
-        .error-message svg {
-            width: 14px;
-            height: 14px;
-        }
-
-        /* Alert Errors */
-        .alert-errors {
-            background: rgba(239, 68, 68, 0.1);
-            border-left: 4px solid var(--danger);
-            border-radius: 12px;
-            padding: 1rem 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .alert-errors ul {
-            margin-left: 1.5rem;
-            color: var(--danger);
-            font-size: 14px;
-        }
-
-        /* Buttons */
-        .form-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .btn-submit {
-            background: var(--primary-light);
-            color: var(--white);
-            padding: 0.75rem 1.5rem;
-            border-radius: 12px;
-            border: none;
-            font-size: 14px;
-            font-weight: 600;
-            font-family: inherit;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-submit:hover {
-            background: var(--primary);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(234, 88, 12, 0.2);
-        }
-
-        .btn-reset {
-            background: var(--white);
-            color: var(--text-muted);
-            padding: 0.75rem 1.5rem;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            font-size: 14px;
-            font-weight: 500;
-            font-family: inherit;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-reset:hover {
-            background: var(--bg-light);
-            color: var(--text-dark);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .main-content {
-                padding: 1rem;
-            }
-            .navbar {
-                padding: 0.75rem 1rem;
-                flex-wrap: wrap;
-                gap: 0.5rem;
-            }
-            .nav-menu {
-                order: 3;
-                width: 100%;
-                justify-content: center;
-                margin-top: 0.5rem;
-            }
-            .form-body {
-                padding: 1.5rem;
-            }
-            .form-actions {
-                flex-direction: column;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- NAVBAR -->
-    <nav class="navbar">
-        <div class="logo">
-            <div class="logo-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="8" r="7"/>
-                    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>
-                </svg>
-            </div>
-            <div class="logo-text">
-                <span>Sistem Nilai</span>
-                <span>Portal Guru</span>
-            </div>
-        </div>
-
-        <ul class="nav-menu">
-            <li class="nav-item">
-                <a href="{{ route('admin.dashboard') }}" class="nav-link">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2h-5v-7H9v7H5a2 2 0 0 1-2-2z"/>
-                    </svg>
-                    <span>Dashboard</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{ route('admin.guru.index') }}" class="nav-link">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                        <circle cx="12" cy="7" r="4"/>
-                    </svg>
-                    <span>Kelola Guru</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{ route('admin.siswa.index') }}" class="nav-link active">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                        <circle cx="9" cy="7" r="4"/>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                    </svg>
-                    <span>Kelola Siswa</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{ route('admin.nilai.index') }}" class="nav-link">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/>
-                        <path d="M12 6v6l4 2"/>
-                    </svg>
-                    <span>Kelola Nilai</span>
-                </a>
-            </li>
-        </ul>
-
-        <div class="user-info">
-            <span class="user-name">{{ Auth::user()->name ?? 'Admin' }}</span>
-            <div class="user-avatar">
-                {{ substr(Auth::user()->name ?? 'A', 0, 1) }}
-            </div>
-            <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-                @csrf
-                <button type="submit" class="logout-btn">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                        <polyline points="16 17 21 12 16 7"/>
-                        <line x1="21" y1="12" x2="9" y2="12"/>
-                    </svg>
-                    <span>Keluar</span>
-                </button>
-            </form>
-        </div>
     </nav>
 
-    <!-- MAIN CONTENT -->
-    <main class="main-content">
-        <!-- PAGE HEADER -->
-        <div class="page-header">
-            <h1>➕ Tambah Siswa Baru</h1>
-            <a href="{{ route('admin.siswa.index') }}" class="btn-back">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-                    <polyline points="15 18 9 12 15 6"/>
-                </svg>
-                Kembali
-            </a>
-        </div>
 
-        <!-- VALIDATION ERRORS -->
-        @if($errors->any())
-        <div class="alert-errors">
-            <ul>
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-        @endif
+    {{-- PAGE HEADER --}}
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
 
-        <!-- FORM CARD -->
-        <div class="form-card">
-            <div class="form-header">
-                <h2>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                        <circle cx="9" cy="7" r="4"/>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                    </svg>
-                    Formulir Pendaftaran Siswa
-                </h2>
+        <div>
+            <div class="flex items-center gap-2 mb-1">
+
+                <span class="w-1.5 h-6 rounded-full bg-orange-500"></span>
+
+                <h1 class="text-xl sm:text-2xl font-bold text-slate-800">
+                    Tambah Siswa Baru
+                </h1>
+
             </div>
 
-            <form method="POST" action="{{ route('admin.siswa.store') }}">
-                @csrf
-                <div class="form-body">
-                    <!-- Nama Lengkap -->
-                    <div class="form-group">
-                        <label>Nama Lengkap <span>*</span></label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                                    <circle cx="12" cy="7" r="4"/>
-                                </svg>
-                            </span>
-                            <input type="text" name="name" class="form-control" placeholder="Masukkan nama lengkap siswa" value="{{ old('name') }}" required>
-                        </div>
-                        @error('name')
-                        <div class="error-message">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                            {{ $message }}
-                        </div>
-                        @enderror
-                    </div>
-
-                    <!-- NIS -->
-                    <div class="form-group">
-                        <label>NIS (Nomor Induk Siswa) <span>*</span></label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="2" y="4" width="20" height="16" rx="2"/>
-                                    <line x1="8" y1="2" x2="8" y2="6"/>
-                                    <line x1="16" y1="2" x2="16" y2="6"/>
-                                    <line x1="2" y1="10" x2="22" y2="10"/>
-                                </svg>
-                            </span>
-                            <input type="text" name="nis" class="form-control" placeholder="Masukkan NIS" value="{{ old('nis') }}" required>
-                        </div>
-                        @error('nis')
-                        <div class="error-message">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                            {{ $message }}
-                        </div>
-                        @enderror
-                    </div>
-
-                    <!-- Kelas - Dropdown dari database -->
-                    <div class="form-group">
-                        <label>Kelas <span>*</span></label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-                                    <line x1="8" y1="21" x2="16" y2="21"/>
-                                    <line x1="12" y1="17" x2="12" y2="21"/>
-                                </svg>
-                            </span>
-                            <select name="kelas" class="form-control" required>
-                                <option value="">-- Pilih Kelas --</option>
-                                @foreach($daftarKelas as $kelas)
-                                    <option value="{{ $kelas->name }}" {{ old('kelas') == $kelas->name ? 'selected' : '' }}>
-                                        {{ $kelas->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        @error('kelas')
-                        <div class="error-message">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                            {{ $message }}
-                        </div>
-                        @enderror
-                    </div>
-
-                    <!-- Form Actions -->
-                    <div class="form-actions">
-                        <button type="submit" class="btn-submit">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-                                <polyline points="17 21 17 13 7 13 7 21"/>
-                                <polyline points="7 3 7 8 15 8"/>
-                            </svg>
-                            Simpan Siswa
-                        </button>
-                        <button type="reset" class="btn-reset">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-                                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-                                <path d="M3 3v5h5"/>
-                            </svg>
-                            Reset
-                        </button>
-                    </div>
-                </div>
-            </form>
+            <p class="text-sm text-slate-500">
+                Lengkapi informasi siswa untuk menambahkan data baru.
+            </p>
         </div>
-    </main>
-</body>
-</html>
+
+
+        <a href="{{ route('admin.siswa.index') }}"
+           class="inline-flex items-center justify-center gap-2
+                  px-4 py-2.5 rounded-xl
+                  border border-slate-200 bg-white
+                  text-xs font-semibold text-slate-600
+                  hover:bg-slate-50
+                  hover:border-slate-300
+                  transition">
+
+            <svg class="w-4 h-4"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+
+            </svg>
+
+            Kembali
+
+        </a>
+
+    </div>
+
+
+    {{-- VALIDATION ERRORS --}}
+    @if ($errors->any())
+
+        <div class="mb-5 bg-red-50 border border-red-200
+                    rounded-2xl p-4">
+
+            <div class="flex items-center gap-2 mb-2">
+
+                <svg class="w-5 h-5 text-red-500"
+                     fill="none"
+                     stroke="currentColor"
+                     viewBox="0 0 24 24">
+
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 9v4m0 4h.01
+                             M10.29 3.86l-7.82 14
+                             A2 2 0 004.2 21h15.6
+                             a2 2 0 001.73-3.14l-7.82-14
+                             a2 2 0 00-3.46 0z"/>
+
+                </svg>
+
+                <p class="text-sm font-bold text-red-700">
+                    Data belum dapat disimpan
+                </p>
+
+            </div>
+
+            <ul class="list-disc list-inside text-xs text-red-600 space-y-1">
+
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+
+            </ul>
+
+        </div>
+
+    @endif
+
+
+    {{-- FORM --}}
+    <form action="{{ route('admin.siswa.store') }}"
+          method="POST">
+
+        @csrf
+
+
+        {{-- ================= IDENTITAS ================= --}}
+        <section class="bg-white border border-slate-200
+                        rounded-2xl shadow-sm overflow-hidden mb-5">
+
+            <div class="px-5 sm:px-6 py-4
+                        bg-orange-50/70
+                        border-b border-orange-100">
+
+                <div class="flex items-center gap-3">
+
+                    <div class="w-10 h-10 rounded-xl
+                                bg-orange-100 text-orange-600
+                                flex items-center justify-center">
+
+                        <svg class="w-5 h-5"
+                             fill="none"
+                             stroke="currentColor"
+                             viewBox="0 0 24 24">
+
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M16 7a4 4 0 11-8 0
+                                     4 4 0 018 0z
+                                     M12 14a7 7 0 00-7 7h14
+                                     a7 7 0 00-7-7z"/>
+
+                        </svg>
+
+                    </div>
+
+                    <div>
+
+                        <h2 class="text-sm font-bold text-slate-800">
+                            Identitas Siswa
+                        </h2>
+
+                        <p class="text-xs text-slate-500 mt-0.5">
+                            Informasi identitas utama siswa.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="p-5 sm:p-6">
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+
+                    {{-- Nama --}}
+                    <div class="sm:col-span-2">
+
+                        <label for="name"
+                               class="block text-sm font-semibold text-slate-700 mb-2">
+
+                            Nama Lengkap
+                            <span class="text-red-500">*</span>
+
+                        </label>
+
+                        <input type="text"
+                               id="name"
+                               name="name"
+                               value="{{ old('name') }}"
+                               placeholder="Masukkan nama lengkap siswa"
+                               required
+                               class="w-full px-4 py-2.5 rounded-xl
+                                      border border-slate-200
+                                      text-sm text-slate-700
+                                      placeholder:text-slate-400
+                                      focus:outline-none
+                                      focus:ring-2 focus:ring-orange-500/20
+                                      focus:border-orange-500
+                                      transition">
+
+                    </div>
+
+
+                    {{-- NIS --}}
+                    <div>
+
+                        <label for="nis"
+                               class="block text-sm font-semibold text-slate-700 mb-2">
+
+                            NIS
+                            <span class="text-red-500">*</span>
+
+                        </label>
+
+                        <input type="text"
+                               id="nis"
+                               name="nis"
+                               value="{{ old('nis') }}"
+                               placeholder="Contoh: 2024001"
+                               required
+                               class="w-full px-4 py-2.5 rounded-xl
+                                      border border-slate-200
+                                      text-sm text-slate-700
+                                      placeholder:text-slate-400
+                                      focus:outline-none
+                                      focus:ring-2 focus:ring-orange-500/20
+                                      focus:border-orange-500
+                                      transition">
+
+                    </div>
+
+
+                    {{-- NISN --}}
+                    <div>
+
+                        <label for="nisn"
+                               class="block text-sm font-semibold text-slate-700 mb-2">
+
+                            NISN
+
+                        </label>
+
+                        <input type="text"
+                               id="nisn"
+                               name="nisn"
+                               value="{{ old('nisn') }}"
+                               placeholder="Masukkan NISN"
+                               maxlength="20"
+                               class="w-full px-4 py-2.5 rounded-xl
+                                      border border-slate-200
+                                      text-sm text-slate-700
+                                      placeholder:text-slate-400
+                                      focus:outline-none
+                                      focus:ring-2 focus:ring-orange-500/20
+                                      focus:border-orange-500
+                                      transition">
+
+                    </div>
+
+
+                    {{-- NIK --}}
+                    <div class="sm:col-span-2">
+
+                        <label for="nik"
+                               class="block text-sm font-semibold text-slate-700 mb-2">
+
+                            NIK
+
+                        </label>
+
+                        <input type="text"
+                               id="nik"
+                               name="nik"
+                               value="{{ old('nik') }}"
+                               placeholder="Masukkan NIK"
+                               maxlength="20"
+                               class="w-full px-4 py-2.5 rounded-xl
+                                      border border-slate-200
+                                      text-sm text-slate-700
+                                      placeholder:text-slate-400
+                                      focus:outline-none
+                                      focus:ring-2 focus:ring-orange-500/20
+                                      focus:border-orange-500
+                                      transition">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        {{-- ================= DATA PRIBADI ================= --}}
+        <section class="bg-white border border-slate-200
+                        rounded-2xl shadow-sm overflow-hidden mb-5">
+
+            <div class="px-5 sm:px-6 py-4
+                        border-b border-slate-100">
+
+                <div class="flex items-center gap-3">
+
+                    <div class="w-10 h-10 rounded-xl
+                                bg-orange-100 text-orange-600
+                                flex items-center justify-center">
+
+                        <svg class="w-5 h-5"
+                             fill="none"
+                             stroke="currentColor"
+                             viewBox="0 0 24 24">
+
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M8 7a4 4 0 118 0
+                                     M6 21v-2a6 6 0 0112 0v2
+                                     M12 11v5
+                                     M9 14h6"/>
+
+                        </svg>
+
+                    </div>
+
+                    <div>
+
+                        <h2 class="text-sm font-bold text-slate-800">
+                            Data Pribadi
+                        </h2>
+
+                        <p class="text-xs text-slate-500 mt-0.5">
+                            Informasi pribadi siswa.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="p-5 sm:p-6">
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+
+                    {{-- Jenis Kelamin --}}
+                    <div>
+
+                        <label for="jenis_kelamin"
+                               class="block text-sm font-semibold text-slate-700 mb-2">
+
+                            Jenis Kelamin
+
+                        </label>
+
+                        <select id="jenis_kelamin"
+                                name="jenis_kelamin"
+                                class="w-full px-4 py-2.5 rounded-xl
+                                       border border-slate-200
+                                       bg-white
+                                       text-sm text-slate-700
+                                       focus:outline-none
+                                       focus:ring-2 focus:ring-orange-500/20
+                                       focus:border-orange-500">
+
+                            <option value="">
+                                Pilih jenis kelamin
+                            </option>
+
+                            <option value="L"
+                                {{ old('jenis_kelamin') === 'L' ? 'selected' : '' }}>
+                                Laki-laki
+                            </option>
+
+                            <option value="P"
+                                {{ old('jenis_kelamin') === 'P' ? 'selected' : '' }}>
+                                Perempuan
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    {{-- Agama --}}
+                    <div>
+
+                        <label for="agama"
+                               class="block text-sm font-semibold text-slate-700 mb-2">
+
+                            Agama
+
+                        </label>
+
+                        <select id="agama"
+                                name="agama"
+                                class="w-full px-4 py-2.5 rounded-xl
+                                       border border-slate-200
+                                       bg-white
+                                       text-sm text-slate-700
+                                       focus:outline-none
+                                       focus:ring-2 focus:ring-orange-500/20
+                                       focus:border-orange-500">
+
+                            <option value="">
+                                Pilih agama
+                            </option>
+
+                            @foreach (['Islam','Kristen','Katolik','Hindu','Buddha','Konghucu'] as $agama)
+
+                                <option value="{{ $agama }}"
+                                    {{ old('agama') === $agama ? 'selected' : '' }}>
+
+                                    {{ $agama }}
+
+                                </option>
+
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+
+                    {{-- Tempat Lahir --}}
+                    <div>
+
+                        <label for="tempat_lahir"
+                               class="block text-sm font-semibold text-slate-700 mb-2">
+
+                            Tempat Lahir
+
+                        </label>
+
+                        <input type="text"
+                               id="tempat_lahir"
+                               name="tempat_lahir"
+                               value="{{ old('tempat_lahir') }}"
+                               placeholder="Contoh: Banyuwangi"
+                               class="w-full px-4 py-2.5 rounded-xl
+                                      border border-slate-200
+                                      text-sm text-slate-700
+                                      placeholder:text-slate-400
+                                      focus:outline-none
+                                      focus:ring-2 focus:ring-orange-500/20
+                                      focus:border-orange-500">
+
+                    </div>
+
+
+                    {{-- Tanggal Lahir --}}
+                    <div>
+
+                        <label for="tanggal_lahir"
+                               class="block text-sm font-semibold text-slate-700 mb-2">
+
+                            Tanggal Lahir
+
+                        </label>
+
+                        <input type="date"
+                               id="tanggal_lahir"
+                               name="tanggal_lahir"
+                               value="{{ old('tanggal_lahir') }}"
+                               class="w-full px-4 py-2.5 rounded-xl
+                                      border border-slate-200
+                                      text-sm text-slate-700
+                                      focus:outline-none
+                                      focus:ring-2 focus:ring-orange-500/20
+                                      focus:border-orange-500">
+
+                    </div>
+
+
+                    {{-- Alamat --}}
+                    <div class="sm:col-span-2">
+
+                        <label for="alamat"
+                               class="block text-sm font-semibold text-slate-700 mb-2">
+
+                            Alamat
+
+                        </label>
+
+                        <textarea id="alamat"
+                                  name="alamat"
+                                  rows="3"
+                                  placeholder="Masukkan alamat lengkap siswa"
+                                  class="w-full px-4 py-2.5 rounded-xl
+                                         border border-slate-200
+                                         text-sm text-slate-700
+                                         placeholder:text-slate-400
+                                         focus:outline-none
+                                         focus:ring-2 focus:ring-orange-500/20
+                                         focus:border-orange-500
+                                         resize-none">{{ old('alamat') }}</textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        {{-- ================= AKADEMIK ================= --}}
+        <section class="bg-white border border-slate-200
+                        rounded-2xl shadow-sm overflow-hidden mb-5">
+
+            <div class="px-5 sm:px-6 py-4
+                        border-b border-slate-100">
+
+                <div class="flex items-center gap-3">
+
+                    <div class="w-10 h-10 rounded-xl
+                                bg-orange-100 text-orange-600
+                                flex items-center justify-center">
+
+                        <svg class="w-5 h-5"
+                             fill="none"
+                             stroke="currentColor"
+                             viewBox="0 0 24 24">
+
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M12 14l9-5-9-5-9 5 9 5z
+                                     M5 12v5a7 7 0 0014 0v-5"/>
+
+                        </svg>
+
+                    </div>
+
+                    <div>
+
+                        <h2 class="text-sm font-bold text-slate-800">
+                            Informasi Akademik
+                        </h2>
+
+                        <p class="text-xs text-slate-500 mt-0.5">
+                            Informasi pendidikan dan kelas siswa.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="p-5 sm:p-6">
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+
+                    {{-- Kelas --}}
+                    <div>
+
+                        <label for="kelas"
+                               class="block text-sm font-semibold text-slate-700 mb-2">
+
+                            Kelas
+                            <span class="text-red-500">*</span>
+
+                        </label>
+
+                        <select id="kelas"
+                                name="kelas"
+                                required
+                                class="w-full px-4 py-2.5 rounded-xl
+                                       border border-slate-200
+                                       bg-white
+                                       text-sm text-slate-700
+                                       focus:outline-none
+                                       focus:ring-2 focus:ring-orange-500/20
+                                       focus:border-orange-500">
+
+                            <option value="">
+                                Pilih kelas
+                            </option>
+
+                            @foreach ($daftarKelas as $kelas)
+
+                                <option value="{{ $kelas }}"
+                                    {{ old('kelas') === $kelas ? 'selected' : '' }}>
+
+                                    {{ $kelas }}
+
+                                </option>
+
+                            @endforeach
+
+                        </select>
+
+                        @if ($daftarKelas->isEmpty())
+
+                            <p class="text-xs text-slate-400 mt-1.5">
+                                Belum ada kelas yang tersedia.
+                            </p>
+
+                        @endif
+
+                    </div>
+
+
+                    {{-- Jurusan --}}
+                    <div>
+
+                        <label for="jurusan"
+                               class="block text-sm font-semibold text-slate-700 mb-2">
+
+                            Jurusan
+
+                        </label>
+
+                        <input type="text"
+                               id="jurusan"
+                               name="jurusan"
+                               value="{{ old('jurusan') }}"
+                               placeholder="Contoh: RPL"
+                               class="w-full px-4 py-2.5 rounded-xl
+                                      border border-slate-200
+                                      text-sm text-slate-700
+                                      placeholder:text-slate-400
+                                      focus:outline-none
+                                      focus:ring-2 focus:ring-orange-500/20
+                                      focus:border-orange-500">
+
+                    </div>
+
+
+                    {{-- Angkatan --}}
+                    <div>
+
+                        <label for="angkatan"
+                               class="block text-sm font-semibold text-slate-700 mb-2">
+
+                            Angkatan
+
+                        </label>
+
+                        <input type="text"
+                               id="angkatan"
+                               name="angkatan"
+                               value="{{ old('angkatan') }}"
+                               placeholder="Contoh: 2026"
+                               maxlength="10"
+                               class="w-full px-4 py-2.5 rounded-xl
+                                      border border-slate-200
+                                      text-sm text-slate-700
+                                      placeholder:text-slate-400
+                                      focus:outline-none
+                                      focus:ring-2 focus:ring-orange-500/20
+                                      focus:border-orange-500">
+
+                    </div>
+
+
+                    {{-- Tahun Masuk --}}
+                    <div>
+
+                        <label for="tahun_masuk"
+                               class="block text-sm font-semibold text-slate-700 mb-2">
+
+                            Tahun Masuk
+
+                        </label>
+
+                        <input type="number"
+                               id="tahun_masuk"
+                               name="tahun_masuk"
+                               value="{{ old('tahun_masuk') }}"
+                               placeholder="Contoh: 2026"
+                               min="2000"
+                               max="2100"
+                               class="w-full px-4 py-2.5 rounded-xl
+                                      border border-slate-200
+                                      text-sm text-slate-700
+                                      placeholder:text-slate-400
+                                      focus:outline-none
+                                      focus:ring-2 focus:ring-orange-500/20
+                                      focus:border-orange-500">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        {{-- ================= KONTAK ================= --}}
+        <section class="bg-white border border-slate-200
+                        rounded-2xl shadow-sm overflow-hidden mb-5">
+
+            <div class="px-5 sm:px-6 py-4
+                        border-b border-slate-100">
+
+                <div class="flex items-center gap-3">
+
+                    <div class="w-10 h-10 rounded-xl
+                                bg-orange-100 text-orange-600
+                                flex items-center justify-center">
+
+                        <svg class="w-5 h-5"
+                             fill="none"
+                             stroke="currentColor"
+                             viewBox="0 0 24 24">
+
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M3 5a2 2 0 012-2h3.28
+                                     a1 1 0 01.948.684l1.498 4.493
+                                     a1 1 0 01-.502 1.21l-2.257 1.13
+                                     a11.042 11.042 0 005.502 5.502
+                                     l1.13-2.257a1 1 0 011.21-.502l4.493 1.498
+                                     A1 1 0 0121 15.72V19a2 2 0 01-2 2h-1
+                                     C9.716 21 3 14.284 3 6V5z"/>
+
+                        </svg>
+
+                    </div>
+
+                    <div>
+
+                        <h2 class="text-sm font-bold text-slate-800">
+                            Informasi Kontak
+                        </h2>
+
+                        <p class="text-xs text-slate-500 mt-0.5">
+                            Informasi kontak siswa.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="p-5 sm:p-6">
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+
+                    {{-- No HP --}}
+                    <div>
+
+                        <label for="no_hp"
+                               class="block text-sm font-semibold text-slate-700 mb-2">
+
+                            Nomor HP
+
+                        </label>
+
+                        <input type="text"
+                               id="no_hp"
+                               name="no_hp"
+                               value="{{ old('no_hp') }}"
+                               placeholder="Contoh: 081234567890"
+                               maxlength="20"
+                               class="w-full px-4 py-2.5 rounded-xl
+                                      border border-slate-200
+                                      text-sm text-slate-700
+                                      placeholder:text-slate-400
+                                      focus:outline-none
+                                      focus:ring-2 focus:ring-orange-500/20
+                                      focus:border-orange-500">
+
+                    </div>
+
+
+                    {{-- Email --}}
+                    <div>
+
+                        <label for="email"
+                               class="block text-sm font-semibold text-slate-700 mb-2">
+
+                            Email
+
+                        </label>
+
+                        <input type="email"
+                               id="email"
+                               name="email"
+                               value="{{ old('email') }}"
+                               placeholder="Contoh: siswa@email.com"
+                               class="w-full px-4 py-2.5 rounded-xl
+                                      border border-slate-200
+                                      text-sm text-slate-700
+                                      placeholder:text-slate-400
+                                      focus:outline-none
+                                      focus:ring-2 focus:ring-orange-500/20
+                                      focus:border-orange-500">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        {{-- ================= STATUS ================= --}}
+        <!-- <section class="bg-white border border-slate-200
+                        <!-- rounded-2xl shadow-sm overflow-hidden mb-5">
+
+            <div class="px-5 sm:px-6 py-4
+                        border-b border-slate-100">
+
+                <div class="flex items-center gap-3">
+
+                    <div class="w-10 h-10 rounded-xl
+                                bg-orange-100 text-orange-600
+                                flex items-center justify-center">
+
+                        <svg class="w-5 h-5"
+                             fill="none"
+                             stroke="currentColor"
+                             viewBox="0 0 24 24">
+
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M9 12l2 2 4-4
+                                     M12 22a10 10 0 100-20
+                                     10 10 0 000 20z"/>
+
+                        </svg>
+
+                    </div>
+
+                    <div>
+
+                        <h2 class="text-sm font-bold text-slate-800">
+                            Status Siswa
+                        </h2>
+
+                        <p class="text-xs text-slate-500 mt-0.5">
+                            Tentukan status siswa saat ini.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="p-5 sm:p-6">
+
+                <select id="status"
+                        name="status"
+                        class="w-full px-4 py-2.5 rounded-xl
+                               border border-slate-200
+                               bg-white
+                               text-sm text-slate-700
+                               focus:outline-none
+                               focus:ring-2 focus:ring-orange-500/20
+                               focus:border-orange-500">
+
+                    <option value="aktif"
+                        {{ old('status', 'aktif') === 'aktif' ? 'selected' : '' }}>
+                        Aktif
+                    </option>
+
+                    <option value="nonaktif"
+                        {{ old('status') === 'nonaktif' ? 'selected' : '' }}>
+                        Nonaktif
+                    </option>
+
+                </select>
+
+            </div>
+
+        </section> -->
+
+
+        {{-- ================= FOOTER ================= --}}
+        <div class="bg-white border border-slate-200
+                    rounded-2xl shadow-sm p-4">
+
+            <div class="flex flex-col-reverse sm:flex-row
+                        sm:items-center sm:justify-between gap-3">
+
+                <div>
+
+                    <p class="text-sm font-semibold text-slate-700">
+                        Simpan data siswa
+                    </p>
+
+                    <p class="text-xs text-slate-400 mt-0.5">
+                        Pastikan informasi yang dimasukkan sudah benar.
+                    </p>
+
+                </div>
+
+
+                <div class="flex flex-col sm:flex-row gap-2">
+
+                    <a href="{{ route('admin.siswa.index') }}"
+                       class="inline-flex items-center justify-center gap-2
+                              px-4 py-2.5 rounded-xl
+                              border border-slate-200 bg-white
+                              text-sm font-semibold text-slate-600
+                              hover:bg-slate-50
+                              transition">
+
+                        Batal
+
+                    </a>
+
+
+                    <button type="submit"
+                            class="inline-flex items-center justify-center gap-2
+                                   px-5 py-2.5 rounded-xl
+                                   bg-orange-600 text-white
+                                   text-sm font-semibold
+                                   hover:bg-orange-700
+                                   active:bg-orange-800
+                                   focus:outline-none
+                                   focus:ring-2
+                                   focus:ring-orange-500/30
+                                   transition">
+
+                        <svg class="w-4 h-4"
+                             fill="none"
+                             stroke="currentColor"
+                             viewBox="0 0 24 24">
+
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M5 13l4 4L19 7"/>
+
+                        </svg>
+
+                        Simpan Siswa
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</main>
+
+@endsection

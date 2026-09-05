@@ -10,16 +10,13 @@ use Illuminate\Http\Request;
 
 class NilaiController extends Controller
 {
-    /**
-     * Rekap nilai semua siswa
-     */
     public function index(Request $request)
     {
         $totalMapel = MataPelajaran::count();
 
         /*
         |--------------------------------------------------------------------------
-        | QUERY SISWA
+        | QUERY DATA SISWA
         |--------------------------------------------------------------------------
         */
         $query = Siswa::with([
@@ -27,23 +24,71 @@ class NilaiController extends Controller
             'nilai.guru',
         ]);
 
-        // Filter pencarian nama
         if ($request->filled('search')) {
-            $search = $request->search;
+            $search = trim($request->search);
 
-            $query->where('name', 'like', '%' . $search . '%');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('nis', 'like', '%' . $search . '%');
+            });
         }
 
-        // Filter kelas
-        if (
-            $request->filled('kelas') &&
-            $request->kelas !== 'Semua Kelas'
-        ) {
+        if ($request->filled('kelas') && $request->kelas !== 'Semua Kelas') {
             $query->where('kelas', $request->kelas);
         }
 
-        // Pagination
-        $perPage = $request->input('per_page', 10);
+        /*
+        |--------------------------------------------------------------------------
+        | DATA SEMUA SISWA SESUAI FILTER
+        | Dipakai untuk ranking agar tidak hanya menghitung halaman aktif.
+        |--------------------------------------------------------------------------
+        */
+        $filteredSiswa = (clone $query)
+            ->orderBy('kelas')
+            ->orderBy('name')
+            ->get();
+
+        /*
+        |--------------------------------------------------------------------------
+        | TRANSFORM DATA SISWA
+        |--------------------------------------------------------------------------
+        */
+        $transformSiswa = function (Siswa $siswa) use ($totalMapel) {
+            $jumlahNilai = $siswa->nilai->count();
+
+            $totalNilai = $siswa->nilai->sum('nilai');
+
+            $rataRata = $totalMapel > 0
+                ? round($totalNilai / $totalMapel, 2)
+                : null;
+
+            $progress = $totalMapel > 0
+                ? round(($jumlahNilai / $totalMapel) * 100)
+                : 0;
+
+            return [
+                'id' => $siswa->id,
+                'name' => $siswa->name,
+                'nis' => $siswa->nis,
+                'kelas' => $siswa->kelas,
+                'nilai_mapel' => $siswa->nilai,
+                'jumlah_mapel_diikuti' => $jumlahNilai,
+                'rata_rata' => $rataRata,
+                'lengkap' => $jumlahNilai >= $totalMapel,
+                'progress' => min($progress, 100),
+            ];
+        };
+
+        /*
+        |--------------------------------------------------------------------------
+        | PAGINATION
+        |--------------------------------------------------------------------------
+        */
+        $perPage = (int) $request->input('per_page', 10);
+
+        if (!in_array($perPage, [10, 25, 50, 100], true)) {
+            $perPage = 10;
+        }
 
         $siswaPaginate = $query
             ->orderBy('kelas')
@@ -51,51 +96,28 @@ class NilaiController extends Controller
             ->paginate($perPage)
             ->withQueryString();
 
+        $siswaPaginate->getCollection()->transform($transformSiswa);
+
         /*
         |--------------------------------------------------------------------------
-        | TRANSFORM DATA SISWA
+        | RANKING KELAS
         |--------------------------------------------------------------------------
         */
-        $siswaPaginate->getCollection()->transform(
-            function (Siswa $siswa) use ($totalMapel) {
+        $rankingSiswa = collect();
 
-                $jumlahNilai = $siswa->nilai->count();
-
-                $totalNilai = $siswa->nilai->sum('nilai');
-
-                $rataRata = $jumlahNilai > 0
-                    ? round($totalNilai / $jumlahNilai, 2)
-                    : null;
-
-                $progress = $totalMapel > 0
-                    ? round(($jumlahNilai / $totalMapel) * 100)
-                    : 0;
-
-                return [
-                    'id' => $siswa->id,
-
-                    'name' => $siswa->name,
-
-                    'nis' => $siswa->nis,
-
-                    'kelas' => $siswa->kelas,
-
-                    'nilai_mapel' => $siswa->nilai,
-
-                    'jumlah_mapel_diikuti' => $jumlahNilai,
-
-                    'rata_rata' => $rataRata,
-
-                    'lengkap' => $jumlahNilai >= $totalMapel,
-
-                    'progress' => min($progress, 100),
-                ];
-            }
-        );
+        if ($request->filled('kelas') && $request->kelas !== 'Semua Kelas') {
+            $rankingSiswa = $filteredSiswa
+                ->map($transformSiswa)
+                ->filter(function ($siswa) {
+                    return !is_null($siswa['rata_rata']);
+                })
+                ->sortByDesc('rata_rata')
+                ->values();
+        }
 
         /*
         |--------------------------------------------------------------------------
-        | STATISTIK SELURUH SISWA
+        | STATISTIK GLOBAL
         |--------------------------------------------------------------------------
         */
         $allSiswa = Siswa::with('nilai')->get();
@@ -103,17 +125,23 @@ class NilaiController extends Controller
         $totalSiswa = $allSiswa->count();
 
         $rataRataPerSiswa = $allSiswa
-            ->map(function (Siswa $siswa) {
+            ->map(function (Siswa $siswa) use ($totalMapel) {
 
-                $jumlahNilai = $siswa->nilai->count();
-
-                if ($jumlahNilai === 0) {
+                if ($totalMapel === 0) {
                     return null;
                 }
 
-                return $siswa->nilai->avg('nilai');
+                $totalNilai = $siswa->nilai->sum('nilai');
+
+                return round(
+                    $totalNilai / $totalMapel,
+                    2
+                );
             })
-            ->filter();
+            ->filter(
+                fn ($nilai) => $nilai !== null
+            )
+            ->values();
 
         $rataRataKeseluruhan = $rataRataPerSiswa->isNotEmpty()
             ? round($rataRataPerSiswa->avg(), 2)
@@ -125,30 +153,24 @@ class NilaiController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | RANKING SISWA
+        | TOP SISWA GLOBAL
         |--------------------------------------------------------------------------
-        |
-        | Ranking berdasarkan rata-rata seluruh nilai siswa.
-        |
         */
         $topSiswa = $allSiswa
-            ->map(function (Siswa $siswa) {
+            ->map(function (Siswa $siswa) use ($totalMapel) {
 
-                $jumlahNilai = $siswa->nilai->count();
-
-                if ($jumlahNilai === 0) {
+                if ($totalMapel === 0) {
                     return null;
                 }
 
+                $totalNilai = $siswa->nilai->sum('nilai');
+
                 return [
                     'id' => $siswa->id,
-
                     'nama' => $siswa->name,
-
                     'kelas' => $siswa->kelas,
-
                     'rata_rata' => round(
-                        $siswa->nilai->avg('nilai'),
+                        $totalNilai / $totalMapel,
                         2
                     ),
                 ];
@@ -162,7 +184,10 @@ class NilaiController extends Controller
         | DAFTAR KELAS
         |--------------------------------------------------------------------------
         */
-        $daftarKelas = Siswa::select('kelas')
+        $daftarKelas = Siswa::query()
+            ->whereNotNull('kelas')
+            ->where('kelas', '!=', '')
+            ->select('kelas')
             ->distinct()
             ->orderBy('kelas')
             ->pluck('kelas');
@@ -172,40 +197,27 @@ class NilaiController extends Controller
         | MATA PELAJARAN
         |--------------------------------------------------------------------------
         */
-        $mataPelajaran = MataPelajaran::orderBy('name')
+        $mataPelajaran = MataPelajaran::query()
+            ->orderBy('name')
             ->get([
                 'id',
                 'name',
                 'kode',
             ]);
 
-        /*
-        |--------------------------------------------------------------------------
-        | VIEW
-        |--------------------------------------------------------------------------
-        */
         return view('admin.nilai.index', [
             'siswaPaginate' => $siswaPaginate,
-
             'mataPelajaran' => $mataPelajaran,
-
             'totalMapel' => $totalMapel,
-
             'totalSiswa' => $totalSiswa,
-
             'rataRataKeseluruhan' => $rataRataKeseluruhan,
-
             'rataRataTertinggi' => $rataRataTertinggi,
-
             'daftarKelas' => $daftarKelas,
-
             'topSiswa' => $topSiswa,
+            'rankingSiswa' => $rankingSiswa,
         ]);
     }
 
-    /**
-     * Detail nilai satu siswa
-     */
     public function show(Siswa $siswa)
     {
         $siswa->load([
@@ -219,8 +231,11 @@ class NilaiController extends Controller
 
         $jumlahNilai = $siswa->nilai->count();
 
-        $rataRata = $jumlahNilai > 0
-            ? round($totalNilai / $jumlahNilai, 2)
+        $rataRata = $totalMapel > 0
+            ? round(
+                $totalNilai / $totalMapel,
+                2
+            )
             : null;
 
         $mataPelajaranBelumDiisi = MataPelajaran::whereNotIn(
@@ -232,22 +247,22 @@ class NilaiController extends Controller
             'kode',
         ]);
 
-        return view('admin.nilai.show', compact(
-            'siswa',
-            'totalMapel',
-            'totalNilai',
-            'jumlahNilai',
-            'rataRata',
-            'mataPelajaranBelumDiisi'
-        ));
+        return view(
+            'admin.nilai.show',
+            compact(
+                'siswa',
+                'totalMapel',
+                'totalNilai',
+                'jumlahNilai',
+                'rataRata',
+                'mataPelajaranBelumDiisi'
+            )
+        );
     }
 
-    /**
-     * Hapus nilai
-     */
     public function destroy(Nilai $nilai)
     {
-        $namaSiswa = $nilai->siswa->name ?? 'Siswa';
+        $namaSiswa = $nilai->siswa?->name ?? 'Siswa';
 
         $nilai->delete();
 
