@@ -1,601 +1,1190 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard Guru | Sistem Nilai</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+@extends('layoutGuru')
 
-    <style>
-        /* ========== SEMUA STYLE TETAP SAMA PERSIS SEPERTI ASLINYA ========== */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --primary: #EA580C;
-            --primary-dark: #C2410C;
-            --primary-light: #FFEDD5;
-            --white: #FFFFFF;
-            --text-dark: #1C1917;
-            --text-muted: #78716C;
-            --border: #F3F4F6;
-            --bg-body: #FAFAFA;
-            --success: #10B981;
-            --success-light: #D1FAE5;
-            --info: #0EA5E9;
-            --warning: #F59E0B;
-            --danger: #EF4444;
-            --accent: #8B5CF6;
-        }
+@section('content')
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: var(--bg-body);
-            color: var(--text-dark);
-            min-height: 100vh;
-        }
+@php
+    $belumDiinput = max($totalSiswa - $sudahDiinput, 0);
+@endphp
 
-        /* --- NAVBAR --- */
-        .navbar {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            padding: 0.75rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
-        }
+<div class="w-full mx-auto px-4 lg:px-8 py-5 flex-grow space-y-5">
 
-        .logo { display: flex; align-items: center; gap: 1rem; }
-        .logo-box {
-            width: 42px; height: 42px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            color: white;
-            box-shadow: 0 4px 12px rgba(234, 88, 12, 0.3);
-        }
+    {{-- ========================================================= --}}
+    {{-- BANNER SELAMAT DATANG --}}
+    {{-- ========================================================= --}}
 
-        .logo-text h2 { font-size: 18px; font-weight: 800; color: var(--text-dark); line-height: 1; }
-        .logo-text p { font-size: 11px; font-weight: 600; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
+    <div class="relative bg-gradient-to-r from-orange-50 via-orange-50/40 to-amber-50/60 rounded-2xl p-6 lg:px-8 lg:py-6 border border-orange-100/80 flex flex-col md:flex-row items-center justify-between overflow-hidden shadow-sm">
+        <div class="z-10 space-y-1.5 max-w-2xl">
+            <h2 class="text-xl lg:text-2xl font-bold text-slate-800 flex items-center gap-2">
+                Selamat datang, {{ $guru->name }}!
+                <span class="inline-block text-xl">👋</span>
+            </h2>
 
-        .nav-menu { display: flex; list-style: none; gap: 0.5rem; background: #F3F4F6; padding: 0.4rem; border-radius: 14px; }
-        .nav-link {
-            display: flex; align-items: center; gap: 0.6rem;
-            padding: 0.6rem 1.2rem; border-radius: 10px;
-            color: var(--text-muted); text-decoration: none;
-            font-weight: 600; font-size: 13.5px; transition: all 0.25s ease;
-        }
-        .nav-link svg { width: 18px; height: 18px; stroke-width: 2.2; }
-        .nav-link:hover { color: var(--primary); background: var(--white); }
-        .nav-link.active { background: var(--white); color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+            <p class="text-xs lg:text-sm text-slate-500 font-normal">
+                Pantau perkembangan nilai dan kelola penilaian siswa dari satu tempat.
+            </p>
 
-        .user-section { display: flex; align-items: center; gap: 1.5rem; }
-        .user-profile {
-            display: flex;
-            flex-direction: row-reverse;
-            align-items: center;
-            gap: 0.75rem;
-            cursor: pointer;
-            padding-right: 1.5rem;
-            border-right: 1px solid var(--border);
-        }
-        .avatar {
-            width: 40px; height: 40px; border-radius: 50%;
-            background: var(--primary-light); color: var(--primary);
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 800; border: 2px solid var(--white); outline: 2px solid var(--primary-light);
-        }
-
-        .btn-logout {
-            display: flex; align-items: center; gap: 8px;
-            background: transparent; color: var(--danger); border: 2px solid transparent;
-            padding: 0.6rem 1rem; border-radius: 12px; font-weight: 700; font-size: 13px;
-            cursor: pointer; transition: all 0.2s;
-        }
-        .btn-logout:hover { background: #FEF2F2; border-color: #FEE2E2; }
-
-        /* --- CONTENT --- */
-        .container {padding: 2rem; max-width: 95%; width: 100%; margin: 0 auto;}
-
-        /* --- ENHANCED WELCOME BANNER --- */
-        .welcome-banner {
-            background: linear-gradient(120deg, #FFF7ED 0%, #FFEDD5 100%);
-            border-radius: 28px;
-            padding: 2.5rem 3rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2.5rem;
-            border: 1px solid #FED7AA;
-            box-shadow: 0 10px 30px rgba(234, 88, 12, 0.08);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .welcome-banner::before {
-            content: ''; position: absolute; right: -5%; top: -50%;
-            width: 300px; height: 300px;
-            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
-            border-radius: 50%; pointer-events: none;
-        }
-
-        .welcome-text { position: relative; z-index: 1; }
-        .welcome-text h1 {
-            font-size: 32px; font-weight: 800;
-            color: var(--primary-dark);
-            letter-spacing: -0.5px; margin-bottom: 0.5rem;
-        }
-        .welcome-text p {
-            color: #9A3412; font-size: 16px; font-weight: 500;
-        }
-        .welcome-date {
-            display: inline-block; margin-top: 1rem;
-            background: var(--white); color: var(--primary);
-            padding: 0.4rem 1rem; border-radius: 20px;
-            font-size: 12px; font-weight: 700;
-            box-shadow: 0 2px 10px rgba(234,88,12,0.1);
-        }
-
-        .welcome-illustration svg {
-            width: 140px; height: auto;
-            position: relative; z-index: 1;
-            filter: drop-shadow(0 10px 15px rgba(234,88,12,0.2));
-        }
-
-        /* --- STATS CARDS --- */
-        .stats-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 2.5rem;
-        }
-        .stat-card-modern {
-            background: var(--white); border-radius: 24px; padding: 1.5rem;
-            border: 1px solid var(--border); position: relative; overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .stat-card-modern:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.05); }
-
-        .stat-icon {
-            width: 48px; height: 48px; border-radius: 14px;
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 1.25rem;
-        }
-        .stat-card-modern h3 { font-size: 14px; color: var(--text-muted); font-weight: 600; margin-bottom: 0.5rem; }
-        .stat-card-modern .value { font-size: 26px; font-weight: 800; color: var(--text-dark); display: flex; align-items: baseline; gap: 5px; }
-        .stat-card-modern .trend { font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin-left: 10px; }
-
-        .bg-orange { background: #FFF7ED; color: #EA580C; }
-        .bg-blue { background: #F0F9FF; color: #0EA5E9; }
-        .bg-green { background: #F0FDF4; color: #10B981; }
-        .bg-purple { background: #F5F3FF; color: #8B5CF6; }
-
-        /* --- DASHBOARD LAYOUT --- */
-        .main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; }
-
-        .glass-card {
-            background: var(--white); border-radius: 28px; border: 1px solid var(--border);
-            padding: 2rem; margin-bottom: 1.5rem;
-        }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-        .card-title { display: flex; align-items: center; gap: 0.75rem; font-size: 18px; font-weight: 700; }
-
-        .btn-primary {
-            background: var(--primary); color: white; border: none;
-            padding: 0.75rem 1.25rem; border-radius: 14px;
-            font-weight: 700; font-size: 14px; cursor: pointer;
-            display: flex; align-items: center; gap: 8px;
-            transition: all 0.2s; box-shadow: 0 4px 12px rgba(234, 88, 12, 0.2);
-        }
-        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(234, 88, 12, 0.3); }
-
-        /* --- TABLE --- */
-        .table-wrapper { overflow-x: auto; }
-        .custom-table { width: 100%; border-collapse: separate; border-spacing: 0 0.75rem; }
-        .custom-table th { padding: 1rem; text-align: left; color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
-        .custom-table tr td { background: var(--bg-body); padding: 1rem; transition: all 0.2s ease; vertical-align: middle; }
-        .custom-table tr td:first-child { border-radius: 16px 0 0 16px; }
-        .custom-table tr td:last-child { border-radius: 0 16px 16px 0; }
-        .custom-table tr:hover td { background: #F3F4F6; transform: scale(1.01); }
-
-        .badge-nilai {
-            display: inline-block; width: 45px; text-align: center;
-            padding: 6px 0; border-radius: 8px; font-weight: 800; font-size: 14px;
-        }
-        .nilai-tinggi { background: var(--success-light); color: var(--success); }
-        .nilai-sedang { background: #FEF3C7; color: var(--warning); }
-        .nilai-kurang { background: #FEE2E2; color: var(--danger); }
-
-        .btn-detail {
-            background: transparent; color: var(--info); border: 1px solid var(--info);
-            padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 12px;
-            cursor: pointer; transition: all 0.2s;
-        }
-        .btn-detail:hover { background: var(--info); color: white; }
-
-        /* --- SIDEBAR RANKING --- */
-        .champion-card {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            border-radius: 30px; padding: 2rem; color: white; position: relative;
-            box-shadow: 0 20px 40px rgba(234, 88, 12, 0.25);
-            overflow: visible;
-            margin-top: 15px;
-        }
-        .champion-card::before {
-            content: ''; position: absolute; top: -10%; left: -10%; width: 150px; height: 150px;
-            background: rgba(255, 255, 255, 0.1); border-radius: 50%;
-        }
-
-        .crown-icon {
-            position: absolute;
-            top: -25px;
-            right: -15px;
-            transform: rotate(15deg);
-            background: linear-gradient(135deg, #FBBF24, #F59E0B);
-            padding: 12px;
-            border-radius: 50%;
-            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.5);
-            border: 4px solid var(--bg-body);
-            display: flex; align-items: center; justify-content: center;
-            z-index: 10;
-        }
-
-        .champion-info { text-align: center; margin-top: 0.5rem; }
-        .champion-avatar {
-            width: 90px; height: 90px; border-radius: 50%; border: 5px solid rgba(255,255,255,0.3);
-            margin: 0 auto 1.5rem; background: var(--white); display: flex; align-items: center; justify-content: center;
-            font-size: 36px; color: var(--primary); font-weight: 900;
-        }
-        .score-pill {
-            background: rgba(255,255,255,0.15); backdrop-filter: blur(5px);
-            padding: 1rem; border-radius: 20px; display: flex; justify-content: space-around; margin-top: 1.5rem;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .btn-rapor {
-            width: 100%; margin-top: 1.5rem; background: var(--white); color: var(--primary-dark);
-            border: none; padding: 1rem; border-radius: 18px; font-weight: 800; font-size: 13px;
-            cursor: pointer; transition: 0.3s;
-        }
-        .btn-rapor:hover { background: var(--primary-light); transform: translateY(-2px); }
-
-        @media (max-width: 1024px) {
-            .main-grid { grid-template-columns: 1fr; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .user-profile { border-right: none; padding-right: 0; }
-            .btn-logout span { display: none; }
-            .welcome-illustration { display: none; }
-        }
-        @media (max-width: 768px) {
-            .stats-grid { grid-template-columns: 1fr; }
-            .welcome-banner { flex-direction: column; text-align: center; }
-        }
-    </style>
-</head>
-<body>
-
-    <!-- NAVBAR -->
-    <nav class="navbar">
-        <div class="logo">
-            <div class="logo-box">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
-            </div>
-            <div class="logo-text">
-                <h2>EDUGRADES</h2>
-                <p>Teacher Portal</p>
-            </div>
+            @if($mataPelajaran)
+                <div class="pt-2">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-orange-100 text-[10px] font-semibold text-orange-600 shadow-sm">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332-.477-4.5-1.253" />
+                        </svg>
+                        {{ $mataPelajaran->name }}
+                    </span>
+                </div>
+            @endif
         </div>
 
-        <ul class="nav-menu">
-            <li><a href="#" class="nav-link active">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
-                Dashboard
-            </a></li>
-            <li><a href="#" class="nav-link" onclick="goToInputPage()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                Input Nilai
-            </a></li>
-        </ul>
+        {{-- Ilustrasi --}}
+        <div class="mt-4 md:mt-0 relative flex items-center justify-end shrink-0 pr-4">
+            <div class="w-64 h-24 flex items-center justify-center relative">
 
-        <div class="user-section">
-            <div class="user-profile">
-                <div class="avatar">{{ substr($guru->name, 0, 1) }}</div>
-                <div style="text-align: right;">
-                    <p style="font-size: 13px; font-weight: 800;">{{ $guru->name }}</p>
-                    <p style="font-size: 11px; color: var(--text-muted);">
-                        {{ $mataPelajaran->name ?? 'Tidak diketahui' }}
-                    </p>
-                </div>
-            </div>
-            <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-                @csrf
-                <button type="submit" class="btn-logout">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                    <span>Keluar</span>
-                </button>
-            </form>
-        </div>
-    </nav>
-
-    <div class="container">
-
-        <!-- WELCOME BANNER -->
-        <div class="welcome-banner">
-            <div class="welcome-text">
-                <h1>Halo, {{ $guru->name }}! 👋</h1>
-                <p style="font-size: 11px; color: var(--text-muted);">
-                    {{ $mataPelajaran->name ?? 'Tidak diketahui' }}
-                </p>
-                <div class="welcome-date">
-                    <svg style="display:inline; vertical-align:middle; margin-right:4px;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    <span id="currentDate"></span>
-                </div>
-            </div>
-            <div class="welcome-illustration">
-                <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20,130 Q50,80 100,100 T180,50" fill="none" stroke="#EA580C" stroke-width="8" stroke-linecap="round"/>
-                    <circle cx="180" cy="50" r="12" fill="#F59E0B" />
-                    <rect x="30" y="40" width="40" height="40" rx="10" fill="#FFEDD5" />
-                    <rect x="40" y="50" width="20" height="20" rx="5" fill="#EA580C" />
-                    <polygon points="120,20 140,60 100,60" fill="#FFEDD5" opacity="0.8"/>
+                {{-- Tanaman --}}
+                <svg class="w-16 h-20 absolute -left-2 bottom-0" viewBox="0 0 100 120" fill="none">
+                    <path d="M35 85 L65 85 L60 115 L40 115 Z" fill="#F97316" />
+                    <path d="M30 85 L70 85 L70 90 L30 90 Z" fill="#EA580C" />
+                    <path d="M50 85 Q20 60 25 35 Q45 45 50 85 Z" fill="#10B981" />
+                    <path d="M50 85 Q80 60 75 35 Q55 45 50 85 Z" fill="#059669" />
+                    <path d="M50 85 Q50 20 50 15 Q60 40 50 85 Z" fill="#34D399" />
                 </svg>
-            </div>
-        </div>
 
-        <!-- STATS CARDS DARI DATA ASLI -->
-        <div class="stats-grid">
-            <div class="stat-card-modern">
-                <div class="stat-icon bg-orange">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                </div>
-                <h3>Total Siswa</h3>
-                <div class="value">{{ $totalSiswa }} <span class="trend bg-green">Aktif</span></div>
-            </div>
+                {{-- Mini Dashboard --}}
+                <div class="bg-white rounded-lg shadow-md border border-slate-200 p-2.5 w-44 space-y-2 ml-10">
+                    <div class="flex items-center space-x-1.5 border-b border-slate-100 pb-1">
+                        <span class="w-2 h-2 rounded-full bg-orange-400"></span>
+                        <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                        <span class="w-2 h-2 rounded-full bg-slate-300"></span>
+                    </div>
 
-            <div class="stat-card-modern">
-                <div class="stat-icon bg-blue">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                </div>
-                <h3>Sudah Diinput</h3>
-                <div class="value">{{ $sudahDiinput }} <span class="trend bg-orange">/ {{ $totalSiswa }}</span></div>
-            </div>
-
-            <div class="stat-card-modern">
-                <div class="stat-icon bg-green">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                </div>
-                <h3>Lulus KKM</h3>
-                <div class="value">95% <span class="trend bg-blue">Tinggi</span></div>
-            </div>
-
-            <div class="stat-card-modern">
-                <div class="stat-icon bg-purple">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-                </div>
-                <h3>Belum Diinput</h3>
-                <div class="value">{{ $totalSiswa - $sudahDiinput }} <span class="trend bg-purple">Sisa</span></div>
-            </div>
-        </div>
-
-        <div class="main-grid">
-
-            <div class="content-left">
-                <!-- CHART -->
-                <div class="glass-card">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
-                            Tren Nilai Semester
+                    <div class="flex space-x-2 items-center">
+                        <div class="w-7 h-7 rounded bg-orange-100 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 19V6l12-3v13" />
+                                <circle cx="6" cy="19" r="3" />
+                                <circle cx="18" cy="16" r="3" />
+                            </svg>
                         </div>
-                        <select style="border:none; font-weight: 700; color: var(--primary); outline: none; cursor:pointer; background: transparent;">
-                            <option>Semester Ganjil 2024</option>
-                            <option>Semester Genap 2024</option>
-                        </select>
-                    </div>
-                    <canvas id="nilaiChart" height="100"></canvas>
-                </div>
 
-                <!-- DAFTAR NILAI DARI DATABASE -->
-                <div class="glass-card">
-                    <div class="card-header" style="margin-bottom: 1rem;">
-                        <div class="card-title">Daftar Nilai Kelas</div>
-                        <button class="btn-primary" onclick="goToInputPage()">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                            Input Nilai
-                        </button>
-                    </div>
-
-                    <div style="margin-bottom: 1.5rem;">
-                        <input type="text" id="searchInput" placeholder="Cari siswa berdasarkan nama atau NIS..." style="width: 100%; padding: 0.8rem 1rem; border-radius: 12px; border: 1px solid var(--border); font-size: 13px; outline: none; background: #F9FAFB;">
-                    </div>
-
-                    <div class="table-wrapper">
-                        <table class="custom-table" id="nilaiTable">
-                            <thead>
-                                <tr>
-                                    <th>Nama Siswa</th>
-                                    <th style="text-align: center;">Nilai</th>
-                                    <th style="text-align: center;">Status</th>
-                                    <th style="text-align: right;">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($nilaiDiinput as $nilai)
-                                <tr>
-                                    <td>
-                                        <div style="display: flex; align-items: center; gap: 12px;">
-                                            <div style="width: 36px; height: 36px; border-radius: 10px; background: #FFEDD5; color: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px;">
-                                                {{ substr($nilai->siswa->name ?? '??', 0, 2) }}
-                                            </div>
-                                            <div>
-                                                <p style="font-weight: 700; font-size: 14px;">{{ $nilai->siswa->name ?? 'Tidak diketahui' }}</p>
-                                                <p style="font-size: 12px; color: var(--text-muted);">NIS: {{ $nilai->siswa->nis ?? '-' }}</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td style="text-align: center;">
-                                        @php
-                                            $nilaiValue = $nilai->nilai ?? 0;
-                                            $nilaiClass = $nilaiValue >= 85 ? 'nilai-tinggi' : ($nilaiValue >= 70 ? 'nilai-sedang' : 'nilai-kurang');
-                                        @endphp
-                                        <span class="badge-nilai {{ $nilaiClass }}">{{ $nilaiValue }}</span>
-                                    </td>
-                                    <td style="text-align: center;">
-                                        @php
-                                            $statusNilai = $nilaiValue >= 75 ? 'Lulus' : 'Remedial';
-                                            $statusClass = $nilaiValue >= 75 ? 'nilai-tinggi' : 'nilai-kurang';
-                                        @endphp
-                                        <span class="badge-nilai {{ $statusClass }}" style="width: auto; padding: 6px 12px;">{{ $statusNilai }}</span>
-                                    </td>
-                                    <td style="text-align: right;">
-                                        <button class="btn-detail" onclick="detailNilai({{ $nilai->id }})">Lihat Detail</button>
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="5" style="text-align: center; padding: 2rem;">
-                                        <p style="color: var(--text-muted);">Belum ada data nilai yang diinput.</p>
-                                        <button class="btn-primary" style="margin-top: 1rem;" onclick="goToInputPage()">Input Nilai Sekarang</button>
-                                    </td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div class="content-right">
-                <!-- SISWA TERBAIK (RANKING) -->
-                @php
-                    $topStudent = $nilaiDiinput->sortByDesc('nilai')->first();
-                @endphp
-                <div class="champion-card">
-                    <div class="crown-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2GF.5"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/><path d="M12 17H12.01"/></svg>
-                    </div>
-
-                    <p style="font-size: 11px; font-weight: 700; opacity: 0.9; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 5px; text-align: center;">Peringkat 1 Kelas</p>
-
-                    <div class="champion-info">
-                        <div class="champion-avatar">
-                            {{ strtoupper(substr(optional(optional($topStudent)->siswa)->name ?? 'SN', 0, 2)) }}
-                        </div>
-                      <h2 style="font-size: 22px; font-weight: 800; letter-spacing: -0.5px;">
-                        {{ $topStudent?->siswa?->name ?? 'Belum Ada Data' }}
-                    </h2>
-                        <p style="opacity: 0.9; font-size: 13px; margin-top: 4px; font-weight: 500;">
-                            {{ $topStudent->siswa->kelas ?? 'Kelas tidak diketahui' }}
-                        </p>
-
-                        <div class="score-pill">
-                            <div>
-                                <small style="display:block; opacity: 0.8; font-size: 9px; text-transform: uppercase; font-weight: 700;">Nilai Tertinggi</small>
-                                <span style="font-size: 24px; font-weight: 900;">{{ optional($topStudent)->nilai ?? '-' }}</span>
-                            </div>
-                            <div style="border-left: 1px solid rgba(255,255,255,0.3); padding-left: 20px;">
-                                <small style="display:block; opacity: 0.8; font-size: 9px; text-transform: uppercase; font-weight: 700;">Rata-rata Kelas</small>
-                                <span style="font-size: 24px; font-weight: 900;">{{ round($nilaiDiinput->avg('nilai'), 1) ?? '-' }}</span>
-                            </div>
+                        <div class="space-y-1 flex-1">
+                            <div class="h-1.5 bg-slate-200 rounded w-full"></div>
+                            <div class="h-1.5 bg-slate-100 rounded w-2/3"></div>
                         </div>
                     </div>
 
-                    <button class="btn-rapor" onclick="lihatRapor({{ $topStudent->id ?? 0 }})">
-                        Lihat Rapor Lengkap
-                    </button>
-                </div>
-
-                <!-- SISWA BERPRESTASI LAINNYA -->
-                <div class="glass-card" style="margin-top: 1.5rem;">
-                    <h3 style="font-size: 15px; font-weight: 800; margin-bottom: 1.5rem;">Siswa Berprestasi Lainnya</h3>
-                    <div style="display: flex; flex-direction: column; gap: 15px;">
-                        @foreach($nilaiDiinput->sortByDesc('nilai')->skip(1)->take(3) as $index => $nilai)
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div style="display: flex; align-items: center; gap: 12px;">
-                                <span style="font-weight: 800; color: #9CA3AF; background: #F3F4F6; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">{{ $index + 2 }}</span>
-                                <span style="font-weight: 600; font-size: 14px;">{{ $nilai->siswa->name ?? 'Tidak diketahui' }}</span>
-                            </div>
-                            <span style="font-weight: 800; font-size: 14px; color: var(--primary);">{{ $nilai->nilai }}</span>
-                        </div>
-                        @endforeach
-                        @if($nilaiDiinput->count() <= 1)
-                        <p style="text-align: center; color: var(--text-muted); padding: 1rem;">Belum ada data prestasi lainnya</p>
-                        @endif
+                    <div class="flex items-center justify-center">
+                        <div class="w-8 h-8 rounded-full border-4 border-orange-500 border-t-amber-400"></div>
                     </div>
                 </div>
-            </div>
 
+            </div>
         </div>
     </div>
 
-    <script>
-        // Set tanggal dinamis
-        const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('currentDate').innerText = new Date().toLocaleDateString('id-ID', dateOptions);
 
-        // Fungsi navigasi
-        function goToInputPage() {
-            window.location.href = "{{ route('guru.nilai.index') }}";
-        }
+    {{-- ========================================================= --}}
+    {{-- 5 METRIC CARDS --}}
+    {{-- ========================================================= --}}
 
-        function detailNilai(id) {
-            window.location.href = "/guru/nilai/" + id;
-        }
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
 
-        function lihatRapor(id) {
-            window.location.href = "/guru/rapor/" + id;
-        }
+        {{-- Total Siswa --}}
+        <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm min-h-[145px] flex flex-col justify-between">
+            <div>
+                <div class="flex items-center gap-2">
+                    <div class="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-500 shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
 
-        // Filter pencarian
-        document.getElementById('searchInput')?.addEventListener('keyup', function() {
-            let filter = this.value.toLowerCase();
-            let rows = document.querySelectorAll('#nilaiTable tbody tr');
+                    <span class="text-xs font-semibold text-slate-500 truncate">
+                        Total Siswa
+                    </span>
+                </div>
 
-            rows.forEach(row => {
-                let text = row.textContent.toLowerCase();
-                row.style.display = text.includes(filter) ? '' : 'none';
-            });
-        });
+                <div class="mt-3 flex items-baseline gap-2">
+                    <span class="text-2xl font-extrabold text-slate-800">
+                        {{ number_format($totalSiswa) }}
+                    </span>
+                    <span class="text-[11px] text-slate-400">
+                        Siswa
+                    </span>
+                </div>
+            </div>
 
-        // Setup Chart.js
-        const ctx = document.getElementById('nilaiChart').getContext('2d');
-        const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-        gradient.addColorStop(0, 'rgba(234, 88, 12, 0.2)');
-        gradient.addColorStop(1, 'rgba(234, 88, 12, 0.0)');
+            <a href="{{ route('guru.nilai.index') }}"
+               class="mt-3 text-xs font-semibold text-emerald-500 hover:underline inline-flex items-center gap-1">
+                Kelola Nilai <span>→</span>
+            </a>
+        </div>
 
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
-                datasets: [{
-                    label: 'Nilai Rata-rata',
-                    data: [75, 78, 85, 82, 88, 91],
-                    borderColor: '#EA580C',
-                    borderWidth: 4,
-                    pointBackgroundColor: '#EA580C',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 3,
-                    pointRadius: 6,
-                    pointHoverRadius: 8,
-                    fill: true,
-                    backgroundColor: gradient,
-                    tension: 0.4
-                }]
+
+        {{-- Sudah Diinput --}}
+        <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm min-h-[145px] flex flex-col justify-between">
+            <div>
+                <div class="flex items-center gap-2">
+                    <div class="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center text-blue-500 shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </div>
+
+                    <span class="text-xs font-semibold text-slate-500">
+                        Sudah Diinput
+                    </span>
+                </div>
+
+                <div class="mt-3 flex items-baseline gap-2">
+                    <span class="text-2xl font-extrabold text-slate-800">
+                        {{ number_format($sudahDiinput) }}
+                    </span>
+                    <span class="text-[11px] text-slate-400">
+                        Siswa
+                    </span>
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-[10px] text-slate-400">Progress</span>
+                    <span class="text-[10px] font-bold text-blue-500">
+                        {{ $persentaseInput }}%
+                    </span>
+                </div>
+
+                <div class="w-full h-1.5 rounded-full bg-slate-100">
+                    <div class="h-1.5 rounded-full bg-blue-500"
+                         style="width: {{ min($persentaseInput, 100) }}%;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        {{-- Belum Diinput --}}
+        <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm min-h-[145px] flex flex-col justify-between">
+            <div>
+                <div class="flex items-center gap-2">
+                    <div class="w-9 h-9 rounded-lg bg-amber-50 flex items-center justify-center text-amber-500 shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+
+                    <span class="text-xs font-semibold text-slate-500">
+                        Belum Diinput
+                    </span>
+                </div>
+
+                <div class="mt-3 flex items-baseline gap-2">
+                    <span class="text-2xl font-extrabold text-slate-800">
+                        {{ number_format($belumDiinput) }}
+                    </span>
+                    <span class="text-[11px] text-slate-400">
+                        Siswa
+                    </span>
+                </div>
+            </div>
+
+            <div class="mt-3">
+                @if($belumDiinput > 0)
+                    <span class="text-xs font-semibold text-amber-500">
+                        Masih perlu dinilai
+                    </span>
+                @else
+                    <span class="text-xs font-semibold text-emerald-500">
+                        Semua siswa sudah dinilai
+                    </span>
+                @endif
+            </div>
+        </div>
+
+
+        {{-- Total Nilai --}}
+        <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm min-h-[145px] flex flex-col justify-between">
+            <div>
+                <div class="flex items-center gap-2">
+                    <div class="w-9 h-9 rounded-lg bg-orange-50 flex items-center justify-center text-orange-500 shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293 0V19a2 2 0 012-2" />
+                        </svg>
+                    </div>
+
+                    <span class="text-xs font-semibold text-slate-500">
+                        Total Nilai
+                    </span>
+                </div>
+
+                <div class="mt-3 flex items-baseline gap-2">
+                    <span class="text-2xl font-extrabold text-slate-800">
+                        {{ number_format($jumlahNilai) }}
+                    </span>
+                    <span class="text-[11px] text-slate-400">
+                        Data Nilai
+                    </span>
+                </div>
+            </div>
+
+            <a href="{{ route('guru.nilai.index') }}"
+               class="mt-3 text-xs font-semibold text-orange-500 hover:underline inline-flex items-center gap-1">
+                Lihat Detail <span>→</span>
+            </a>
+        </div>
+
+
+        {{-- Rata-rata Nilai --}}
+        <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm min-h-[145px] flex flex-col justify-between">
+            <div>
+                <div class="flex items-center gap-2">
+                    <div class="w-9 h-9 rounded-lg bg-purple-50 flex items-center justify-center text-purple-500 shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 12h3l3-8 4 16 3-8h5" />
+                        </svg>
+                    </div>
+
+                    <span class="text-xs font-semibold text-slate-500">
+                        Rata-rata Nilai
+                    </span>
+                </div>
+
+                <div class="mt-3 flex items-baseline gap-2">
+                    <span class="text-2xl font-extrabold text-slate-800">
+                        {{ number_format($rataRataNilai, 2, ',', '.') }}
+                    </span>
+                    <span class="text-[11px] text-slate-400">
+                        Keseluruhan
+                    </span>
+                </div>
+            </div>
+
+            <div class="mt-3">
+                @if($rataRataNilai >= 75)
+                    <span class="text-xs font-semibold text-emerald-500">
+                        Di atas KKM
+                    </span>
+                @else
+                    <span class="text-xs font-semibold text-rose-500">
+                        Di bawah KKM
+                    </span>
+                @endif
+            </div>
+        </div>
+
+    </div>
+
+
+    {{-- ========================================================= --}}
+    {{-- ROW 2 : TREN NILAI & PERLU PERHATIAN --}}
+    {{-- ========================================================= --}}
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+
+        {{-- Tren Nilai --}}
+        <div class="lg:col-span-7 bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
+
+            <div class="px-5 py-4 border-b border-slate-100">
+                <div class="flex items-center justify-between">
+
+                    <div class="flex items-center gap-2">
+
+                        <div class="w-7 h-7 rounded-lg bg-orange-100 flex items-center justify-center text-orange-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 3v18h18" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M7 16l4-5 3 3 5-7" />
+                            </svg>
+                        </div>
+
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-sm">
+                                Tren Nilai
+                            </h3>
+                            <p class="text-[10px] text-slate-400 mt-0.5">
+                                Perkembangan nilai terbaru
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <span class="text-[10px] text-slate-400">
+                        {{ $jumlahNilai }} data
+                    </span>
+
+                </div>
+            </div>
+
+            <div class="p-5">
+                <div class="relative h-[260px]">
+
+                    @if(count($chartValues) > 0)
+
+                        <canvas id="guruNilaiChart"></canvas>
+
+                    @else
+
+                        <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+
+                            <div class="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center">
+
+                                <svg class="w-5 h-5 text-slate-300"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     viewBox="0 0 24 24">
+
+                                    <path stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          stroke-width="2"
+                                          d="M3 3v18h18M7 16l4-5 3 3 5-7" />
+
+                                </svg>
+
+                            </div>
+
+                            <p class="text-[11px] font-semibold text-slate-500 mt-2">
+                                Belum ada data nilai
+                            </p>
+
+                        </div>
+
+                    @endif
+
+                </div>
+            </div>
+
+        </div>
+
+
+        {{-- Perlu Perhatian --}}
+        <div class="lg:col-span-5 bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
+
+            <div class="px-5 py-4 border-b border-slate-100">
+
+                <div class="flex items-center justify-between">
+
+                    <div class="flex items-center gap-2">
+
+                        <div class="w-7 h-7 rounded-lg bg-rose-100 flex items-center justify-center text-rose-500">
+
+                            <svg class="w-4 h-4"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 viewBox="0 0 24 24">
+
+                                <path stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      stroke-width="2"
+                                      d="M12 9v2m0 4h.01M5.07 19h13.86c1.54 0 2.5-1.67 1.73-3L13.73 4c-.77-1.33-2.69-1.33-3.46 0L3.34 16c-.77 1.33.19 3 1.73 3z" />
+
+                            </svg>
+
+                        </div>
+
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-sm">
+                                Perlu Perhatian
+                            </h3>
+
+                            <p class="text-[10px] text-slate-400 mt-0.5">
+                                Rata-rata nilai terendah
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <span class="text-[10px] font-semibold text-rose-500">
+                        Top 5
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="divide-y divide-slate-100">
+
+                @forelse($siswaPerluPerhatian as $index => $siswa)
+
+                    <div class="px-5 py-3.5 flex items-center gap-3">
+
+                        <div class="w-7 h-7 shrink-0 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center text-[9px] font-extrabold">
+                            {{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}
+                        </div>
+
+                        <div class="w-8 h-8 shrink-0 rounded-lg bg-slate-50 border border-slate-100 text-slate-500 flex items-center justify-center text-[9px] font-bold">
+                            {{ strtoupper(substr($siswa['nama'], 0, 2)) }}
+                        </div>
+
+                        <div class="flex-1 min-w-0">
+
+                            <p class="text-xs font-bold text-slate-800 truncate">
+                                {{ $siswa['nama'] }}
+                            </p>
+
+                            <p class="text-[9px] text-slate-400 mt-0.5">
+                                {{ $siswa['kelas'] }}
+                            </p>
+
+                        </div>
+
+                        <div class="text-right shrink-0">
+
+                            <p class="text-sm font-extrabold {{ $siswa['rata_rata'] < 75 ? 'text-rose-500' : 'text-amber-500' }}">
+                                {{ number_format($siswa['rata_rata'], 2, ',', '.') }}
+                            </p>
+
+                            <p class="text-[8px] text-slate-400">
+                                rata-rata
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                @empty
+
+                    <div class="px-5 py-12 text-center">
+
+                        <div class="w-10 h-10 mx-auto rounded-lg bg-emerald-50 flex items-center justify-center">
+
+                            <svg class="w-5 h-5 text-emerald-500"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 viewBox="0 0 24 24">
+
+                                <path stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      stroke-width="2"
+                                      d="M5 13l4 4L19 7" />
+
+                            </svg>
+
+                        </div>
+
+                        <p class="text-xs font-semibold text-slate-600 mt-2">
+                            Tidak ada siswa yang perlu perhatian
+                        </p>
+
+                    </div>
+
+                @endforelse
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    {{-- ========================================================= --}}
+    {{-- ROW 3 : STATISTIK NILAI & PERINGKAT SISWA --}}
+    {{-- ========================================================= --}}
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+
+        {{-- Statistik Nilai --}}
+        <div class="lg:col-span-7 bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
+
+            <div class="px-5 py-4 border-b border-slate-100">
+
+                <div class="flex items-center gap-2">
+
+                    <div class="w-7 h-7 rounded-lg bg-orange-100 flex items-center justify-center text-orange-600">
+
+                        <svg class="w-4 h-4"
+                             fill="none"
+                             stroke="currentColor"
+                             viewBox="0 0 24 24">
+
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M3 3v18h18" />
+
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M7 16l4-5 3 3 5-7" />
+
+                        </svg>
+
+                    </div>
+
+                    <div>
+
+                        <h3 class="font-bold text-slate-800 text-sm">
+                            Statistik Nilai
+                        </h3>
+
+                        <p class="text-[10px] text-slate-400 mt-0.5">
+                            Ringkasan hasil penilaian siswa
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="p-5">
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                    {{-- Nilai Tertinggi --}}
+                    <div class="p-4 rounded-xl bg-emerald-50/70 border border-emerald-100">
+
+                        <div class="flex items-center justify-between gap-3">
+
+                            <div>
+                                <p class="text-[10px] font-semibold text-emerald-600">
+                                    Nilai Tertinggi
+                                </p>
+
+                                <p class="text-2xl font-extrabold text-slate-800 mt-1">
+                                    {{ number_format($nilaiTertinggi, 0) }}
+                                </p>
+                            </div>
+
+                            <div class="w-9 h-9 rounded-lg bg-white border border-emerald-100 flex items-center justify-center text-emerald-500 shrink-0">
+
+                                <svg class="w-5 h-5"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     viewBox="0 0 24 24">
+
+                                    <path stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          stroke-width="2"
+                                          d="M5 15l7-7 7 7" />
+
+                                </svg>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    {{-- Nilai Terendah --}}
+                    <div class="p-4 rounded-xl bg-rose-50/70 border border-rose-100">
+
+                        <div class="flex items-center justify-between gap-3">
+
+                            <div>
+
+                                <p class="text-[10px] font-semibold text-rose-500">
+                                    Nilai Terendah
+                                </p>
+
+                                <p class="text-2xl font-extrabold text-slate-800 mt-1">
+                                    {{ number_format($nilaiTerendah, 0) }}
+                                </p>
+
+                            </div>
+
+                            <div class="w-9 h-9 rounded-lg bg-white border border-rose-100 flex items-center justify-center text-rose-500 shrink-0">
+
+                                <svg class="w-5 h-5"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     viewBox="0 0 24 24">
+
+                                    <path stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          stroke-width="2"
+                                          d="M19 9l-7 7-7-7" />
+
+                                </svg>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    {{-- Lulus --}}
+                    <div class="p-4 rounded-xl bg-blue-50/70 border border-blue-100">
+
+                        <div class="flex items-center justify-between gap-3">
+
+                            <div>
+
+                                <p class="text-[10px] font-semibold text-blue-600">
+                                    Lulus KKM
+                                </p>
+
+                                <p class="text-2xl font-extrabold text-slate-800 mt-1">
+                                    {{ number_format($jumlahLulus) }}
+                                </p>
+
+                                <p class="text-[9px] text-slate-400 mt-0.5">
+                                    Siswa
+                                </p>
+
+                            </div>
+
+                            <div class="w-9 h-9 rounded-lg bg-white border border-blue-100 flex items-center justify-center text-blue-500 shrink-0">
+
+                                <svg class="w-5 h-5"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     viewBox="0 0 24 24">
+
+                                    <path stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          stroke-width="2"
+                                          d="M5 13l4 4L19 7" />
+
+                                </svg>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    {{-- Remedial --}}
+                    <div class="p-4 rounded-xl bg-amber-50/70 border border-amber-100">
+
+                        <div class="flex items-center justify-between gap-3">
+
+                            <div>
+
+                                <p class="text-[10px] font-semibold text-amber-600">
+                                    Remedial
+                                </p>
+
+                                <p class="text-2xl font-extrabold text-slate-800 mt-1">
+                                    {{ number_format($jumlahRemedial) }}
+                                </p>
+
+                                <p class="text-[9px] text-slate-400 mt-0.5">
+                                    Siswa
+                                </p>
+
+                            </div>
+
+                            <div class="w-9 h-9 rounded-lg bg-white border border-amber-100 flex items-center justify-center text-amber-500 shrink-0">
+
+                                <svg class="w-5 h-5"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     viewBox="0 0 24 24">
+
+                                    <path stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          stroke-width="2"
+                                          d="M12 9v2m0 4h.01M5.07 19h13.86c1.54 0 2.5-1.67 1.73-3L13.73 4c-.77-1.33-2.69-1.33-3.46 0L3.34 16c-.77 1.33.19 3 1.73 3z" />
+
+                                </svg>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                {{-- Persentase Kelulusan --}}
+                <div class="mt-5 pt-4 border-t border-slate-100">
+
+                    <div class="flex items-center justify-between mb-2">
+
+                        <div>
+
+                            <p class="text-[10px] font-semibold text-slate-600">
+                                Persentase Kelulusan
+                            </p>
+
+                            <p class="text-[9px] text-slate-400 mt-0.5">
+                                Berdasarkan nilai KKM 75
+                            </p>
+
+                        </div>
+
+                        <span class="text-sm font-extrabold text-emerald-600">
+                            {{ $persentaseLulus }}%
+                        </span>
+
+                    </div>
+
+                    <div class="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+
+                        <div class="h-full rounded-full bg-emerald-500"
+                             style="width: {{ min($persentaseLulus, 100) }}%;">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {{-- Peringkat Siswa --}}
+        <div class="lg:col-span-5 bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
+
+            <div class="px-5 py-4 border-b border-slate-100">
+
+                <div class="flex items-center justify-between">
+
+                    <div class="flex items-center gap-2">
+
+                        <div class="w-7 h-7 rounded-lg bg-amber-100 flex items-center justify-center text-amber-600">
+
+                            <svg class="w-4 h-4"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 viewBox="0 0 24 24">
+
+                                <path stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      stroke-width="2"
+                                      d="M5 3v2M19 3v2M10 21h4M12 17v4M6 8h12a2 2 0 012 2v1a6 6 0 01-12 0v-1a2 2 0 012-2z" />
+
+                            </svg>
+
+                        </div>
+
+                        <div>
+
+                            <h3 class="font-bold text-slate-800 text-sm">
+                                Peringkat Siswa
+                            </h3>
+
+                            <p class="text-[10px] text-slate-400 mt-0.5">
+                                Berdasarkan rata-rata nilai
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <span class="text-[10px] text-slate-400">
+                        Top 5
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="divide-y divide-slate-100">
+
+                @forelse($rankingSiswa->take(5) as $index => $siswa)
+
+                    @php
+                        $rank = $index + 1;
+                    @endphp
+
+                    <div class="px-5 py-3.5 flex items-center gap-3">
+
+                        <div class="w-7 h-7 shrink-0 rounded-lg flex items-center justify-center text-[9px] font-extrabold
+                            {{ $rank === 1
+                                ? 'bg-orange-50 text-orange-600'
+                                : ($rank === 2
+                                    ? 'bg-slate-100 text-slate-600'
+                                    : ($rank === 3
+                                        ? 'bg-amber-50 text-amber-600'
+                                        : 'bg-slate-50 text-slate-400')) }}">
+
+                            {{ $rank }}
+
+                        </div>
+
+                        <div class="w-8 h-8 shrink-0 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-[9px] font-bold text-slate-500">
+                            {{ strtoupper(substr($siswa['nama'], 0, 2)) }}
+                        </div>
+
+                        <div class="flex-1 min-w-0">
+
+                            <p class="text-xs font-bold text-slate-800 truncate">
+                                {{ $siswa['nama'] }}
+                            </p>
+
+                            <p class="text-[9px] text-slate-400 mt-0.5">
+                                {{ $siswa['kelas'] }}
+                            </p>
+
+                        </div>
+
+                        <div class="text-right shrink-0">
+
+                            <p class="text-sm font-extrabold text-orange-600">
+                                {{ number_format($siswa['rata_rata'], 2, ',', '.') }}
+                            </p>
+
+                            <p class="text-[8px] text-slate-400">
+                                rata-rata
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                @empty
+
+                    <div class="px-5 py-12 text-center">
+
+                        <p class="text-xs font-semibold text-slate-500">
+                            Belum ada ranking siswa
+                        </p>
+
+                        <p class="text-[10px] text-slate-400 mt-1">
+                            Ranking akan muncul setelah nilai tersedia.
+                        </p>
+
+                    </div>
+
+                @endforelse
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    {{-- ========================================================= --}}
+    {{-- ROW 4 : RAPOR & PEMBELAJARAN --}}
+    {{-- ========================================================= --}}
+
+    <div class="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
+
+        <div class="px-5 py-4 border-b border-slate-100">
+
+            <div class="flex items-center gap-2">
+
+                <div class="w-7 h-7 rounded-lg bg-orange-100 flex items-center justify-center text-orange-600">
+
+                    <svg class="w-4 h-4"
+                         fill="none"
+                         stroke="currentColor"
+                         viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293 0V19a2 2 0 01-2 2h-1.586a1 1 0 01-.707-.293L15 16H9" />
+
+                    </svg>
+
+                </div>
+
+                <div>
+
+                    <h3 class="font-bold text-slate-800 text-sm">
+                        Rapor & Pembelajaran
+                    </h3>
+
+                    <p class="text-[10px] text-slate-400 mt-0.5">
+                        Pengembangan fitur berikutnya
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="p-5">
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+
+                {{-- Pencapaian Pembelajaran --}}
+                <div class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 border border-slate-100">
+
+                    <div class="w-9 h-9 shrink-0 rounded-lg bg-white border border-orange-100 text-orange-500 flex items-center justify-center">
+
+                        <svg class="w-4 h-4"
+                             fill="none"
+                             stroke="currentColor"
+                             viewBox="0 0 24 24">
+
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M12 20h9" />
+
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4z" />
+
+                        </svg>
+
+                    </div>
+
+                    <div>
+
+                        <p class="text-xs font-bold text-slate-700">
+                            Pencapaian Pembelajaran
+                        </p>
+
+                        <p class="text-[9px] text-slate-400 mt-0.5">
+                            Deskripsi capaian siswa
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                {{-- Template Rapor --}}
+                <div class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 border border-slate-100">
+
+                    <div class="w-9 h-9 shrink-0 rounded-lg bg-white border border-orange-100 text-orange-500 flex items-center justify-center">
+
+                        <svg class="w-4 h-4"
+                             fill="none"
+                             stroke="currentColor"
+                             viewBox="0 0 24 24">
+
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+
+                        </svg>
+
+                    </div>
+
+                    <div>
+
+                        <p class="text-xs font-bold text-slate-700">
+                            Template Rapor
+                        </p>
+
+                        <p class="text-[9px] text-slate-400 mt-0.5">
+                            Template dapat dimodifikasi
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                {{-- Export Rapor --}}
+                <div class="flex items-center gap-3 p-3 rounded-lg bg-orange-50 border border-orange-100">
+
+                    <div class="w-9 h-9 shrink-0 rounded-lg bg-white border border-orange-100 text-orange-500 flex items-center justify-center">
+
+                        <svg class="w-4 h-4"
+                             fill="none"
+                             stroke="currentColor"
+                             viewBox="0 0 24 24">
+
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M12 10v6m0 0l-3-3m3 3l3-3m2-8H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2z" />
+
+                        </svg>
+
+                    </div>
+
+                    <div>
+
+                        <p class="text-xs font-bold text-slate-700">
+                            Export Rapor PDF
+                        </p>
+
+                        <p class="text-[9px] text-slate-400 mt-0.5">
+                            Siap untuk dicetak
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="mt-4 pt-4 border-t border-slate-100">
+
+                <p class="text-[9px] leading-5 text-slate-400">
+                    Nantinya data nilai dapat digunakan untuk membentuk rapor lengkap dengan
+                    identitas sekolah, logo SMUHERO, tabel nilai, deskripsi pembelajaran,
+                    dan halaman belakang rapor.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@endsection
+
+
+@push('scripts')
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const canvas = document.getElementById('guruNilaiChart');
+
+    if (!canvas || typeof Chart === 'undefined') {
+        return;
+    }
+
+    const labels = @json($chartLabels);
+    const values = @json($chartValues);
+
+    if (
+        !Array.isArray(labels) ||
+        !Array.isArray(values) ||
+        values.length === 0
+    ) {
+        return;
+    }
+
+    const ctx = canvas.getContext('2d');
+
+    if (!ctx) {
+        return;
+    }
+
+    const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+
+    gradient.addColorStop(0, 'rgba(249, 115, 22, 0.16)');
+    gradient.addColorStop(1, 'rgba(249, 115, 22, 0)');
+
+    new Chart(ctx, {
+        type: 'line',
+
+        data: {
+            labels: labels,
+
+            datasets: [{
+                data: values,
+                borderColor: '#F97316',
+                backgroundColor: gradient,
+                borderWidth: 2.5,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 3,
+                pointHoverRadius: 5,
+                pointBackgroundColor: '#F97316',
+                pointBorderColor: '#FFFFFF',
+                pointBorderWidth: 2
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            interaction: {
+                intersect: false,
+                mode: 'index'
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { grid: { color: '#F3F4F6' }, ticks: { font: { weight: 'bold' } } },
-                    x: { grid: { display: false } }
+
+            plugins: {
+                legend: {
+                    display: false
+                },
+
+                tooltip: {
+                    backgroundColor: '#1E293B',
+                    padding: 9,
+                    cornerRadius: 7,
+                    displayColors: false,
+
+                    titleFont: {
+                        size: 10,
+                        weight: '700'
+                    },
+
+                    bodyFont: {
+                        size: 10,
+                        weight: '600'
+                    },
+
+                    callbacks: {
+                        label: function (context) {
+                            return ' Nilai: ' + context.parsed.y;
+                        }
+                    }
+                }
+            },
+
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    suggestedMin: 50,
+                    suggestedMax: 100,
+
+                    border: {
+                        display: false
+                    },
+
+                    grid: {
+                        color: '#F1F5F9',
+                        drawTicks: false
+                    },
+
+                    ticks: {
+                        color: '#94A3B8',
+                        padding: 8,
+
+                        font: {
+                            size: 9,
+                            weight: '600'
+                        }
+                    }
+                },
+
+                x: {
+                    border: {
+                        display: false
+                    },
+
+                    grid: {
+                        display: false
+                    },
+
+                    ticks: {
+                        color: '#94A3B8',
+                        padding: 8,
+                        maxRotation: 0,
+                        autoSkip: true,
+                        maxTicksLimit: 6,
+
+                        font: {
+                            size: 8,
+                            weight: '600'
+                        },
+
+                        callback: function (value) {
+                            const label = this.getLabelForValue(value);
+
+                            if (!label) {
+                                return '';
+                            }
+
+                            return label.length > 9
+                                ? label.substring(0, 9) + '…'
+                                : label;
+                        }
+                    }
                 }
             }
-        });
-    </script>
-</body>
-</html>
+        }
+    });
+});
+</script>
+
+@endpush

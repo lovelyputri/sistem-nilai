@@ -1,193 +1,221 @@
-@extends('layouts.app')
+@extends('layoutGuru')
 
-@section('title', 'Daftar Nilai')
+@section('title', 'Input Nilai')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Daftar Nilai Siswa</h3>
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalTambahNilai">
-                            <i class="fas fa-plus"></i> Tambah Nilai
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    @if(session('sukses'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <i class="fas fa-check-circle"></i> {{ session('sukses') }}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    @endif
 
-                    @if(session('error'))
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <i class="fas fa-exclamation-circle"></i> {{ session('error') }}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    @endif
+<div class="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover" id="tabelNilai">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th>No</th>
-                                    <th>NIS</th>
-                                    <th>Nama Siswa</th>
-                                    <th>Kelas</th>
-                                    <th>Mata Pelajaran</th>
-                                    <th>Nilai</th>
-                                    <th>Grade</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($nilaiList as $index => $nilai)
-                                    <tr>
-                                        <td>{{ $index + 1 }}</td>
-                                        <td>{{ $nilai->siswa->nis ?? '-' }}</td>
-                                        <td>{{ $nilai->siswa->name ?? '-' }}</td>
-                                        <td>{{ $nilai->siswa->kelas ?? '-' }}</td>
-                                        <td>{{ $nilai->mataPelajaran->name ?? '-' }}</td>
-                                        <td>
-                                            <strong class="text-primary">{{ $nilai->nilai }}</strong>
-                                        </td>
-                                        <td>
-                                            @php
-                                                $grade = '';
-                                                $badgeColor = '';
-                                                if($nilai->nilai >= 85) {
-                                                    $grade = 'A';
-                                                    $badgeColor = 'success';
-                                                } elseif($nilai->nilai >= 75) {
-                                                    $grade = 'B';
-                                                    $badgeColor = 'info';
-                                                } elseif($nilai->nilai >= 60) {
-                                                    $grade = 'C';
-                                                    $badgeColor = 'warning';
-                                                } else {
-                                                    $grade = 'D';
-                                                    $badgeColor = 'danger';
-                                                }
-                                            @endphp
-                                            <span class="badge badge-{{ $badgeColor }} badge-pill">{{ $grade }}</span>
-                                        </td>
-                                        <td>
-                                            <a href="{{ route('nilai.edit', $nilai->id) }}" class="btn btn-sm btn-warning">
-                                                <i class="fas fa-edit"></i> Edit
-                                            </a>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="8" class="text-center text-muted">
-                                            <i class="fas fa-database"></i> Belum ada data nilai
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+    {{-- HEADER --}}
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+
+        <div>
+            <div class="flex items-center gap-2 text-xs text-slate-400 mb-2">
+                <a href="{{ route('guru.dashboard') }}" class="hover:text-orange-600">
+                    Dashboard
+                </a>
+                <span>/</span>
+                <a href="{{ route('guru.nilai.index') }}" class="hover:text-orange-600">
+                    Nilai
+                </a>
+                <span>/</span>
+                <span class="text-slate-500">
+                    Input Nilai
+                </span>
             </div>
+
+            <h1 class="text-2xl font-bold text-slate-800">
+                Input Nilai Siswa
+            </h1>
+
+            <p class="text-sm text-slate-500 mt-1">
+                Masukkan nilai siswa sesuai mata pelajaran yang Anda ampu.
+            </p>
         </div>
+
+        <a
+            href="{{ route('guru.nilai.index') }}"
+            class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-sm font-semibold text-slate-600 hover:text-orange-600 hover:border-orange-200 transition"
+        >
+            ← Kembali
+        </a>
+
     </div>
+
+    {{-- ERROR --}}
+    @if($errors->any())
+
+        <div class="mb-5 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-700">
+
+            <p class="text-xs font-bold mb-1">
+                Terdapat kesalahan:
+            </p>
+
+            <ul class="text-xs space-y-1">
+                @foreach($errors->all() as $error)
+                    <li>• {{ $error }}</li>
+                @endforeach
+            </ul>
+
+        </div>
+
+    @endif
+
+    <form
+        action="{{ route('guru.nilai.store') }}"
+        method="POST"
+        class="space-y-5"
+    >
+
+        @csrf
+
+        {{-- MAPEL --}}
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+
+            <label
+                for="id_mata_pelajaran"
+                class="block text-sm font-bold text-slate-700 mb-2"
+            >
+                Mata Pelajaran
+            </label>
+
+            <select
+                id="id_mata_pelajaran"
+                name="id_mata_pelajaran"
+                required
+                class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
+            >
+
+                <option value="">
+                    Pilih mata pelajaran
+                </option>
+
+                @foreach($mataPelajarans as $mapel)
+
+                    <option
+                        value="{{ $mapel->id }}"
+                        @selected(old('id_mata_pelajaran', request('id_mata_pelajaran')) == $mapel->id)
+                    >
+                        {{ $mapel->name }}
+                        @if($mapel->kode)
+                            — {{ $mapel->kode }}
+                        @endif
+                    </option>
+
+                @endforeach
+
+            </select>
+
+            <p class="text-[11px] text-slate-400 mt-2">
+                Mata pelajaran yang tersedia hanya yang menjadi bidang Anda.
+            </p>
+
+        </div>
+
+        {{-- SISWA --}}
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+
+            <div class="px-5 py-4 border-b border-slate-100">
+
+                <h3 class="text-sm font-bold text-slate-800">
+                    Siswa
+                </h3>
+
+                <p class="text-xs text-slate-400 mt-1">
+                    Pilih siswa yang akan diberikan nilai.
+                </p>
+
+            </div>
+
+            <div class="p-5">
+
+                <label
+                    for="id_siswa"
+                    class="block text-xs font-bold text-slate-700 mb-2"
+                >
+                    Nama Siswa
+                </label>
+
+                <select
+                    id="id_siswa"
+                    name="id_siswa"
+                    required
+                    class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
+                >
+
+                    <option value="">
+                        Pilih siswa
+                    </option>
+
+                    @foreach($siswa as $item)
+
+                        <option
+                            value="{{ $item->id }}"
+                            @selected(old('id_siswa', request('id_siswa')) == $item->id)
+                        >
+                            {{ $item->name }}
+                            — NIS: {{ $item->nis ?? '-' }}
+                            — Kelas {{ $item->kelas ?? '-' }}
+                        </option>
+
+                    @endforeach
+
+                </select>
+
+            </div>
+
+        </div>
+
+        {{-- NILAI --}}
+        <div class="bg-white rounded-2xl border border-orange-100 shadow-sm p-5">
+
+            <label
+                for="nilai"
+                class="block text-sm font-bold text-slate-700 mb-2"
+            >
+                Nilai
+            </label>
+
+            <input
+                type="number"
+                id="nilai"
+                name="nilai"
+                value="{{ old('nilai') }}"
+                min="0"
+                max="100"
+                step="0.01"
+                required
+                placeholder="Masukkan nilai 0 - 100"
+                class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
+            >
+
+            <p class="text-[11px] text-slate-400 mt-2">
+                Nilai harus berada di antara 0 sampai 100.
+            </p>
+
+        </div>
+
+        {{-- BUTTON --}}
+        <div class="flex justify-end gap-3">
+
+            <a
+                href="{{ route('guru.nilai.index') }}"
+                class="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-sm font-semibold transition"
+            >
+                Batal
+            </a>
+
+            <button
+                type="submit"
+                class="px-5 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold transition"
+            >
+                Simpan Nilai
+            </button>
+
+        </div>
+
+    </form>
+
 </div>
 
-<!-- Modal Tambah Nilai -->
-<div class="modal fade" id="modalTambahNilai" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    <i class="fas fa-plus-circle"></i> Tambah Nilai Baru
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form action="{{ route('nilai.store') }}" method="POST">
-                @csrf
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="id_siswa">Nama Siswa <span class="text-danger">*</span></label>
-                        <select name="id_siswa" id="id_siswa" class="form-control @error('id_siswa') is-invalid @enderror" required>
-                            <option value="">-- Pilih Siswa --</option>
-                            @foreach($siswaList as $siswa)
-                                <option value="{{ $siswa->id }}" {{ old('id_siswa') == $siswa->id ? 'selected' : '' }}>
-                                    {{ $siswa->name }} - Kelas {{ $siswa->kelas }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('id_siswa')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label for="nilai">Nilai <span class="text-danger">*</span></label>
-                        <input type="number" 
-                               name="nilai" 
-                               id="nilai" 
-                               class="form-control @error('nilai') is-invalid @enderror" 
-                               placeholder="Masukkan nilai (0-100)"
-                               min="0" 
-                               max="100" 
-                               step="0.01"
-                               value="{{ old('nilai') }}"
-                               required>
-                        <small class="form-text text-muted">Nilai minimal 0 dan maksimal 100</small>
-                        @error('nilai')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle"></i> Mata pelajaran akan diambil dari mata pelajaran yang Anda ajar
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                        <i class="fas fa-times"></i> Batal
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Simpan
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-@endsection
-
-@section('styles')
-<style>
-    .table tbody tr:hover {
-        background-color: #f5f5f5;
-    }
-    .badge-pill {
-        padding: 5px 12px;
-        font-size: 12px;
-    }
-</style>
-@endsection
-
-@section('scripts')
-<script>
-    $(document).ready(function() {
-        $('#tabelNilai').DataTable({
-            "language": {
-                "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Indonesian.json"
-            },
-            "order": [[1, 'asc']]
-        });
-    });
-</script>
 @endsection

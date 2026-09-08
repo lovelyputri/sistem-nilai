@@ -1,5 +1,3 @@
-Tidak bisa kita ketahui, bahkan CCTV- CCTV-nya Juga enggak ada, jadi untuk mencari jejak-jejaknya pun Mm.@extends('layout')
-
 @section('content')
 
 <main class="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">

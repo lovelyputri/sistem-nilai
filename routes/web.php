@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Guru\DashboardController as GuruDashboardController;
 use App\Http\Controllers\Guru\NilaiController as GuruNilaiController;
+use App\Http\Controllers\Guru\SiswaController as GuruSiswaController;
 use App\Models\Nilai;
 use Illuminate\Support\Facades\Route;
 
@@ -129,12 +130,31 @@ Route::middleware(['auth', 'check.role:guru'])->prefix('guru')->name('guru.')->g
     Route::get('/dashboard', [GuruDashboardController::class, 'index'])->name('dashboard');
 
     // Nilai
-    Route::get('/nilai', [GuruNilaiController::class, 'index'])->name('nilai.index');
-    Route::post('/nilai/create', [GuruNilaiController::class, 'store'])->name('nilai.create');
-    Route::get('/nilai/{nilai}/edit', [GuruNilaiController::class, 'edit'])->name('nilai.edit');
-    // Route::put('/nilai/{nilai}', [GuruNilaiController::class, 'update'])->name('nilai.update');
-    Route::delete('nilai/{nilai}', [NilaiController::class, 'destroy'])->name('nilai.destroy');
+    Route::get('/nilai', [GuruNilaiController::class, 'index'])
+            ->name('nilai.index');
 
-    // pilih kelas
-    Route::post('/nilai/select-class', [GuruNilaiController::class, 'selectClass'])->name('nilai.selectClass');
+        Route::get('/nilai/create', [GuruNilaiController::class, 'create'])
+            ->name('nilai.create');
+
+        Route::post('/nilai', [GuruNilaiController::class, 'store'])
+            ->name('nilai.store');
+
+        Route::get('/nilai/siswa/{siswa}', [GuruNilaiController::class, 'show'])
+            ->name('nilai.show');
+
+        Route::get('/nilai/{nilai}/edit', [GuruNilaiController::class, 'edit'])
+            ->name('nilai.edit');
+
+        Route::put('/nilai/{nilai}', [GuruNilaiController::class, 'update'])
+            ->name('nilai.update');
+
+        Route::delete('/nilai/{nilai}', [GuruNilaiController::class, 'destroy'])
+            ->name('nilai.destroy');
+
+    //siswa
+        Route::get('/siswa', [GuruSiswaController::class, 'index'])
+            ->name('siswa.index');
+
+        Route::get('/siswa/{siswa}', [GuruSiswaController::class, 'show'])
+            ->name('siswa.show');
 });
