@@ -254,7 +254,7 @@
                     {{-- Input Nilai --}}
 
                     <a
-                        href="{{ route('guru.nilai.index') }}"
+                        href="{{ route('guru.rapot.index') }}"
                         class="flex items-center gap-2
                                px-3 py-2
                                rounded-lg
@@ -296,7 +296,7 @@
                     {{-- Sementara belum ada route --}}
 
                     <a
-                        href="#"
+                        href="{{ route('guru.rapot.index') }}"
                         onclick="return false;"
                         class="flex items-center gap-2
                                px-3 py-2

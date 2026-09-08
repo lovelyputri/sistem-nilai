@@ -5,14 +5,11 @@ namespace App\Http\Controllers\Guru;
 use App\Http\Controllers\Controller;
 use App\Models\Siswa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class SiswaController extends Controller
 {
-    /**
-     * Menampilkan daftar siswa.
-     * Guru hanya dapat melihat data.
-     */
     public function index(Request $request): View
     {
         $search = trim($request->get('search', ''));
@@ -25,28 +22,18 @@ class SiswaController extends Controller
             $perPage = 10;
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | DAFTAR KELAS
-        |--------------------------------------------------------------------------
-        */
+        $daftarKelas = Auth::user()
+            ->kelas()
+            ->pluck('kelas')
+            ->unique()
+            ->values();
 
-        $daftarKelas = Siswa::query()
-            ->select('kelas')
-            ->whereNotNull('kelas')
-            ->where('kelas', '!=', '')
-            ->distinct()
-            ->orderBy('kelas')
-            ->pluck('kelas');
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | DATA SISWA
-        |--------------------------------------------------------------------------
-        */
+        if ($kelasTerpilih && !$daftarKelas->contains($kelasTerpilih)) {
+            abort(403, 'Anda tidak mengajar kelas ini.');
+        }
 
         $siswa = Siswa::query()
+            ->whereIn('kelas', $daftarKelas)
 
             ->when($kelasTerpilih, function ($query) use ($kelasTerpilih) {
                 $query->where('kelas', $kelasTerpilih);
@@ -66,28 +53,16 @@ class SiswaController extends Controller
 
             ->orderBy('kelas')
             ->orderBy('name')
-
             ->paginate($perPage)
-
             ->appends($request->query());
 
+        $totalSiswa = Siswa::whereIn('kelas', $daftarKelas)->count();
 
-        /*
-        |--------------------------------------------------------------------------
-        | STATISTIK
-        |--------------------------------------------------------------------------
-        */
+        $totalSiswaAktif = Siswa::whereIn('kelas', $daftarKelas)
+            ->where('status', 'aktif')
+            ->count();
 
-        $totalSiswa = Siswa::count();
-
-        $totalSiswaAktif = Siswa::where('status', 'aktif')->count();
-
-        $totalKelas = Siswa::query()
-            ->whereNotNull('kelas')
-            ->where('kelas', '!=', '')
-            ->distinct()
-            ->count('kelas');
-
+        $totalKelas = $daftarKelas->count();
 
         return view('guru.siswa.index', compact(
             'siswa',
@@ -102,16 +77,18 @@ class SiswaController extends Controller
         ));
     }
 
-
-    /**
-     * Menampilkan detail siswa.
-     * Guru hanya dapat melihat data.
-     */
     public function show(Siswa $siswa): View
     {
-        return view(
-            'guru.siswa.show',
-            compact('siswa')
+        $kelasGuru = Auth::user()
+            ->kelas()
+            ->pluck('kelas');
+
+        abort_unless(
+            $kelasGuru->contains($siswa->kelas),
+            403,
+            'Siswa ini bukan bagian dari kelas Anda.'
         );
+
+        return view('guru.siswa.show', compact('siswa'));
     }
 }

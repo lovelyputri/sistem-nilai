@@ -4,12 +4,9 @@
 
 <div class="w-full mx-auto px-3 sm:px-4 lg:px-8 py-5 flex-grow space-y-5">
 
-    {{-- =========================================================
-        FLASH MESSAGES
-    ========================================================== --}}
+    {{-- FLASH MESSAGES --}}
     @if (session('success'))
         <div class="flex items-start gap-3 px-4 py-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold">
-
             <svg class="w-5 h-5 shrink-0 mt-0.5"
                  fill="none"
                  stroke="currentColor"
@@ -17,17 +14,15 @@
                 <path stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
-                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 11-18 0z"/>
             </svg>
 
             <span>{{ session('success') }}</span>
-
         </div>
     @endif
 
     @if (session('error'))
         <div class="flex items-start gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold">
-
             <svg class="w-5 h-5 shrink-0 mt-0.5"
                  fill="none"
                  stroke="currentColor"
@@ -39,14 +34,11 @@
             </svg>
 
             <span>{{ session('error') }}</span>
-
         </div>
     @endif
 
 
-    {{-- =========================================================
-        HEADER
-    ========================================================== --}}
+    {{-- HEADER --}}
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 
         <div class="space-y-1.5 min-w-0">
@@ -110,9 +102,7 @@
     </div>
 
 
-    {{-- =========================================================
-        STAT CARDS
-    ========================================================== --}}
+    {{-- STAT CARDS --}}
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
         {{-- SUDAH DINILAI --}}
@@ -145,7 +135,7 @@
                         <path stroke-linecap="round"
                               stroke-linejoin="round"
                               stroke-width="2"
-                              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 11-18 0z"/>
                     </svg>
 
                 </div>
@@ -185,7 +175,7 @@
                         <path stroke-linecap="round"
                               stroke-linejoin="round"
                               stroke-width="2"
-                              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 11-18 0z"/>
                     </svg>
 
                 </div>
@@ -237,15 +227,10 @@
     </div>
 
 
-    {{-- =========================================================
-        FILTER + TABLE
-    ========================================================== --}}
+    {{-- FILTER + TABLE --}}
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-start">
 
-
-        {{-- =====================================================
-            FILTER
-        ====================================================== --}}
+        {{-- FILTER --}}
         <div class="lg:col-span-3 bg-white p-4 sm:p-5 rounded-2xl border border-slate-100 shadow-sm">
 
             <div class="flex items-center justify-between gap-3 pb-3 border-b border-slate-100">
@@ -256,12 +241,10 @@
                          fill="none"
                          stroke="currentColor"
                          viewBox="0 0 24 24">
-
                         <path stroke-linecap="round"
                               stroke-linejoin="round"
                               stroke-width="2"
                               d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
-
                     </svg>
 
                     <span class="font-bold text-slate-800 text-sm truncate">
@@ -285,7 +268,6 @@
             <form method="GET"
                   action="{{ route('guru.nilai.index') }}"
                   class="space-y-4 mt-4">
-
 
                 {{-- SEARCH --}}
                 <div class="space-y-1.5">
@@ -383,12 +365,10 @@
                          fill="none"
                          stroke="currentColor"
                          viewBox="0 0 24 24">
-
                         <path stroke-linecap="round"
                               stroke-linejoin="round"
                               stroke-width="2"
                               d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L2.293 7.293A1 1 0 012 6.586V4a1 1 0 011-1z"/>
-
                     </svg>
 
                     <span>
@@ -402,11 +382,8 @@
         </div>
 
 
-        {{-- =====================================================
-            DATA NILAI
-        ====================================================== --}}
+        {{-- DATA NILAI --}}
         <div class="lg:col-span-9 bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-
 
             {{-- TABLE HEADER --}}
             <div class="px-4 sm:px-5 py-4 border-b border-slate-100">
@@ -438,9 +415,7 @@
             </div>
 
 
-            {{-- =================================================
-                DESKTOP TABLE
-            ================================================== --}}
+            {{-- DESKTOP TABLE --}}
             <div class="hidden md:block w-full">
 
                 <table class="w-full table-fixed text-left text-xs">
@@ -563,8 +538,14 @@
 
                                         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 text-slate-500 text-[10px] font-semibold">
 
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            <svg class="w-3 h-3"
+                                                 fill="none"
+                                                 stroke="currentColor"
+                                                 viewBox="0 0 24 24">
+                                                <path stroke-linecap="round"
+                                                      stroke-linejoin="round"
+                                                      stroke-width="2"
+                                                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 11-18 0z"/>
                                             </svg>
 
                                             Belum Dinilai
@@ -575,8 +556,14 @@
 
                                         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 text-[10px] font-semibold">
 
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            <svg class="w-3 h-3"
+                                                 fill="none"
+                                                 stroke="currentColor"
+                                                 viewBox="0 0 24 24">
+                                                <path stroke-linecap="round"
+                                                      stroke-linejoin="round"
+                                                      stroke-width="2"
+                                                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 11-18 0z"/>
                                             </svg>
 
                                             {{ $item['status'] }}
@@ -587,8 +574,14 @@
 
                                         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-red-50 text-red-700 text-[10px] font-semibold">
 
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 4h.01M10.29 3.86l-8.48 14.7A1 1 0 002.7 20h18.6a1 1 0 00.87-1.44L13.7 3.86a1 1 0 00-1.73 0z"/>
+                                            <svg class="w-3 h-3"
+                                                 fill="none"
+                                                 stroke="currentColor"
+                                                 viewBox="0 0 24 24">
+                                                <path stroke-linecap="round"
+                                                      stroke-linejoin="round"
+                                                      stroke-width="2"
+                                                      d="M12 9v3m0 4h.01M10.29 3.86l-8.48 14.7A1 1 0 002.7 20h18.6a1 1 0 00.87-1.44L13.7 3.86a1 1 0 00-1.73 0z"/>
                                             </svg>
 
                                             {{ $item['status'] }}
@@ -599,101 +592,52 @@
 
                                 </td>
 
-
                                 {{-- AKSI --}}
                                 <td class="py-4 px-2">
 
                                     <div class="flex items-center justify-center gap-1.5">
 
-                                        {{-- DETAIL --}}
+                                        {{-- VIEW / DETAIL --}}
                                         <a href="{{ route('guru.nilai.show', $item['id']) }}"
-                                           title="Lihat Detail"
-                                           class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 flex items-center justify-center border border-blue-200 transition-colors">
+                                        title="Lihat Detail"
+                                        class="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 flex items-center justify-center border border-orange-200 transition-colors">
 
                                             <svg class="w-3.5 h-3.5"
-                                                 fill="none"
-                                                 stroke="currentColor"
-                                                 viewBox="0 0 24 24">
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24">
 
                                                 <path stroke-linecap="round"
-                                                      stroke-linejoin="round"
-                                                      stroke-width="2"
-                                                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
 
                                                 <path stroke-linecap="round"
-                                                      stroke-linejoin="round"
-                                                      stroke-width="2"
-                                                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7z"/>
 
                                             </svg>
 
                                         </a>
 
-                                        @if($item['sudah_dinilai'])
 
-                                            {{-- EDIT --}}
+                                        {{-- EDIT --}}
+                                        @if(!empty($item['nilai_id']))
+
                                             <a href="{{ route('guru.nilai.edit', $item['nilai_id']) }}"
-                                               title="Edit Nilai"
-                                               class="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 flex items-center justify-center border border-orange-200 transition-colors">
+                                            title="Edit Nilai"
+                                            class="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 flex items-center justify-center border border-orange-200 transition-colors">
 
                                                 <svg class="w-3.5 h-3.5"
-                                                     fill="none"
-                                                     stroke="currentColor"
-                                                     viewBox="0 0 24 24">
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24">
 
                                                     <path stroke-linecap="round"
-                                                          stroke-linejoin="round"
-                                                          stroke-width="2"
-                                                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-
-                                                </svg>
-
-                                            </a>
-
-                                            {{-- HAPUS --}}
-                                            <form action="{{ route('guru.nilai.destroy', $item['nilai_id']) }}"
-                                                  method="POST"
-                                                  onsubmit="return confirm('Yakin ingin menghapus nilai siswa ini?')">
-
-                                                @csrf
-                                                @method('DELETE')
-
-                                                <button type="submit"
-                                                        title="Hapus Nilai"
-                                                        class="w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 flex items-center justify-center border border-red-200 transition-colors">
-
-                                                    <svg class="w-3.5 h-3.5"
-                                                         fill="none"
-                                                         stroke="currentColor"
-                                                         viewBox="0 0 24 24">
-
-                                                        <path stroke-linecap="round"
-                                                              stroke-linejoin="round"
-                                                              stroke-width="2"
-                                                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3M4 7h16"/>
-
-                                                    </svg>
-
-                                                </button>
-
-                                            </form>
-
-                                        @else
-
-                                            {{-- INPUT --}}
-                                            <a href="{{ route('guru.nilai.create') }}"
-                                               title="Input Nilai"
-                                               class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 flex items-center justify-center border border-emerald-200 transition-colors">
-
-                                                <svg class="w-3.5 h-3.5"
-                                                     fill="none"
-                                                     stroke="currentColor"
-                                                     viewBox="0 0 24 24">
-
-                                                    <path stroke-linecap="round"
-                                                          stroke-linejoin="round"
-                                                          stroke-width="2"
-                                                          d="M12 4v16m8-8H4"/>
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
 
                                                 </svg>
 
@@ -704,7 +648,6 @@
                                     </div>
 
                                 </td>
-
                             </tr>
 
                         @empty
@@ -755,9 +698,7 @@
             </div>
 
 
-            {{-- =================================================
-                MOBILE CARDS
-            ================================================== --}}
+            {{-- MOBILE CARDS --}}
             <div class="md:hidden divide-y divide-slate-100">
 
                 @forelse($siswaPaginate as $index => $item)
@@ -789,28 +730,56 @@
 
                                     </div>
 
-                                    <a href="{{ route('guru.nilai.show', $item['id']) }}"
-                                       title="Lihat Detail"
-                                       class="w-8 h-8 shrink-0 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-200">
+                                    <div class="flex items-center gap-1.5 shrink-0">
 
-                                        <svg class="w-3.5 h-3.5"
-                                             fill="none"
-                                             stroke="currentColor"
-                                             viewBox="0 0 24 24">
+                                        {{-- DETAIL --}}
+                                        <a href="{{ route('guru.nilai.show', $item['id']) }}"
+                                           title="Lihat Detail"
+                                           class="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 flex items-center justify-center border border-orange-200 transition-colors">
 
-                                            <path stroke-linecap="round"
-                                                  stroke-linejoin="round"
-                                                  stroke-width="2"
-                                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            <svg class="w-3.5 h-3.5"
+                                                 fill="none"
+                                                 stroke="currentColor"
+                                                 viewBox="0 0 24 24">
 
-                                            <path stroke-linecap="round"
-                                                  stroke-linejoin="round"
-                                                  stroke-width="2"
-                                                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                                <path stroke-linecap="round"
+                                                      stroke-linejoin="round"
+                                                      stroke-width="2"
+                                                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
 
-                                        </svg>
+                                                <path stroke-linecap="round"
+                                                      stroke-linejoin="round"
+                                                      stroke-width="2"
+                                                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
 
-                                    </a>
+                                            </svg>
+
+                                        </a>
+
+                                        {{-- EDIT --}}
+                                        @if(!empty($item['nilai_id']))
+
+                                            <a href="{{ route('guru.nilai.edit', $item['nilai_id']) }}"
+                                               title="Edit Nilai"
+                                               class="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 flex items-center justify-center border border-orange-200 transition-colors">
+
+                                                <svg class="w-3.5 h-3.5"
+                                                     fill="none"
+                                                     stroke="currentColor"
+                                                     viewBox="0 0 24 24">
+
+                                                    <path stroke-linecap="round"
+                                                          stroke-linejoin="round"
+                                                          stroke-width="2"
+                                                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+
+                                                </svg>
+
+                                            </a>
+
+                                        @endif
+
+                                    </div>
 
                                 </div>
 
@@ -872,61 +841,6 @@
 
                                 </div>
 
-
-                                {{-- AKSI --}}
-                                <div class="mt-3 flex items-center gap-2">
-
-                                    @if($item['sudah_dinilai'])
-
-                                        <a href="{{ route('guru.nilai.edit', $item['nilai_id']) }}"
-                                           class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-orange-50 text-orange-600 border border-orange-200 text-[11px] font-semibold">
-
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                                            </svg>
-
-                                            Edit
-
-                                        </a>
-
-                                        <form action="{{ route('guru.nilai.destroy', $item['nilai_id']) }}"
-                                              method="POST"
-                                              onsubmit="return confirm('Yakin ingin menghapus nilai ini?')"
-                                              class="flex-1">
-
-                                            @csrf
-                                            @method('DELETE')
-
-                                            <button type="submit"
-                                                    class="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-red-50 text-red-600 border border-red-200 text-[11px] font-semibold">
-
-                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3M4 7h16"/>
-                                                </svg>
-
-                                                Hapus
-
-                                            </button>
-
-                                        </form>
-
-                                    @else
-
-                                        <a href="{{ route('guru.nilai.create') }}"
-                                           class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-200 text-[11px] font-semibold">
-
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                                            </svg>
-
-                                            Input Nilai
-
-                                        </a>
-
-                                    @endif
-
-                                </div>
-
                             </div>
 
                         </div>
@@ -968,9 +882,7 @@
             </div>
 
 
-            {{-- =================================================
-                PAGINATION
-            ================================================== --}}
+            {{-- PAGINATION --}}
             @if($siswaPaginate->total() > 0)
 
                 <div class="px-4 sm:px-5 py-4 border-t border-slate-100">
@@ -1022,9 +934,7 @@
     </div>
 
 
-    {{-- =========================================================
-        RANKING KELAS
-    ========================================================== --}}
+    {{-- RANKING KELAS --}}
     @if($kelasTerpilih && $rankingSiswa->isNotEmpty())
 
         <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
@@ -1067,9 +977,7 @@
                     </div>
 
                     <span class="inline-flex w-fit px-3 py-1.5 rounded-lg bg-orange-50 text-orange-600 text-[11px] font-semibold">
-
                         {{ $rankingSiswa->count() }} Siswa
-
                     </span>
 
                 </div>

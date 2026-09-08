@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Guru\DashboardController as GuruDashboardController;
 use App\Http\Controllers\Guru\NilaiController as GuruNilaiController;
+use App\Http\Controllers\Guru\RapotController;
 use App\Http\Controllers\Guru\SiswaController as GuruSiswaController;
 use App\Models\Nilai;
 use Illuminate\Support\Facades\Route;
@@ -157,4 +158,11 @@ Route::middleware(['auth', 'check.role:guru'])->prefix('guru')->name('guru.')->g
 
         Route::get('/siswa/{siswa}', [GuruSiswaController::class, 'show'])
             ->name('siswa.show');
+
+    // Rapot
+    Route::get('/rapot', [RapotController::class, 'index'])
+        ->name('rapot.index');
+
+    Route::get('/rapot/{siswa}', [RapotController::class, 'show'])
+        ->name('rapot.show');
 });

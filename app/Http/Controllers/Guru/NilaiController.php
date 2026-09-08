@@ -12,71 +12,51 @@ use Illuminate\Validation\Rule;
 
 class NilaiController extends Controller
 {
-    /**
-     * Batas nilai kelulusan (KKM) untuk menentukan status Tuntas / Belum Tuntas.
-     * Ganti sesuai kebijakan sekolah kalau berbeda per mapel.
-     */
     private const KKM = 75;
 
-    /**
-     * Daftar kelas yang ditugaskan ke guru yang sedang login (dari tabel guru_kelas).
-     */
     private function kelasGuru(): \Illuminate\Support\Collection
     {
         return Auth::user()
-            ->kelas() // relasi User::kelas() -> hasMany(GuruKelas)
+            ->kelas()
             ->pluck('kelas');
     }
 
-    /**
-     * Daftar mata pelajaran yang diampu guru yang sedang login (pivot guru_mapel).
-     */
     private function mapelGuruList()
     {
-        return Auth::user()->mataPelajaran; // BelongsToMany
+        return Auth::user()->mataPelajaran;
     }
 
-    /**
-     * Tentukan mapel yang sedang aktif dipakai guru untuk mengelola nilai.
-     * Kalau guru mengampu >1 mapel, bisa dipilih lewat query string ?mapel_id=.
-     * Default: mapel pertama yang diampu.
-     */
     private function mapelAktif(Request $request, $daftarMapel): ?MataPelajaran
     {
-        $mapelId = $request->input('mapel_id');
+        $mapelId = $request->input('mapel_id')
+            ?? $request->input('id_mata_pelajaran');
 
         if ($mapelId) {
-            $dipilih = $daftarMapel->firstWhere('id', (int) $mapelId);
-            if ($dipilih) {
-                return $dipilih;
+            $mapel = $daftarMapel->firstWhere('id', (int) $mapelId);
+
+            if ($mapel) {
+                return $mapel;
             }
         }
 
         return $daftarMapel->first();
     }
 
-    /**
-     * GET /guru/nilai
-     */
     public function index(Request $request)
     {
         $daftarMapel = $this->mapelGuruList();
-        $mapelGuru   = $this->mapelAktif($request, $daftarMapel);
-
+        $mapelGuru = $this->mapelAktif($request, $daftarMapel);
         $kelasGuru = $this->kelasGuru();
 
-        $search        = $request->input('search');
+        $search = $request->input('search');
         $kelasTerpilih = $request->input('kelas');
-        $perPage       = (int) $request->input('per_page', 10);
-
-        // Kelas yang bisa difilter hanya kelas yang ditugaskan ke guru ini
-        $daftarKelas = $kelasGuru;
+        $perPage = (int) $request->input('per_page', 10);
 
         $query = Siswa::query()
             ->whereIn('siswas.kelas', $kelasGuru)
             ->leftJoin('nilais', function ($join) use ($mapelGuru) {
                 $join->on('nilais.id_siswa', '=', 'siswas.id')
-                     ->where('nilais.id_mata_pelajaran', '=', $mapelGuru?->id);
+                    ->where('nilais.id_mata_pelajaran', '=', $mapelGuru?->id);
             })
             ->select(
                 'siswas.id',
@@ -85,18 +65,24 @@ class NilaiController extends Controller
                 'siswas.nisn',
                 'siswas.kelas',
                 'nilais.id as nilai_id',
-                'nilais.nilai as nilai'
+                'nilais.nilai'
             );
 
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('siswas.name', 'like', "%{$search}%")
-                  ->orWhere('siswas.nis', 'like', "%{$search}%")
-                  ->orWhere('siswas.nisn', 'like', "%{$search}%");
+                    ->orWhere('siswas.nis', 'like', "%{$search}%")
+                    ->orWhere('siswas.nisn', 'like', "%{$search}%");
             });
         }
 
         if ($kelasTerpilih) {
+            abort_unless(
+                $kelasGuru->contains($kelasTerpilih),
+                403,
+                'Anda tidak mengajar kelas ini.'
+            );
+
             $query->where('siswas.kelas', $kelasTerpilih);
         }
 
@@ -109,36 +95,46 @@ class NilaiController extends Controller
             $sudahDinilai = !is_null($row->nilai_id);
 
             return [
-                'id'            => $row->id,
-                'name'          => $row->name,
-                'nis'           => $row->nis,
-                'nisn'          => $row->nisn,
-                'kelas'         => $row->kelas,
-                'nilai_id'      => $row->nilai_id,
-                'nilai'         => $row->nilai !== null ? (float) $row->nilai : null,
+                'id' => $row->id,
+                'name' => $row->name,
+                'nis' => $row->nis,
+                'nisn' => $row->nisn,
+                'kelas' => $row->kelas,
+                'nilai_id' => $row->nilai_id,
+                'nilai' => $row->nilai !== null ? (float) $row->nilai : null,
                 'sudah_dinilai' => $sudahDinilai,
-                'status'        => $sudahDinilai
+                'status' => $sudahDinilai
                     ? ($row->nilai >= self::KKM ? 'Tuntas' : 'Belum Tuntas')
                     : null,
             ];
         });
 
-        // ===== Statistik, dihitung dari seluruh siswa di kelas guru (tidak ikut kefilter search) =====
+        $daftarKelas = $kelasGuru;
+
         $totalSiswa = Siswa::whereIn('kelas', $kelasGuru)->count();
 
-        $nilaiMapelQuery = Nilai::where('id_mata_pelajaran', $mapelGuru?->id)
-            ->whereHas('siswa', function ($q) use ($kelasGuru) {
-                $q->whereIn('kelas', $kelasGuru);
-            });
+        $nilaiMapelQuery = Nilai::where(
+            'id_mata_pelajaran',
+            $mapelGuru?->id
+        )->whereHas('siswa', function ($q) use ($kelasGuru) {
+            $q->whereIn('kelas', $kelasGuru);
+        });
 
-        $jumlahSudahDinilai = (clone $nilaiMapelQuery)->distinct('id_siswa')->count('id_siswa');
-        $jumlahBelumDinilai = max($totalSiswa - $jumlahSudahDinilai, 0);
+        $jumlahSudahDinilai = (clone $nilaiMapelQuery)
+            ->distinct('id_siswa')
+            ->count('id_siswa');
+
+        $jumlahBelumDinilai = max(
+            $totalSiswa - $jumlahSudahDinilai,
+            0
+        );
+
         $persentasePenilaian = $totalSiswa > 0
             ? round(($jumlahSudahDinilai / $totalSiswa) * 100)
             : 0;
+
         $rataRataKeseluruhan = (clone $nilaiMapelQuery)->avg('nilai');
 
-        // ===== Ranking kelas (hanya muncul kalau kelas difilter) =====
         $rankingSiswa = collect();
 
         if ($kelasTerpilih) {
@@ -150,8 +146,8 @@ class NilaiController extends Controller
                 ->orderByDesc('nilais.nilai')
                 ->get()
                 ->map(fn ($row) => [
-                    'name'  => $row->name,
-                    'nis'   => $row->nis,
+                    'name' => $row->name,
+                    'nis' => $row->nis,
                     'nilai' => (float) $row->nilai,
                 ]);
         }
@@ -173,55 +169,108 @@ class NilaiController extends Controller
         ));
     }
 
-    /**
-     * GET /guru/nilai/create
-     */
     public function create(Request $request)
     {
         $daftarMapel = $this->mapelGuruList();
-        $mapelGuru   = $this->mapelAktif($request, $daftarMapel);
-        $kelasGuru   = $this->kelasGuru();
+        $mapelGuru = $this->mapelAktif($request, $daftarMapel);
+        $kelasGuru = $this->kelasGuru();
 
-        // Hanya tampilkan siswa di kelas guru ini yang BELUM punya nilai untuk mapel ini
-        $siswaBelumDinilai = Siswa::query()
-            ->whereIn('kelas', $kelasGuru)
-            ->whereDoesntHave('nilai', function ($q) use ($mapelGuru) {
-                $q->where('id_mata_pelajaran', $mapelGuru?->id);
-            })
-            ->orderBy('name')
-            ->get();
+        $kelasTerpilih = $request->input('kelas');
 
-        return view('guru.nilai.create', compact('mapelGuru', 'daftarMapel', 'siswaBelumDinilai'));
+        if ($kelasTerpilih && !$kelasGuru->contains($kelasTerpilih)) {
+            abort(403, 'Anda tidak mengajar kelas ini.');
+        }
+
+        $siswa = collect();
+
+        if ($kelasTerpilih && $mapelGuru) {
+            $siswa = Siswa::query()
+                ->where('kelas', $kelasTerpilih)
+                ->whereDoesntHave('nilai', function ($query) use ($mapelGuru) {
+                    $query->where(
+                        'id_mata_pelajaran',
+                        $mapelGuru->id
+                    );
+                })
+                ->orderBy('name')
+                ->get();
+        }
+
+        return view('guru.nilai.create', [
+            'mapelGuru' => $mapelGuru,
+            'daftarMapel' => $daftarMapel,
+            'mataPelajarans' => $daftarMapel,
+            'kelasGuru' => $kelasGuru,
+            'kelasTerpilih' => $kelasTerpilih,
+            'siswa' => $siswa,
+        ]);
     }
 
-    /**
-     * POST /guru/nilai
-     */
     public function store(Request $request)
     {
         $daftarMapel = $this->mapelGuruList();
-        $mapelId     = $request->input('id_mata_pelajaran') ?? $this->mapelAktif($request, $daftarMapel)?->id;
 
-        // Pastikan mapel yang dipilih memang benar-benar diampu guru ini
-        abort_unless($daftarMapel->contains('id', $mapelId), 403, 'Anda tidak mengampu mata pelajaran ini.');
+        $mapelId = $request->input('id_mata_pelajaran')
+            ?? $this->mapelAktif($request, $daftarMapel)?->id;
+
+        abort_unless(
+            $daftarMapel->contains('id', $mapelId),
+            403,
+            'Anda tidak mengampu mata pelajaran ini.'
+        );
+
+        $kelasGuru = $this->kelasGuru();
 
         $validated = $request->validate([
+            'kelas' => [
+                'required',
+                Rule::in($kelasGuru->toArray()),
+            ],
             'id_siswa' => [
                 'required',
                 'exists:siswas,id',
                 Rule::unique('nilais', 'id_siswa')
-                    ->where(fn ($q) => $q->where('id_mata_pelajaran', $mapelId)),
+                    ->where(fn ($query) => $query->where(
+                        'id_mata_pelajaran',
+                        $mapelId
+                    )),
             ],
-            'nilai' => 'required|numeric|min:0|max:100',
+            'nilai' => [
+                'required',
+                'numeric',
+                'min:0',
+                'max:100',
+            ],
         ], [
+            'kelas.required' => 'Kelas wajib dipilih.',
+            'kelas.in' => 'Anda tidak mengajar kelas ini.',
+            'id_siswa.required' => 'Siswa wajib dipilih.',
+            'id_siswa.exists' => 'Data siswa tidak ditemukan.',
             'id_siswa.unique' => 'Siswa ini sudah memiliki nilai untuk mata pelajaran ini.',
+            'nilai.required' => 'Nilai wajib diisi.',
+            'nilai.numeric' => 'Nilai harus berupa angka.',
+            'nilai.min' => 'Nilai minimal adalah 0.',
+            'nilai.max' => 'Nilai maksimal adalah 100.',
         ]);
 
+        $siswa = Siswa::query()
+            ->where('id', $validated['id_siswa'])
+            ->where('kelas', $validated['kelas'])
+            ->first();
+
+        if (!$siswa) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'id_siswa' => 'Siswa tidak sesuai dengan kelas yang dipilih.',
+                ]);
+        }
+
         Nilai::create([
-            'id_siswa'          => $validated['id_siswa'],
+            'id_siswa' => $validated['id_siswa'],
             'id_mata_pelajaran' => $mapelId,
-            'id_user'           => Auth::id(),
-            'nilai'             => $validated['nilai'],
+            'id_user' => Auth::id(),
+            'nilai' => $validated['nilai'],
         ]);
 
         return redirect()
@@ -229,26 +278,48 @@ class NilaiController extends Controller
             ->with('success', 'Nilai siswa berhasil ditambahkan.');
     }
 
-    /**
-     * GET /guru/nilai/{siswa}
-     */
-    public function show(Request $request, Siswa $siswa)
+    public function show(Siswa $siswa)
     {
-        abort_unless($this->kelasGuru()->contains($siswa->kelas), 403, 'Siswa ini bukan bagian dari kelas Anda.');
+        abort_unless(
+            $this->kelasGuru()->contains($siswa->kelas),
+            403,
+            'Siswa ini bukan bagian dari kelas Anda.'
+        );
 
         $daftarMapel = $this->mapelGuruList();
-        $mapelGuru   = $this->mapelAktif($request, $daftarMapel);
 
-        $nilai = Nilai::where('id_siswa', $siswa->id)
-            ->where('id_mata_pelajaran', $mapelGuru?->id)
-            ->first();
+        $nilai = Nilai::with('mataPelajaran')
+            ->where('id_siswa', $siswa->id)
+            ->whereIn('id_mata_pelajaran', $daftarMapel->pluck('id'))
+            ->orderBy('id_mata_pelajaran')
+            ->get();
 
-        return view('guru.nilai.show', compact('siswa', 'mapelGuru', 'nilai'));
+        $jumlahNilai = $nilai->count();
+
+        $totalMapel = $daftarMapel->count();
+
+        $rataRata = $jumlahNilai > 0
+            ? $nilai->avg('nilai')
+            : null;
+
+        $mapelYangSudahDiisi = $nilai
+            ->pluck('id_mata_pelajaran')
+            ->toArray();
+
+        $mataPelajaranBelumDiisi = $daftarMapel
+            ->whereNotIn('id', $mapelYangSudahDiisi)
+            ->values();
+
+        return view('guru.nilai.show', [
+            'siswa' => $siswa,
+            'nilai' => $nilai,
+            'jumlahNilai' => $jumlahNilai,
+            'totalMapel' => $totalMapel,
+            'rataRata' => $rataRata,
+            'mataPelajaranBelumDiisi' => $mataPelajaranBelumDiisi,
+        ]);
     }
 
-    /**
-     * GET /guru/nilai/{nilai}/edit
-     */
     public function edit(Nilai $nilai)
     {
         $this->authorizeNilai($nilai);
@@ -258,9 +329,6 @@ class NilaiController extends Controller
         return view('guru.nilai.edit', compact('nilai'));
     }
 
-    /**
-     * PUT/PATCH /guru/nilai/{nilai}
-     */
     public function update(Request $request, Nilai $nilai)
     {
         $this->authorizeNilai($nilai);
@@ -276,9 +344,6 @@ class NilaiController extends Controller
             ->with('success', 'Nilai siswa berhasil diperbarui.');
     }
 
-    /**
-     * DELETE /guru/nilai/{nilai}
-     */
     public function destroy(Nilai $nilai)
     {
         $this->authorizeNilai($nilai);
@@ -290,10 +355,6 @@ class NilaiController extends Controller
             ->with('success', 'Nilai siswa berhasil dihapus.');
     }
 
-    /**
-     * Pastikan guru cuma bisa ubah/hapus nilai yang dia input sendiri
-     * (dicek dari kolom id_user di tabel nilais).
-     */
     private function authorizeNilai(Nilai $nilai): void
     {
         abort_if(
@@ -303,3 +364,4 @@ class NilaiController extends Controller
         );
     }
 }
+?>
