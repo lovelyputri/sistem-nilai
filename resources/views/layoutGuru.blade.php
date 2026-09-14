@@ -22,9 +22,6 @@
         rel="stylesheet"
     >
 
-    {{-- Chart.js --}}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <style>
 
         :root {
@@ -91,9 +88,7 @@
 
 </head>
 
-
 <body class="text-slate-800 antialiased min-h-screen flex flex-col">
-
 
     <!-- ========================================================= -->
     <!-- HEADER -->
@@ -104,7 +99,6 @@
         <div class="w-full px-4 sm:px-6 lg:px-8">
 
             <div class="min-h-[64px] flex items-center justify-between gap-3">
-
 
                 <!-- ================================================= -->
                 <!-- LOGO -->
@@ -138,7 +132,6 @@
 
                     </div>
 
-
                     <div class="min-w-0">
 
                         <h1
@@ -161,13 +154,11 @@
 
                 </div>
 
-
                 <!-- ================================================= -->
                 <!-- DESKTOP NAVIGATION -->
                 <!-- ================================================= -->
 
-                <nav class="hidden md:flex items-center gap-1 lg:gap-1.5">
-
+                <nav class="relative z-10 hidden md:flex items-center gap-1 lg:gap-1.5">
 
                     {{-- Dashboard --}}
 
@@ -209,7 +200,6 @@
 
                     </a>
 
-
                     {{-- Siswa --}}
 
                     <a
@@ -250,11 +240,10 @@
 
                     </a>
 
-
                     {{-- Input Nilai --}}
 
                     <a
-                        href="{{ route('guru.rapot.index') }}"
+                        href="{{ route('guru.nilai.index') }}"
                         class="flex items-center gap-2
                                px-3 py-2
                                rounded-lg
@@ -291,27 +280,25 @@
 
                     </a>
 
-
                     {{-- Rapor --}}
-                    {{-- Sementara belum ada route --}}
-
                     <a
                         href="{{ route('guru.rapot.index') }}"
-                        onclick="return false;"
-                        class="flex items-center gap-2
+                        class="relative z-10 flex items-center gap-2
                                px-3 py-2
                                rounded-lg
                                text-sm
                                whitespace-nowrap
-                               font-medium
-                               text-slate-600
-                               hover:text-orange-600
-                               hover:bg-orange-50/60
-                               transition-colors duration-200"
+                               transition-colors duration-200
+                               {{ request()->routeIs('guru.rapot.*')
+                                   ? 'font-bold text-orange-600 bg-orange-50/80'
+                                   : 'font-medium text-slate-600 hover:text-orange-600 hover:bg-orange-50/60' }}"
                     >
 
                         <svg
-                            class="w-4 h-4 text-slate-400"
+                            class="w-4 h-4
+                                   {{ request()->routeIs('guru.rapot.*')
+                                       ? 'text-orange-500'
+                                       : 'text-slate-400' }}"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -340,7 +327,6 @@
                     </a>
 
                 </nav>
-
 
                 <!-- ================================================= -->
                 <!-- DESKTOP PROFILE -->
@@ -378,7 +364,6 @@
 
                         </div>
 
-
                         <div class="hidden lg:block text-left leading-tight">
 
                             <p class="text-xs font-bold text-slate-800">
@@ -396,7 +381,6 @@
                         </div>
 
                     </div>
-
 
                     {{-- Logout --}}
 
@@ -445,7 +429,6 @@
 
                 </div>
 
-
                 <!-- ================================================= -->
                 <!-- MOBILE PROFILE + HAMBURGER -->
                 <!-- ================================================= -->
@@ -476,7 +459,6 @@
                         </span>
 
                     </div>
-
 
                     {{-- Hamburger --}}
 
@@ -511,7 +493,6 @@
 
                         </svg>
 
-
                         <svg
                             id="menuCloseIcon"
                             class="hidden w-6 h-6"
@@ -535,7 +516,6 @@
 
             </div>
 
-
             <!-- ===================================================== -->
             <!-- MOBILE MENU -->
             <!-- ===================================================== -->
@@ -545,7 +525,6 @@
                 <div class="border-t border-slate-100 pt-3 pb-4">
 
                     <div class="space-y-1">
-
 
                         {{-- Dashboard --}}
 
@@ -586,7 +565,6 @@
 
                         </a>
 
-
                         {{-- Siswa --}}
 
                         <a
@@ -625,7 +603,6 @@
                             </span>
 
                         </a>
-
 
                         {{-- Input Nilai --}}
 
@@ -666,26 +643,24 @@
 
                         </a>
 
-
                         {{-- Rapor --}}
-                        {{-- Sementara belum ada route --}}
-
                         <a
-                            href="#"
-                            onclick="return false;"
-                            class="flex items-center gap-3
+                            href="{{ route('guru.rapot.index') }}"
+                            class="relative z-10 flex items-center gap-3
                                    px-3 py-2.5
                                    rounded-lg
                                    text-sm
-                                   font-medium
-                                   text-slate-600
-                                   hover:bg-orange-50
-                                   hover:text-orange-600
-                                   transition-colors duration-200"
+                                   transition-colors duration-200
+                                   {{ request()->routeIs('guru.rapot.*')
+                                       ? 'font-bold text-orange-600 bg-orange-50/80'
+                                       : 'font-medium text-slate-600 hover:bg-orange-50 hover:text-orange-600' }}"
                         >
 
                             <svg
-                                class="w-5 h-5 text-slate-400"
+                                class="w-5 h-5
+                                       {{ request()->routeIs('guru.rapot.*')
+                                           ? 'text-orange-500'
+                                           : 'text-slate-400' }}"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -713,11 +688,9 @@
 
                         </a>
 
-
                         <!-- Separator -->
 
                         <div class="border-t border-slate-100 my-2"></div>
-
 
                         <!-- ================================================= -->
                         <!-- USER INFO -->
@@ -746,7 +719,6 @@
 
                             </div>
 
-
                             <div class="leading-tight min-w-0">
 
                                 <p class="text-xs font-bold text-slate-800 truncate">
@@ -764,7 +736,6 @@
                             </div>
 
                         </div>
-
 
                         <!-- ================================================= -->
                         <!-- LOGOUT -->
@@ -826,7 +797,6 @@
 
     </header>
 
-
     <!-- ========================================================= -->
     <!-- CONTENT -->
     <!-- ========================================================= -->
@@ -841,7 +811,6 @@
         @yield('content')
 
     </main>
-
 
     <!-- ========================================================= -->
     <!-- FOOTER -->
@@ -878,7 +847,6 @@
 
     </footer>
 
-
     <!-- ========================================================= -->
     <!-- JAVASCRIPT -->
     <!-- ========================================================= -->
@@ -899,6 +867,12 @@
             const menuCloseIcon =
                 document.getElementById('menuCloseIcon');
 
+            const closeMobileMenu = () => {
+                mobileMenu?.classList.remove('show-menu');
+                menuOpenIcon?.classList.remove('hidden');
+                menuCloseIcon?.classList.add('hidden');
+                menuButton?.setAttribute('aria-expanded', 'false');
+            };
 
             if (
                 menuButton &&
@@ -915,7 +889,6 @@
                             menuButton.getAttribute(
                                 'aria-expanded'
                             ) === 'true';
-
 
                         if (isOpen) {
 
@@ -962,30 +935,23 @@
 
             }
 
+            document.querySelectorAll('#mobileMenu a[href]:not([href="#"])')
+                .forEach(function (link) {
+                    link.addEventListener('click', closeMobileMenu);
+                });
+
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape') {
+                    closeMobileMenu();
+                }
+            });
 
             window.addEventListener(
                 'resize',
                 function () {
 
                     if (window.innerWidth >= 768) {
-
-                        mobileMenu?.classList.remove(
-                            'show-menu'
-                        );
-
-                        menuOpenIcon?.classList.remove(
-                            'hidden'
-                        );
-
-                        menuCloseIcon?.classList.add(
-                            'hidden'
-                        );
-
-                        menuButton?.setAttribute(
-                            'aria-expanded',
-                            'false'
-                        );
-
+                        closeMobileMenu();
                     }
 
                 }
@@ -994,7 +960,6 @@
         });
 
     </script>
-
 
     {{-- Script dari halaman seperti Chart.js dashboard --}}
     @stack('scripts')
