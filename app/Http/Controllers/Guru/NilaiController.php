@@ -32,7 +32,9 @@ class NilaiController extends Controller
             ?? $request->input('id_mata_pelajaran');
 
         if ($mapelId) {
-            $mapel = $daftarMapel->firstWhere('id', (int) $mapelId);
+            $mapel = $daftarMapel->first(function ($mapel) use ($mapelId) {
+                return (string) $mapel->id === (string) $mapelId;
+            });
 
             if ($mapel) {
                 return $mapel;
@@ -357,10 +359,18 @@ class NilaiController extends Controller
 
     private function authorizeNilai(Nilai $nilai): void
     {
-        abort_if(
-            $nilai->id_user !== Auth::id(),
+        $mapelGuru = $this->mapelGuruList();
+
+        abort_unless(
+            $mapelGuru->contains('id', $nilai->id_mata_pelajaran),
             403,
             'Anda tidak memiliki akses ke data nilai ini.'
+        );
+
+        abort_unless(
+            $this->kelasGuru()->contains($nilai->siswa?->kelas),
+            403,
+            'Anda tidak memiliki akses ke siswa ini.'
         );
     }
 }

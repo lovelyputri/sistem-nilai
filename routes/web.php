@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Guru\DashboardController as GuruDashboardController;
 use App\Http\Controllers\Guru\NilaiController as GuruNilaiController;
+use App\Http\Controllers\Guru\PredikatController;
 use App\Http\Controllers\Guru\RapotController;
 use App\Http\Controllers\Guru\SiswaController as GuruSiswaController;
 use App\Models\Nilai;
@@ -160,6 +161,15 @@ Route::middleware(['auth', 'check.role:guru'])->prefix('guru')->name('guru.')->g
             ->name('siswa.show');
 
     // Rapot
+
+    // Predikat & Deskripsi Rapor
+    Route::prefix('rapot/predikat')->name('rapot.predikat.')->group(function () {
+
+        Route::get('/',[PredikatController::class, 'index'])->name('index');
+        Route::post('/',[PredikatController::class, 'store'])->name('store');
+        Route::delete('/{deskripsiRapor}', [PredikatController::class, 'destroy'])->name('destroy');
+    });
+
     Route::get('/rapot', [RapotController::class, 'index'])
         ->name('rapot.index');
 

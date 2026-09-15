@@ -88,7 +88,9 @@
 
 </head>
 
+
 <body class="text-slate-800 antialiased min-h-screen flex flex-col">
+
 
     <!-- ========================================================= -->
     <!-- HEADER -->
@@ -99,6 +101,7 @@
         <div class="w-full px-4 sm:px-6 lg:px-8">
 
             <div class="min-h-[64px] flex items-center justify-between gap-3">
+
 
                 <!-- ================================================= -->
                 <!-- LOGO -->
@@ -132,6 +135,7 @@
 
                     </div>
 
+
                     <div class="min-w-0">
 
                         <h1
@@ -154,13 +158,20 @@
 
                 </div>
 
+
                 <!-- ================================================= -->
                 <!-- DESKTOP NAVIGATION -->
                 <!-- ================================================= -->
 
-                <nav class="relative z-10 hidden md:flex items-center gap-1 lg:gap-1.5">
+                <nav
+                    class="relative z-10 hidden md:flex
+                           items-center gap-1 lg:gap-1.5"
+                >
 
-                    {{-- Dashboard --}}
+
+                    {{-- ================================================= --}}
+                    {{-- DASHBOARD --}}
+                    {{-- ================================================= --}}
 
                     <a
                         href="{{ route('guru.dashboard') }}"
@@ -200,7 +211,10 @@
 
                     </a>
 
-                    {{-- Siswa --}}
+
+                    {{-- ================================================= --}}
+                    {{-- SISWA --}}
+                    {{-- ================================================= --}}
 
                     <a
                         href="{{ route('guru.siswa.index') }}"
@@ -240,7 +254,10 @@
 
                     </a>
 
-                    {{-- Input Nilai --}}
+
+                    {{-- ================================================= --}}
+                    {{-- INPUT NILAI --}}
+                    {{-- ================================================= --}}
 
                     <a
                         href="{{ route('guru.nilai.index') }}"
@@ -269,7 +286,7 @@
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
                                 stroke-width="2"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707 0.293l5.414 5.414a1 1 0 01.293 0V19a2 2 0 01-2 2h-1.586a1 1 0 01-.707-.293L15 16H9"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293 0V19a2 2 0 01-2 2h-1.586a1 1 0 01-.707-.293L15 16H9"
                             />
 
                         </svg>
@@ -280,8 +297,62 @@
 
                     </a>
 
-                    {{-- Rapor --}}
+
+                    {{-- ================================================= --}}
+                    {{-- PREDIKAT & DESKRIPSI --}}
+                    {{-- ================================================= --}}
+
                     <a
+                        href="{{ route('guru.rapot.predikat.index') }}"
+                        class="flex items-center gap-2
+                               px-3 py-2
+                               rounded-lg
+                               text-sm
+                               whitespace-nowrap
+                               transition-colors duration-200
+                               {{ request()->routeIs('guru.rapot.predikat.*')
+                                   ? 'font-bold text-orange-600 bg-orange-50/80'
+                                   : 'font-medium text-slate-600 hover:text-orange-600 hover:bg-orange-50/60' }}"
+                    >
+
+                        <svg
+                            class="w-4 h-4
+                                   {{ request()->routeIs('guru.rapot.predikat.*')
+                                       ? 'text-orange-500'
+                                       : 'text-slate-400' }}"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 12h6m-6 4h4m-8-8h10M6 3h9l4 4v14H6a2 2 0 01-2-2V5a2 2 0 012-2z"
+                            />
+
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M15 3v5h5"
+                            />
+
+                        </svg>
+
+                        <span>
+                            Predikat & Deskripsi
+                        </span>
+
+                    </a>
+
+
+                    {{-- ================================================= --}}
+                    {{-- RAPOR --}}
+                    {{-- ================================================= --}}
+
+                    {{-- <a
                         href="{{ route('guru.rapot.index') }}"
                         class="relative z-10 flex items-center gap-2
                                px-3 py-2
@@ -289,14 +360,14 @@
                                text-sm
                                whitespace-nowrap
                                transition-colors duration-200
-                               {{ request()->routeIs('guru.rapot.*')
+                               {{ request()->routeIs('guru.rapot.index', 'guru.rapot.show')
                                    ? 'font-bold text-orange-600 bg-orange-50/80'
                                    : 'font-medium text-slate-600 hover:text-orange-600 hover:bg-orange-50/60' }}"
                     >
 
                         <svg
                             class="w-4 h-4
-                                   {{ request()->routeIs('guru.rapot.*')
+                                   {{ request()->routeIs('guru.rapot.index', 'guru.rapot.show')
                                        ? 'text-orange-500'
                                        : 'text-slate-400' }}"
                             fill="none"
@@ -324,9 +395,10 @@
                             Rapor
                         </span>
 
-                    </a>
+                    </a> --}}
 
                 </nav>
+
 
                 <!-- ================================================= -->
                 <!-- DESKTOP PROFILE -->
@@ -364,6 +436,7 @@
 
                         </div>
 
+
                         <div class="hidden lg:block text-left leading-tight">
 
                             <p class="text-xs font-bold text-slate-800">
@@ -381,6 +454,7 @@
                         </div>
 
                     </div>
+
 
                     {{-- Logout --}}
 
@@ -429,11 +503,13 @@
 
                 </div>
 
+
                 <!-- ================================================= -->
                 <!-- MOBILE PROFILE + HAMBURGER -->
                 <!-- ================================================= -->
 
                 <div class="flex md:hidden items-center gap-2 shrink-0">
+
 
                     {{-- Avatar --}}
 
@@ -460,6 +536,7 @@
 
                     </div>
 
+
                     {{-- Hamburger --}}
 
                     <button
@@ -475,6 +552,8 @@
                                hover:text-orange-600
                                transition-colors duration-200"
                     >
+
+                        {{-- Open --}}
 
                         <svg
                             id="menuOpenIcon"
@@ -492,6 +571,9 @@
                             />
 
                         </svg>
+
+
+                        {{-- Close --}}
 
                         <svg
                             id="menuCloseIcon"
@@ -516,6 +598,7 @@
 
             </div>
 
+
             <!-- ===================================================== -->
             <!-- MOBILE MENU -->
             <!-- ===================================================== -->
@@ -526,7 +609,10 @@
 
                     <div class="space-y-1">
 
-                        {{-- Dashboard --}}
+
+                        {{-- ================================================= --}}
+                        {{-- DASHBOARD --}}
+                        {{-- ================================================= --}}
 
                         <a
                             href="{{ route('guru.dashboard') }}"
@@ -565,7 +651,10 @@
 
                         </a>
 
-                        {{-- Siswa --}}
+
+                        {{-- ================================================= --}}
+                        {{-- SISWA --}}
+                        {{-- ================================================= --}}
 
                         <a
                             href="{{ route('guru.siswa.index') }}"
@@ -593,7 +682,7 @@
                                     stroke-linecap="round"
                                     stroke-linejoin="round"
                                     stroke-width="2"
-                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656-.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
                                 />
 
                             </svg>
@@ -604,7 +693,10 @@
 
                         </a>
 
-                        {{-- Input Nilai --}}
+
+                        {{-- ================================================= --}}
+                        {{-- INPUT NILAI --}}
+                        {{-- ================================================= --}}
 
                         <a
                             href="{{ route('guru.nilai.index') }}"
@@ -632,7 +724,7 @@
                                     stroke-linecap="round"
                                     stroke-linejoin="round"
                                     stroke-width="2"
-                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707 0.293l5.414 5.414a1 1 0 01.293 0V19a2 2 0 01-2 2h-1.586a1 1 0 01-1.707-.293L15 16H9"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293 0V19a2 2 0 01-2 2h-1.586a1 1 0 01-.707-.293L15 16H9"
                                 />
 
                             </svg>
@@ -643,7 +735,60 @@
 
                         </a>
 
-                        {{-- Rapor --}}
+
+                        {{-- ================================================= --}}
+                        {{-- PREDIKAT & DESKRIPSI --}}
+                        {{-- ================================================= --}}
+
+                        <a
+                            href="{{ route('guru.rapot.predikat.index') }}"
+                            class="flex items-center gap-3
+                                   px-3 py-2.5
+                                   rounded-lg
+                                   text-sm
+                                   transition-colors duration-200
+                                   {{ request()->routeIs('guru.rapot.predikat.*')
+                                       ? 'font-bold text-orange-600 bg-orange-50/80'
+                                       : 'font-medium text-slate-600 hover:bg-orange-50 hover:text-orange-600' }}"
+                        >
+
+                            <svg
+                                class="w-5 h-5
+                                       {{ request()->routeIs('guru.rapot.predikat.*')
+                                           ? 'text-orange-500'
+                                           : 'text-slate-400' }}"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M9 12h6m-6 4h4m-8-8h10M6 3h9l4 4v14H6a2 2 0 01-2-2V5a2 2 0 012-2z"
+                                />
+
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M15 3v5h5"
+                                />
+
+                            </svg>
+
+                            <span>
+                                Predikat & Deskripsi
+                            </span>
+
+                        </a>
+
+
+                        {{-- ================================================= --}}
+                        {{-- RAPOR --}}
+                        {{-- ================================================= --}}
+
                         <a
                             href="{{ route('guru.rapot.index') }}"
                             class="relative z-10 flex items-center gap-3
@@ -651,14 +796,14 @@
                                    rounded-lg
                                    text-sm
                                    transition-colors duration-200
-                                   {{ request()->routeIs('guru.rapot.*')
+                                   {{ request()->routeIs('guru.rapot.index', 'guru.rapot.show')
                                        ? 'font-bold text-orange-600 bg-orange-50/80'
                                        : 'font-medium text-slate-600 hover:bg-orange-50 hover:text-orange-600' }}"
                         >
 
                             <svg
                                 class="w-5 h-5
-                                       {{ request()->routeIs('guru.rapot.*')
+                                       {{ request()->routeIs('guru.rapot.index', 'guru.rapot.show')
                                            ? 'text-orange-500'
                                            : 'text-slate-400' }}"
                                 fill="none"
@@ -688,9 +833,13 @@
 
                         </a>
 
-                        <!-- Separator -->
+
+                        <!-- ================================================= -->
+                        <!-- SEPARATOR -->
+                        <!-- ================================================= -->
 
                         <div class="border-t border-slate-100 my-2"></div>
+
 
                         <!-- ================================================= -->
                         <!-- USER INFO -->
@@ -719,6 +868,7 @@
 
                             </div>
 
+
                             <div class="leading-tight min-w-0">
 
                                 <p class="text-xs font-bold text-slate-800 truncate">
@@ -736,6 +886,7 @@
                             </div>
 
                         </div>
+
 
                         <!-- ================================================= -->
                         <!-- LOGOUT -->
@@ -797,6 +948,7 @@
 
     </header>
 
+
     <!-- ========================================================= -->
     <!-- CONTENT -->
     <!-- ========================================================= -->
@@ -811,6 +963,7 @@
         @yield('content')
 
     </main>
+
 
     <!-- ========================================================= -->
     <!-- FOOTER -->
@@ -847,6 +1000,7 @@
 
     </footer>
 
+
     <!-- ========================================================= -->
     <!-- JAVASCRIPT -->
     <!-- ========================================================= -->
@@ -867,12 +1021,34 @@
             const menuCloseIcon =
                 document.getElementById('menuCloseIcon');
 
+
+            /*
+            |--------------------------------------------------------------------------
+            | CLOSE MOBILE MENU
+            |--------------------------------------------------------------------------
+            */
+
             const closeMobileMenu = () => {
+
                 mobileMenu?.classList.remove('show-menu');
+
                 menuOpenIcon?.classList.remove('hidden');
+
                 menuCloseIcon?.classList.add('hidden');
-                menuButton?.setAttribute('aria-expanded', 'false');
+
+                menuButton?.setAttribute(
+                    'aria-expanded',
+                    'false'
+                );
+
             };
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | TOGGLE MOBILE MENU
+            |--------------------------------------------------------------------------
+            */
 
             if (
                 menuButton &&
@@ -890,24 +1066,10 @@
                                 'aria-expanded'
                             ) === 'true';
 
+
                         if (isOpen) {
 
-                            mobileMenu.classList.remove(
-                                'show-menu'
-                            );
-
-                            menuOpenIcon.classList.remove(
-                                'hidden'
-                            );
-
-                            menuCloseIcon.classList.add(
-                                'hidden'
-                            );
-
-                            menuButton.setAttribute(
-                                'aria-expanded',
-                                'false'
-                            );
+                            closeMobileMenu();
 
                         } else {
 
@@ -935,23 +1097,61 @@
 
             }
 
-            document.querySelectorAll('#mobileMenu a[href]:not([href="#"])')
+
+            /*
+            |--------------------------------------------------------------------------
+            | CLOSE AFTER CLICK MENU
+            |--------------------------------------------------------------------------
+            */
+
+            document
+                .querySelectorAll(
+                    '#mobileMenu a[href]:not([href="#"])'
+                )
                 .forEach(function (link) {
-                    link.addEventListener('click', closeMobileMenu);
+
+                    link.addEventListener(
+                        'click',
+                        closeMobileMenu
+                    );
+
                 });
 
-            document.addEventListener('keydown', function (event) {
-                if (event.key === 'Escape') {
-                    closeMobileMenu();
+
+            /*
+            |--------------------------------------------------------------------------
+            | ESCAPE KEY
+            |--------------------------------------------------------------------------
+            */
+
+            document.addEventListener(
+                'keydown',
+                function (event) {
+
+                    if (event.key === 'Escape') {
+
+                        closeMobileMenu();
+
+                    }
+
                 }
-            });
+            );
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | RESET WHEN DESKTOP
+            |--------------------------------------------------------------------------
+            */
 
             window.addEventListener(
                 'resize',
                 function () {
 
                     if (window.innerWidth >= 768) {
+
                         closeMobileMenu();
+
                     }
 
                 }
@@ -961,8 +1161,11 @@
 
     </script>
 
+
     {{-- Script dari halaman seperti Chart.js dashboard --}}
+
     @stack('scripts')
+
 
 </body>
 

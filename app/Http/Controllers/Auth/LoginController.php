@@ -24,7 +24,7 @@ class LoginController extends Controller
             'email.required'    => 'Email wajib diisi',
             'email.email'       => 'Format email tidak valid',
             'password.required' => 'Password wajib di isi'
-        ]); 
+        ]);
 
         $credentials = [
             'email' => $request->email,
