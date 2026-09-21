@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\GuruController;
 use App\Http\Controllers\Admin\GuruKelasController;
 use App\Http\Controllers\Admin\MataPelajaranController;
 use App\Http\Controllers\Admin\NilaiController;
+use App\Http\Controllers\Admin\RaporController;
 use App\Http\Controllers\Admin\SiswaController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -124,6 +125,16 @@ Route::delete('/guru/{guru}', [GuruController::class, 'destroy'])->name('guru.de
     Route::get('/nilai/{siswa}', [NilaiController::class, 'show'])->name('nilai.show');
     Route::delete('/nilai/{nilai}', [NilaiController::class, 'destroy'])
         ->name('nilai.destroy');
+
+        Route::get('/rapor', [RaporController::class, 'index'])
+    ->name('rapor.index');
+
+    Route::get('/rapor/preview', [RaporController::class, 'preview'])
+        ->name('rapor.preview');
+
+    Route::get('/rapor/export', [RaporController::class, 'exportPdf'])
+        ->name('rapor.export');
+
 });
 
 Route::middleware(['auth', 'check.role:guru'])->prefix('guru')->name('guru.')->group(function () {

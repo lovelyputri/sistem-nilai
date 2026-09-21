@@ -39,9 +39,9 @@
         }
 
         /*
-        |--------------------------------------------------------------------------
+        |------------------------------------------------------------------
         | MOBILE MENU
-        |--------------------------------------------------------------------------
+        |------------------------------------------------------------------
         */
 
         #mobileMenu {
@@ -49,6 +49,7 @@
             opacity: 0;
             overflow: hidden;
             transform: translateY(-8px);
+
             transition:
                 max-height 0.25s ease,
                 opacity 0.2s ease,
@@ -56,21 +57,22 @@
         }
 
         #mobileMenu.show-menu {
-            max-height: 800px;
+            max-height: 900px;
             opacity: 1;
             transform: translateY(0);
         }
 
         /*
-        |--------------------------------------------------------------------------
+        |------------------------------------------------------------------
         | MOBILE GURU MENU
-        |--------------------------------------------------------------------------
+        |------------------------------------------------------------------
         */
 
         #mobileGuruMenu {
             max-height: 0;
             opacity: 0;
             overflow: hidden;
+
             transition:
                 max-height 0.2s ease,
                 opacity 0.2s ease;
@@ -86,9 +88,9 @@
         }
 
         /*
-        |--------------------------------------------------------------------------
+        |------------------------------------------------------------------
         | DESKTOP DROPDOWN
-        |--------------------------------------------------------------------------
+        |------------------------------------------------------------------
         */
 
         .guru-dropdown {
@@ -111,9 +113,9 @@
         }
 
         /*
-        |--------------------------------------------------------------------------
+        |------------------------------------------------------------------
         | PREVENT MOBILE MENU FLASH
-        |--------------------------------------------------------------------------
+        |------------------------------------------------------------------
         */
 
         @media (min-width: 768px) {
@@ -200,7 +202,9 @@
 
                 <nav class="hidden md:flex items-center gap-1 lg:gap-2">
 
-                    {{-- Dashboard --}}
+                    {{-- ================================================= --}}
+                    {{-- DASHBOARD --}}
+                    {{-- ================================================= --}}
 
                     <a href="{{ route('admin.dashboard') }}"
                        class="flex items-center gap-2
@@ -232,7 +236,9 @@
                     </a>
 
 
-                    {{-- Guru --}}
+                    {{-- ================================================= --}}
+                    {{-- GURU --}}
+                    {{-- ================================================= --}}
 
                     @php
 
@@ -274,7 +280,9 @@
 
                             <svg class="w-3.5 h-3.5
                                        transition-transform
-                                       {{ $guruAktif ? 'rotate-180 text-orange-500' : 'text-slate-400' }}"
+                                       {{ $guruAktif
+                                           ? 'rotate-180 text-orange-500'
+                                           : 'text-slate-400' }}"
                                  fill="none"
                                  stroke="currentColor"
                                  viewBox="0 0 24 24">
@@ -289,7 +297,7 @@
                         </button>
 
 
-                        <!-- Dropdown -->
+                        {{-- Guru Dropdown --}}
 
                         <div class="guru-dropdown
                                     absolute left-0 top-full mt-1
@@ -350,7 +358,9 @@
                     </div>
 
 
-                    {{-- Siswa --}}
+                    {{-- ================================================= --}}
+                    {{-- SISWA --}}
+                    {{-- ================================================= --}}
 
                     <a href="{{ route('admin.siswa.index') }}"
                        class="flex items-center gap-2
@@ -387,7 +397,9 @@
                     </a>
 
 
-                    {{-- Mata Pelajaran --}}
+                    {{-- ================================================= --}}
+                    {{-- MATA PELAJARAN --}}
+                    {{-- ================================================= --}}
 
                     <a href="{{ route('admin.mapel.index') }}"
                        class="flex items-center gap-2
@@ -419,7 +431,9 @@
                     </a>
 
 
-                    {{-- Nilai --}}
+                    {{-- ================================================= --}}
+                    {{-- NILAI --}}
+                    {{-- ================================================= --}}
 
                     <a href="{{ route('admin.nilai.index') }}"
                        class="flex items-center gap-2
@@ -450,6 +464,40 @@
 
                     </a>
 
+
+                    {{-- ================================================= --}}
+                    {{-- EKSPOR RAPOR --}}
+                    {{-- ================================================= --}}
+
+                    <a href="{{ route('admin.rapor.index') }}"
+                       class="flex items-center gap-2
+                              px-3 py-2
+                              text-sm rounded-lg
+                              whitespace-nowrap
+                              transition-colors
+                              {{ request()->routeIs('admin.rapor.*')
+                                  ? 'font-bold text-orange-600 bg-orange-50/80'
+                                  : 'font-medium text-slate-600 hover:text-orange-600 hover:bg-orange-50/60' }}">
+
+                        <svg class="w-4 h-4
+                                   {{ request()->routeIs('admin.rapor.*')
+                                      ? 'text-orange-500'
+                                      : 'text-slate-400' }}"
+                             fill="none"
+                             stroke="currentColor"
+                             viewBox="0 0 24 24">
+
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h6l5 5v11a2 2 0 01-2 2z"/>
+
+                        </svg>
+
+                        <span>Ekspor Rapor</span>
+
+                    </a>
+
                 </nav>
 
 
@@ -469,7 +517,7 @@
                                     flex-shrink-0
                                     bg-white">
 
-                            <img src="{{ asset('storage/profil/SMUHERO_logo.png') }}"
+                            <img src="{{ asset('public/images/SMUHERO_logo.png') }}"
                                  alt="SMUHERO"
                                  class="w-full h-full object-cover">
 
@@ -560,8 +608,6 @@
                                    hover:text-orange-600
                                    transition-colors">
 
-                        {{-- Hamburger --}}
-
                         <svg id="menuOpenIcon"
                              class="w-6 h-6"
                              fill="none"
@@ -575,8 +621,6 @@
 
                         </svg>
 
-
-                        {{-- Close --}}
 
                         <svg id="menuCloseIcon"
                              class="hidden w-6 h-6"
@@ -609,7 +653,9 @@
                     <div class="space-y-1">
 
 
-                        {{-- Dashboard --}}
+                        {{-- ================================================= --}}
+                        {{-- DASHBOARD --}}
+                        {{-- ================================================= --}}
 
                         <a href="{{ route('admin.dashboard') }}"
                            class="flex items-center gap-3
@@ -641,7 +687,9 @@
                         </a>
 
 
-                        {{-- Guru --}}
+                        {{-- ================================================= --}}
+                        {{-- GURU --}}
+                        {{-- ================================================= --}}
 
                         <div>
 
@@ -757,7 +805,9 @@
                         </div>
 
 
-                        {{-- Siswa --}}
+                        {{-- ================================================= --}}
+                        {{-- SISWA --}}
+                        {{-- ================================================= --}}
 
                         <a href="{{ route('admin.siswa.index') }}"
                            class="flex items-center gap-3
@@ -794,7 +844,9 @@
                         </a>
 
 
-                        {{-- Mata Pelajaran --}}
+                        {{-- ================================================= --}}
+                        {{-- MATA PELAJARAN --}}
+                        {{-- ================================================= --}}
 
                         <a href="{{ route('admin.mapel.index') }}"
                            class="flex items-center gap-3
@@ -826,7 +878,9 @@
                         </a>
 
 
-                        {{-- Nilai --}}
+                        {{-- ================================================= --}}
+                        {{-- NILAI --}}
+                        {{-- ================================================= --}}
 
                         <a href="{{ route('admin.nilai.index') }}"
                            class="flex items-center gap-3
@@ -858,12 +912,50 @@
                         </a>
 
 
-                        {{-- Separator --}}
+                        {{-- ================================================= --}}
+                        {{-- EKSPOR RAPOR --}}
+                        {{-- ================================================= --}}
+
+                        <a href="{{ route('admin.rapor.index') }}"
+                           class="flex items-center gap-3
+                                  px-3 py-2.5
+                                  rounded-lg
+                                  text-sm
+                                  transition-colors
+                                  {{ request()->routeIs('admin.rapor.*')
+                                      ? 'font-bold text-orange-600 bg-orange-50/80'
+                                      : 'font-medium text-slate-600 hover:bg-orange-50 hover:text-orange-600' }}">
+
+                            <svg class="w-5 h-5
+                                       {{ request()->routeIs('admin.rapor.*')
+                                          ? 'text-orange-500'
+                                          : 'text-slate-400' }}"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 viewBox="0 0 24 24">
+
+                                <path stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      stroke-width="2"
+                                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h6l5 5v11a2 2 0 01-2 2z"/>
+
+                            </svg>
+
+                            <span>Ekspor Rapor</span>
+
+                        </a>
+
+
+                        {{-- ================================================= --}}
+                        {{-- SEPARATOR --}}
+                        {{-- ================================================= --}}
 
                         <div class="border-t border-slate-100 my-2"></div>
 
 
-                        {{-- Admin Info --}}
+                        {{-- ================================================= --}}
+                        {{-- ADMIN INFO --}}
+                        {{-- ================================================= --}}
 
                         <div class="flex items-center gap-3 px-3 py-2.5">
 
@@ -873,7 +965,7 @@
                                         shadow-sm
                                         bg-white">
 
-                                <img src="{{ asset('storage/profil/SMUHERO_logo.png') }}"
+                                <img src="{{ asset('storage/images/SMUHERO_logo.png') }}"
                                      alt="SMUHERO"
                                      class="w-full h-full object-cover">
 
@@ -895,7 +987,9 @@
                         </div>
 
 
-                        {{-- Logout --}}
+                        {{-- ================================================= --}}
+                        {{-- LOGOUT --}}
+                        {{-- ================================================= --}}
 
                         <form action="{{ route('logout') }}"
                               method="POST"
@@ -999,71 +1093,102 @@
         document.addEventListener('DOMContentLoaded', function () {
 
             /*
-            |--------------------------------------------------------------------------
+            |------------------------------------------------------------------
             | MOBILE MENU
-            |--------------------------------------------------------------------------
+            |------------------------------------------------------------------
             */
 
-            const menuButton = document.getElementById('menuButton');
-            const mobileMenu = document.getElementById('mobileMenu');
+            const menuButton =
+                document.getElementById('menuButton');
 
-            const menuOpenIcon = document.getElementById('menuOpenIcon');
-            const menuCloseIcon = document.getElementById('menuCloseIcon');
+            const mobileMenu =
+                document.getElementById('mobileMenu');
+
+            const menuOpenIcon =
+                document.getElementById('menuOpenIcon');
+
+            const menuCloseIcon =
+                document.getElementById('menuCloseIcon');
 
 
             if (menuButton && mobileMenu) {
 
-                menuButton.addEventListener('click', function () {
+                menuButton.addEventListener(
+                    'click',
+                    function () {
 
-                    const isOpen =
-                        menuButton.getAttribute('aria-expanded') === 'true';
+                        const isOpen =
+                            menuButton.getAttribute(
+                                'aria-expanded'
+                            ) === 'true';
 
 
-                    if (isOpen) {
+                        if (isOpen) {
 
-                        mobileMenu.classList.remove('show-menu');
+                            mobileMenu.classList.remove(
+                                'show-menu'
+                            );
 
-                        menuOpenIcon.classList.remove('hidden');
-                        menuCloseIcon.classList.add('hidden');
+                            menuOpenIcon.classList.remove(
+                                'hidden'
+                            );
 
-                        menuButton.setAttribute(
-                            'aria-expanded',
-                            'false'
-                        );
+                            menuCloseIcon.classList.add(
+                                'hidden'
+                            );
 
-                    } else {
+                            menuButton.setAttribute(
+                                'aria-expanded',
+                                'false'
+                            );
 
-                        mobileMenu.classList.add('show-menu');
+                        } else {
 
-                        menuOpenIcon.classList.add('hidden');
-                        menuCloseIcon.classList.remove('hidden');
+                            mobileMenu.classList.add(
+                                'show-menu'
+                            );
 
-                        menuButton.setAttribute(
-                            'aria-expanded',
-                            'true'
-                        );
+                            menuOpenIcon.classList.add(
+                                'hidden'
+                            );
+
+                            menuCloseIcon.classList.remove(
+                                'hidden'
+                            );
+
+                            menuButton.setAttribute(
+                                'aria-expanded',
+                                'true'
+                            );
+
+                        }
 
                     }
-
-                });
+                );
 
             }
 
 
             /*
-            |--------------------------------------------------------------------------
+            |------------------------------------------------------------------
             | MOBILE GURU DROPDOWN
-            |--------------------------------------------------------------------------
+            |------------------------------------------------------------------
             */
 
             const mobileGuruButton =
-                document.getElementById('mobileGuruButton');
+                document.getElementById(
+                    'mobileGuruButton'
+                );
 
             const mobileGuruMenu =
-                document.getElementById('mobileGuruMenu');
+                document.getElementById(
+                    'mobileGuruMenu'
+                );
 
             const mobileGuruArrow =
-                document.getElementById('mobileGuruArrow');
+                document.getElementById(
+                    'mobileGuruArrow'
+                );
 
 
             if (
@@ -1091,9 +1216,9 @@
 
 
             /*
-            |--------------------------------------------------------------------------
+            |------------------------------------------------------------------
             | RESET MOBILE MENU WHEN DESKTOP
-            |--------------------------------------------------------------------------
+            |------------------------------------------------------------------
             */
 
             function resetMobileMenu() {
