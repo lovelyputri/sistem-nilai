@@ -1,7 +1,189 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\GuruController;
+use App\Http\Controllers\Admin\GuruKelasController;
+use App\Http\Controllers\Admin\MataPelajaranController;
+use App\Http\Controllers\Admin\NilaiController;
+use App\Http\Controllers\Admin\RaporController;
+use App\Http\Controllers\Admin\SiswaController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Guru\DashboardController as GuruDashboardController;
+use App\Http\Controllers\Guru\NilaiController as GuruNilaiController;
+use App\Http\Controllers\Guru\PredikatController;
+use App\Http\Controllers\Guru\RapotController;
+use App\Http\Controllers\Guru\SiswaController as GuruSiswaController;
+use App\Models\Nilai;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
+// auth
+    // Login
+    Route::get('/', [LoginController::class, 'showForm'])->name('login');
+    Route::get('/masuk', [LoginController::class, 'showForm'])->name('masuk');
+    Route::post('/masuk', [LoginController::class, 'login'])->name('login.proses');
+    // Register
+    Route::get('/daftar', [RegisterController::class, 'showForm'])->name('register');
+    Route::post('/daftar', [RegisterController::class, 'register'])->name('register.proses');
+    // Logout
+    Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
+
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'check.role:admin'])->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+        // Guru
+Route::get('/guru', [GuruController::class, 'index'])->name('guru.index');
+
+Route::get('/guru/create', [GuruController::class, 'create'])->name('guru.create');
+Route::post('/guru', [GuruController::class, 'store'])->name('guru.store');
+
+Route::get('/guru/{guru}/edit', [GuruController::class, 'edit'])->name('guru.edit');
+Route::put('/guru/{guru}', [GuruController::class, 'update'])->name('guru.update');
+
+Route::get('/guru/{guru}', [GuruController::class, 'show'])->name('guru.show');
+Route::delete('/guru/{guru}', [GuruController::class, 'destroy'])->name('guru.destroy');
+
+
+    // Menampilkan semua assignment guru dan kelas (Verifikasi Guru)
+    Route::get('/guru-kelas', [GuruKelasController::class, 'index'])->name('guruKelas.index');
+    // Menampilkan daftar guru dengan penugasan kelas
+    Route::get('/kelas', [GuruKelasController::class, 'daftarKelas'])->name('guruKelas.daftarKelas');
+   Route::get(
+    '/guru-kelas/tambah-penugasan',
+    [GuruKelasController::class, 'tambahPenugasan']
+    )->name('guruKelas.tambahPenugasan');
+
+    Route::post(
+        '/guru-kelas/tambah-penugasan',
+        [GuruKelasController::class, 'storePenugasan']
+    )->name('guruKelas.storePenugasan');
+    Route::get(
+    '/guru-kelas/edit-penugasan/{id}',
+    [GuruKelasController::class, 'editPenugasan']
+    )->name('guruKelas.editPenugasan');
+    Route::put(
+        '/guru-kelas/edit-penugasan/{id}',
+        [GuruKelasController::class, 'updatePenugasan']
+    )->name('guruKelas.updatePenugasan');
+    Route::get(
+    '/guru-kelas/tambah-mapel',
+    [GuruKelasController::class, 'tambahMapel']
+    )->name('guruKelas.tambahMapel');
+
+    Route::post(
+        '/guru-kelas/tambah-mapel',
+        [GuruKelasController::class, 'storeMapel']
+    )->name('guruKelas.storeMapel');
+    // Menampilkan guru yang ditugaskan pada kelas tertentu
+    // Route::get('/kelas/{kelas}', [GuruKelasController::class, 'show'])->name('guruKelas.show');
+    // Menambahkan guru ke kelas
+    Route::post('/kelas', [GuruKelasController::class, 'store'])->name('guruKelas.store');
+    // Menghapus assignment guru dari kelas
+    Route::delete('/kelas/{guruKelas}', [GuruKelasController::class, 'destroy'])->name('guruKelas.destroy');
+
+    // Mata Pelajaran
+    Route::prefix('mapel')->name('mapel.')->group(function () {
+        Route::get('/', [MataPelajaranController::class, 'index'])->name('index');
+        Route::get('/mapel/{mataPelajaran}', [MataPelajaranController::class, 'show'])->name('show');
+        Route::get('/create', [MataPelajaranController::class, 'create'])->name('create');
+        Route::post('/', [MataPelajaranController::class, 'store'])->name('store');
+        Route::get('/{mataPelajaran}/edit', [MataPelajaranController::class, 'edit'])->name('edit');
+        Route::put('/{mataPelajaran}', [MataPelajaranController::class, 'update'])->name('update');
+        Route::delete('/{mataPelajaran}', [MataPelajaranController::class, 'destroy'])->name('destroy');
+    });
+
+
+    // konfirmasi guru
+    Route::get('/guru/{guru}/confirm', [GuruController::class, 'confirmation'])->name('guru.confirm');
+    Route::get('/guru/{guru}/reject', [GuruController::class, 'rejected'])->name('guru.reject');
+
+    // Siswa
+    Route::get('/siswa', [SiswaController::class, 'index'])
+        ->name('siswa.index');
+
+    Route::get('/siswa/create', [SiswaController::class, 'create'])
+        ->name('siswa.create');
+
+    Route::post('/siswa', [SiswaController::class, 'store'])
+        ->name('siswa.store');
+
+    Route::get('/siswa/{siswa}', [SiswaController::class, 'show'])
+        ->name('siswa.show');
+
+    Route::get('/siswa/{siswa}/edit', [SiswaController::class, 'edit'])
+        ->name('siswa.edit');
+
+    Route::put('/siswa/{siswa}', [SiswaController::class, 'update'])
+        ->name('siswa.update');
+
+    Route::delete('/siswa/{siswa}', [SiswaController::class, 'destroy'])
+        ->name('siswa.destroy');
+
+    // Nilai
+    Route::get('/nilai', [NilaiController::class, 'index'])->name('nilai.index');
+    Route::get('/nilai/{siswa}', [NilaiController::class, 'show'])->name('nilai.show');
+    Route::delete('/nilai/{nilai}', [NilaiController::class, 'destroy'])
+        ->name('nilai.destroy');
+
+        Route::get('/rapor', [RaporController::class, 'index'])
+    ->name('rapor.index');
+
+    Route::get('/rapor/preview', [RaporController::class, 'preview'])
+        ->name('rapor.preview');
+
+    Route::get('/rapor/export', [RaporController::class, 'exportPdf'])
+        ->name('rapor.export');
+
+});
+
+Route::middleware(['auth', 'check.role:guru'])->prefix('guru')->name('guru.')->group(function () {
+
+    // Dashboard
+    Route::get('/dashboard', [GuruDashboardController::class, 'index'])->name('dashboard');
+
+    // Nilai
+    Route::get('/nilai', [GuruNilaiController::class, 'index'])
+            ->name('nilai.index');
+
+        Route::get('/nilai/create', [GuruNilaiController::class, 'create'])
+            ->name('nilai.create');
+
+        Route::post('/nilai', [GuruNilaiController::class, 'store'])
+            ->name('nilai.store');
+
+        Route::get('/nilai/siswa/{siswa}', [GuruNilaiController::class, 'show'])
+            ->name('nilai.show');
+
+        Route::get('/nilai/{nilai}/edit', [GuruNilaiController::class, 'edit'])
+            ->name('nilai.edit');
+
+        Route::put('/nilai/{nilai}', [GuruNilaiController::class, 'update'])
+            ->name('nilai.update');
+
+        Route::delete('/nilai/{nilai}', [GuruNilaiController::class, 'destroy'])
+            ->name('nilai.destroy');
+
+    //siswa
+        Route::get('/siswa', [GuruSiswaController::class, 'index'])
+            ->name('siswa.index');
+
+        Route::get('/siswa/{siswa}', [GuruSiswaController::class, 'show'])
+            ->name('siswa.show');
+
+    // Rapot
+
+    // Predikat & Deskripsi Rapor
+    Route::prefix('rapot/predikat')->name('rapot.predikat.')->group(function () {
+
+        Route::get('/',[PredikatController::class, 'index'])->name('index');
+        Route::post('/',[PredikatController::class, 'store'])->name('store');
+        Route::delete('/{deskripsiRapor}', [PredikatController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::get('/rapot', [RapotController::class, 'index'])
+        ->name('rapot.index');
+
+    Route::get('/rapot/{siswa}', [RapotController::class, 'show'])
+        ->name('rapot.show');
 });
